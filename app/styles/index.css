@@ -1,0 +1,23 @@
+body {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 16px;
+  margin-right: 16px;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+@font-face {
+  font-family: "Tusker-Grotesk";
+  src: url("../fonts/tusker-grotesk/TuskerGrotesk-4500Medium.otf") format("opentype");
+}
+
+a {
+  color: white;
+  text-decoration: none;
+}
+
+h1 {
+  font-family: "Tusker-Grotesk";
+  font-size: 52px;
+}
