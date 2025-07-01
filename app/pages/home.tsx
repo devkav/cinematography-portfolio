@@ -13,7 +13,7 @@ export default function Home() {
     <div>
       <video autoPlay muted loop src="landing-video.mp4" id="jumbo-video"/>
       <div id="title-container">
-        <h1 id="title">MAGGIE LUCY</h1>
+        <h1 id="title" className="page-title">MAGGIE LUCY</h1>
       </div>
 
       <div id="welcome-container">

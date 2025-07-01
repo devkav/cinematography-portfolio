@@ -1,0 +1,28 @@
+#reel-container {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#reel-iframe {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16/9;
+}
+
+#reel-page {
+    margin-left: 16px;
+    margin-right: 16px;
+}
+
+#title-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body {
+    background-color: #000;
+    color: white;
+}

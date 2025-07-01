@@ -1,0 +1,28 @@
+#footer {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+#footer p {
+    width: fit-content;
+    font-size: 16px;
+}
+
+.icon-row svg {
+    color: black;
+    font-size: 20px;
+}
+
+.icon-row a {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.icon-row-dark svg {
+    color: white !important;
+}

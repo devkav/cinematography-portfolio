@@ -21,12 +21,7 @@
 }
 
 #title {
-  font-family: "Tusker-Grotesk";
-  font-size: 45px;
   color: white;
-  margin: 0;
-  margin-top: 12px;
-  text-transform: uppercase;
 }
 
 #work {
@@ -57,4 +52,5 @@
   font-size: 28px;
   font-family: "Tusker-Grotesk";
   text-transform: uppercase;
+  color: white;
 }

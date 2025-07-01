@@ -1,4 +1,4 @@
-import "~/styles/project-display.css";
+import "~/components/ProjectDisplay/project-display.css";
 
 export default function ProjectDisplay() {
     return (

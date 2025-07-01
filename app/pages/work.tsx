@@ -1,4 +1,4 @@
-import ProjectDisplay from "~/components/ProjectDisplay";
+import ProjectDisplay from "~/components/ProjectDisplay/ProjectDisplay";
 import type { Route } from "./+types/home";
 
 export function meta({}: Route.MetaArgs) {

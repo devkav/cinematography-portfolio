@@ -1,10 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap');
+
 body {
-  margin-top: 0px;
-  margin-bottom: 0px;
-  margin-left: 16px;
-  margin-right: 16px;
+  margin: 0;
   padding: 0;
-  overflow-x: hidden;
+  overflow-x: hidden !important;
 }
 
 @font-face {
@@ -13,11 +12,34 @@ body {
 }
 
 a {
-  color: white;
   text-decoration: none;
 }
 
-h1 {
+h1, h2, h3 {
   font-family: "Tusker-Grotesk";
+}
+
+h1 {
   font-size: 52px;
+}
+
+h2 {
+  font-size: 42px;
+}
+
+h3 {
+  font-size: 30px;
+}
+
+p {
+  font-family: "Archivo";
+}
+
+iframe {
+  border: none;
+}
+
+.page-title {
+  margin-top: 16px;
+  text-transform: uppercase;
 }
