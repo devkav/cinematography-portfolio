@@ -1,0 +1,33 @@
+#title-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-flow: column;
+}
+
+#title-container a, #title-container h1 {
+  color: black
+}
+
+#title-container.dark-mode a, #title-container.dark-mode h1 {
+  color: white;
+}
+
+#title-container a {
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 20px;
+  font-family: "Tusker-Grotesk";
+  text-transform: uppercase;
+}
+
+#title-button-row {
+  display: flex;
+  flex-flow: row;
+}
+
+#page-title {
+  margin-top: 16px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}

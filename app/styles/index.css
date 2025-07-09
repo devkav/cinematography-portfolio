@@ -13,6 +13,11 @@ body {
 
 a {
   text-decoration: none;
+  transition: opacity .25s;
+}
+
+a:hover {
+  opacity: .75;
 }
 
 h1, h2, h3 {
@@ -37,9 +42,4 @@ p {
 
 iframe {
   border: none;
-}
-
-.page-title {
-  margin-top: 16px;
-  text-transform: uppercase;
 }

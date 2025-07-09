@@ -1,5 +1,6 @@
 import ProjectDisplay from "~/components/ProjectDisplay/ProjectDisplay";
 import type { Route } from "./+types/home";
+import TitleBar from "~/components/TitleBar/TitleBar";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -19,8 +20,8 @@ const projects = [
 export default function Work() {
   return (
     <div>
-        <h1>Work</h1>
-        {projects.map((project) => (<ProjectDisplay/>))}
+      <TitleBar route="work"/>
+      {projects.map((project) => (<ProjectDisplay/>))}
     </div>
   )
 }

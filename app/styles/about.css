@@ -7,18 +7,26 @@
     z-index: 1;
 }
 
-#title, #down-arrow {
-    color: white;
+@keyframes bounce {
+  0% {margin-bottom: 50px;}
+  50% {margin-bottom: 60px;}
+  100% {margin-bottom: 50px;}
 }
 
 #down-arrow {
+    animation: bounce 3s infinite;
+    animation-timing-function: ease-in-out;
+    -webkit-animation-timing-function: ease-in-out;
     text-align: center;
     margin-bottom: 50px;
     font-size: 24px;
+    transition: opacity 0.25s;
+    color: white;
 }
 
 #down-arrow:hover {
     cursor: pointer;
+    opacity: 0.75;
 }
 
 #name-container * {
@@ -44,7 +52,8 @@
     display: flex;
     flex-flow: column;
     align-items: center;
-    margin-top: 100px;
+    padding-top: 100px;
+    min-height: 100vh;
 }
 
 #word-blob {

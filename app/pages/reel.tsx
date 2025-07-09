@@ -1,6 +1,7 @@
 import "~/styles/reel.css";
 import type { Route } from "./+types/home";
 import Footer from "~/components/Footer/Footer";
+import TitleBar from "~/components/TitleBar/TitleBar";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -12,14 +13,12 @@ export function meta({}: Route.MetaArgs) {
 export default function Reel() {
   return (
     <div id="reel-page">
-        <div id="title-container">
-          <h1 className="page-title">Reel</h1>
-        </div>
-        <div id="reel-container">
-          <iframe id="reel-iframe" src="https://www.youtube.com/embed/IF0gXTvGxnk"/>
-        </div>
+      <TitleBar route="reel" darkMode/>
+      <div id="reel-container">
+        <iframe id="reel-iframe" src="https://www.youtube.com/embed/IF0gXTvGxnk"/>
+      </div>
 
-        <Footer darkMode/>
+      <Footer darkMode/>
     </div>
   )
 }

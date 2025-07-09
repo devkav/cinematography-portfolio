@@ -2,6 +2,7 @@ import "~/styles/about.css"
 import Footer from "~/components/Footer/Footer";
 import type { Route } from "./+types/home";
 import { FaAngleDown } from "react-icons/fa";
+import TitleBar from "~/components/TitleBar/TitleBar";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -17,12 +18,17 @@ for composition, lighting, and storytelling within her work.  With a BFA in Film
  always on the table.`
 
 export default function About() {
+  const onClick = () => {
+    const content = document.getElementById('content');
+    content?.scrollIntoView({behavior: 'smooth'});
+  }
+
   return (
     <div>
         <img id="billboard" src="maggie-billboard.jpeg"/>
         <div id="name-container">
-          <h1 className="page-title" id="title">About</h1>
-          <FaAngleDown id="down-arrow"/>
+          <TitleBar route="about" darkMode/>
+          <FaAngleDown id="down-arrow" onClick={onClick} />
         </div>
 
         <div id="content">
