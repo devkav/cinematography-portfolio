@@ -94,7 +94,7 @@ resource "aws_cloudfront_distribution" "static_distribution" {
   custom_error_response {
     error_code = "403"
     response_code = "200"
-    response_page_path = "index.html"
+    response_page_path = "/index.html"
   }
 }
 
