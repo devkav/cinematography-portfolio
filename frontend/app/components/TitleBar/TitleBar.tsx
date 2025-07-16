@@ -9,13 +9,12 @@ interface Props {
 
 export default function TitleBar({route: routeKey, darkMode=false} : Props) {
   const route: MenuRouteObj = MenuRoute[routeKey];
-
-  // TODO: The buttons can be ordered differently on different pages
-  // Sort them to ensure they are always in the same relative order
   const buttons = Object.keys(MenuRoute).filter(
     key => key !== routeKey
   ).map(
     key => MenuRoute[key]
+  ).sort(
+    (a, b) => a.order > b.order ? 1 : -1
   ).map(
     ({title, route}) => (<a href={route}>{title}</a>)
   )
