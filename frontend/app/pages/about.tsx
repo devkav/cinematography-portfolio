@@ -3,6 +3,7 @@ import Footer from "~/components/Footer/Footer";
 import type { Route } from "./+types/home";
 import { FaAngleDown } from "react-icons/fa";
 import TitleBar from "~/components/TitleBar/TitleBar";
+import maggieBillboard from "~/assets/images/maggie-billboard.jpeg";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -25,7 +26,7 @@ export default function About() {
 
   return (
     <div>
-        <img id="billboard" src="maggie-billboard.jpeg"/>
+        <img id="billboard" src={maggieBillboard}/>
         <div id="name-container">
           <TitleBar route="about" darkMode/>
           <FaAngleDown id="down-arrow" onClick={onClick} />

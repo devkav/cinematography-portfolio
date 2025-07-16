@@ -1,5 +1,6 @@
 import type { Route } from "./+types/home";
 import "~/styles/home.css";
+import landingVideo from "~/assets/videos/landing-video.mp4";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -11,7 +12,7 @@ export function meta({}: Route.MetaArgs) {
 export default function Home() {
   return (
     <div>
-      <video autoPlay muted loop src="landing-video.mp4" id="jumbo-video"/>
+      <video autoPlay muted loop src={landingVideo} id="jumbo-video"/>
       <div id="title-container">
         <h1 id="title" className="page-title">MAGGIE LUCY</h1>
       </div>

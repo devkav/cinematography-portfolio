@@ -1,8 +1,8 @@
 .DS_Store
-/node_modules/
+frontend/node_modules/
 
 # React Router
-/.react-router/
-/build/
+frontend/.react-router/
+frontend/build/
 *.mp4
 fonts
