@@ -14,5 +14,6 @@ npm run build
 Run the python script to deploy the changes
 
 ```console
+cd infra/frontend-deployment
 uv run main.py
 ```
