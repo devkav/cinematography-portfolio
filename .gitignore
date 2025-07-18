@@ -6,3 +6,4 @@ frontend/.react-router/
 frontend/build/
 *.mp4
 fonts
+.venv

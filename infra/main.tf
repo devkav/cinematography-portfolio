@@ -65,9 +65,6 @@ resource "aws_cloudfront_distribution" "static_distribution" {
   enabled = true
   default_root_object = "index.html"
 
-  # TODO: Needs reworked. Web page breaks if a user visits the site, new build files
-  # are deployed to the S3 bucket, then the user refreshes. The old cache is still
-  # sent and the user sees a broken site.
   default_cache_behavior {
     allowed_methods = ["GET", "HEAD", "OPTIONS"]
     cached_methods = ["GET", "HEAD"]

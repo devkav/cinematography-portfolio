@@ -2,7 +2,7 @@
   position: absolute;
   object-fit: cover;
   width: 100vw;
-  height: 100vh;
+  height: 100svh;
   right: 0;
   z-index: 1;
 }
@@ -16,7 +16,7 @@
   z-index: 2;
   top: 0;
   left: 0;
-  height: 100vh;
+  height: 100svh;
   width: 100vw;
   display: flex;
   flex-flow: row;
@@ -34,7 +34,7 @@
 }
 
 #welcome-container {
-  height: 100vh;
+  height: 100svh;
   width: 100vw;
   display: flex;
   flex-flow: column;
