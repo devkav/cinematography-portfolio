@@ -83,6 +83,7 @@ def main():
         # TODO: Should have a standard naming convention to find the distribution in the future
         # For now, just assume we only have 1 distribution on our AWS account
         print_colored_message("Found multiple possible distributions. Exiting...", FAIL)
+        return
 
     distribution = distributions[0]
     distribution_id = distribution["Id"]
