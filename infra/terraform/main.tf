@@ -1,6 +1,12 @@
+locals {
+  s3_origin_id = "myS3Origin"
+}
+
+
 provider "aws" {
   region = "us-east-1"
 }
+
 
 data "aws_caller_identity" "current" {}
 
@@ -51,9 +57,6 @@ data "aws_iam_policy_document" "cloudfront_private_content" {
   }
 }
 
-locals {
-  s3_origin_id = "myS3Origin"
-}
 
 resource "aws_cloudfront_distribution" "static_distribution" {
   origin {
@@ -104,6 +107,7 @@ resource "aws_cloudfront_origin_access_control" "cf_origin_access_control" {
   signing_behavior = "always"
   signing_protocol = "sigv4"
 }
+
 
 output "bucket_name" {
   value = aws_s3_bucket.static_bucket.id

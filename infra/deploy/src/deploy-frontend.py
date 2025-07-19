@@ -2,19 +2,8 @@ import boto3
 import re
 import glob
 from pathlib import Path
-import mimetypes
 import datetime
-
-OK = "\033[92m"
-WARNING = "\033[93m"
-FAIL = "\033[91m"
-ENDC = "\033[0m"
-
-# ]]]] <- fix my neovim indenting actin up
-
-
-def print_colored_message(message, color):
-    print(f"{color}{message}{ENDC}")
+from util.util import print_colored_message, remove_root_from_path, get_mime_type, FAIL, WARNING, OK
 
 
 def main():
@@ -31,7 +20,11 @@ def main():
             
             bucket = current_bucket 
 
-    root_directory = Path(__file__).parent.parent.parent
+    if bucket == None:
+        print_colored_message("\nCould not find bucket. Exiting...", FAIL)
+        return
+
+    root_directory = Path(__file__).parent.parent.parent.parent
     build_directory = root_directory.joinpath("frontend/build/client")
     build_directory_str = str(build_directory)
 
@@ -43,7 +36,7 @@ def main():
         if not Path(build_path).is_file():
             continue
 
-        build_file_name = re.sub(rf"^{build_directory_str}/", "", str(build_path))
+        build_file_name = remove_root_from_path(build_path, build_directory_str)
         build_file_names.add(build_file_name)
         build_file_paths[build_file_name] = str(build_path)
 
@@ -68,7 +61,7 @@ def main():
     for file_name in new_files:
         print_colored_message(f"Uploading {file_name}", OK)
         file_path = build_file_paths[file_name]
-        mime_type, _ = mimetypes.guess_type(file_path)
+        mime_type = get_mime_type(file_path)
 
         s3.meta.client.upload_file(file_path, bucket.name, file_name, ExtraArgs={'ContentType': mime_type})
 
@@ -90,18 +83,19 @@ def main():
     timestamp = datetime.datetime.now().timestamp()
     invalid_items = [f"/{deleted_object}" for deleted_object in deleted_objects]
 
-    cloudfront.create_invalidation(
-        DistributionId=distribution_id,
-        InvalidationBatch={
-            'Paths': {
-                'Quantity': num_deleted_objects,
-                'Items': invalid_items
-            },
-            'CallerReference': str(timestamp)
-        }
-    )
+    if (num_deleted_objects > 0):
+        cloudfront.create_invalidation(
+            DistributionId=distribution_id,
+            InvalidationBatch={
+                'Paths': {
+                    'Quantity': num_deleted_objects,
+                    'Items': invalid_items
+                },
+                'CallerReference': str(timestamp)
+            }
+        )
 
-    print(f"Invalidated {num_deleted_objects} items: {invalid_items}")
+        print(f"Invalidated {num_deleted_objects} items: {invalid_items}")
 
     print_colored_message(f"\nIgnored {num_ignored_files} files", WARNING)
     print_colored_message(f"Deleted {num_deleted_objects} files", FAIL)

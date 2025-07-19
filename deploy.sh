@@ -1,2 +1,2 @@
 #!/bin/bash
-uv run --project ./infra/deploy ./infra/deploy/deploy-frontend.py
+uv run --project ./infra/deploy ./infra/deploy/src/deploy-frontend.py

@@ -1,9 +1,12 @@
 .DS_Store
-frontend/node_modules/
 
-# React Router
+# React
+frontend/node_modules/
 frontend/.react-router/
 frontend/build/
 *.mp4
 fonts
+
+# Python
 .venv
+__pycache__
