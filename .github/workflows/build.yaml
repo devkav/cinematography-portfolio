@@ -11,9 +11,12 @@ jobs:
         with:
           node-version: '23'
       - name: Install dependencies
-        run: |
-          npm i
-          working-directory: frontend
+        run: npm ci --prefix frontend
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Download assets
+        run: ./download_assets.sh
       - name: Build frontend
         run: ./build.sh
       - name: Deploy frontend
