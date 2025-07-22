@@ -22,6 +22,8 @@ jobs:
 
       - name: Download assets
         run: ./download_assets.sh
+      - name: print assets
+        run: ls frontend/app/assets
       - name: Build frontend
         run: ./build.sh
       - name: Deploy frontend

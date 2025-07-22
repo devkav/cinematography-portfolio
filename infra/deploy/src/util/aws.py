@@ -48,5 +48,6 @@ def download_bucket_contents(bucket_name, download_directory):
         downloaded_file_path = Path(download_directory).joinpath(s3_object.key)
         download_directory = downloaded_file_path.parent
         os.makedirs(str(download_directory), exist_ok=True)
+        print(f"Downloading to {downloaded_file_path}")
 
         bucket.download_file(s3_object.key, str(downloaded_file_path))
