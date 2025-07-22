@@ -2,7 +2,7 @@ name: Deploy Frontend
 on: [push]
 jobs:
   deploy-frontend:
-    runs-on: macos-latest
+    runs-on: macosx_10_6_intel
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
