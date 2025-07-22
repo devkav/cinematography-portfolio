@@ -3,7 +3,8 @@ import re
 import glob
 from pathlib import Path
 import datetime
-from util.util import print_colored_message, remove_root_from_path, get_mime_type, FAIL, WARNING, OK
+from util.io import remove_root_from_path, get_mime_type
+from util.output import print_colored_message, FAIL, WARNING, OK
 
 
 def main():

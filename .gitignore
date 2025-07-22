@@ -4,8 +4,9 @@
 frontend/node_modules/
 frontend/.react-router/
 frontend/build/
-*.mp4
-fonts
+frontend/app/assets/fonts/
+frontend/app/assets/images/
+frontend/app/assets/videos/
 
 # Python
 .venv

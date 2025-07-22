@@ -8,7 +8,7 @@ body {
 
 @font-face {
   font-family: "Tusker-Grotesk";
-  src: url("../fonts/tusker-grotesk/TuskerGrotesk-4500Medium.otf") format("opentype");
+  src: url("../assets/fonts/tusker-grotesk/TuskerGrotesk-4500Medium.otf") format("opentype");
 }
 
 a {
