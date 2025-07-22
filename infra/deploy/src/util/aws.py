@@ -46,8 +46,7 @@ def download_bucket_contents(bucket_name, download_directory):
     for s3_object in bucket.objects.all():
         print_colored_message(f"Downloading {s3_object.key}", OK)
         downloaded_file_path = Path(download_directory).joinpath(s3_object.key)
-        download_directory = downloaded_file_path.parent
-        os.makedirs(str(download_directory), exist_ok=True)
+        os.makedirs(str(downloaded_file_path.parent), exist_ok=True)
         print(f"Downloading to {downloaded_file_path}")
 
         bucket.download_file(s3_object.key, str(downloaded_file_path))
