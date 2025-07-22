@@ -1,5 +1,10 @@
 name: Deploy Frontend
-on: [push]
+
+on:
+  push:
+    branches:
+      - main
+
 jobs:
   deploy-frontend:
     runs-on: ubuntu-latest
@@ -22,8 +27,6 @@ jobs:
 
       - name: Download assets
         run: ./download_assets.sh
-      - name: print assets
-        run: ls frontend/app/assets
       - name: Build frontend
         run: ./build.sh
       - name: Deploy frontend
