@@ -16,7 +16,7 @@ def clear_bucket(bucket_name):
         s3.Object(bucket.name, s3_object.key).delete()
 
 
-def upload_directory_to_bucket(bucket_name, directory, exclude_condition = lambda _: True):
+def upload_directory_to_bucket(bucket_name, directory, exclude_condition = lambda _: False):
     s3 = boto3.resource('s3')
     root_directory = Path(__file__).parent.parent.parent.parent.parent
     upload_directory = root_directory.joinpath(directory)

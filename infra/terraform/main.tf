@@ -1,5 +1,6 @@
 locals {
   s3_origin_id = "myS3Origin"
+  domain_name = "maggieclucy.com"
 }
 
 
@@ -38,16 +39,13 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
 
 data "aws_iam_policy_document" "cloudfront_private_content" {
   statement {
-    resources = ["arn:aws:s3:::${aws_s3_bucket.static_bucket.id}/*"]
-
+    resources = ["${aws_s3_bucket.static_bucket.arn}/*"]
     actions = ["s3:GetObject*"]
 
     condition {
       test = "StringEquals"
       variable = "AWS:SourceArn"
-      values = [
-        "arn:aws:cloudfront::${data.aws_caller_identity.current.account_id}:distribution/${aws_cloudfront_distribution.static_distribution.id}"
-      ]
+      values = [aws_cloudfront_distribution.static_distribution.arn]
     }
 
     principals {
@@ -58,12 +56,21 @@ data "aws_iam_policy_document" "cloudfront_private_content" {
 }
 
 
+resource "aws_acm_certificate" "certificate" {
+  domain_name = local.domain_name
+  validation_method = "DNS"
+
+}
+
+
 resource "aws_cloudfront_distribution" "static_distribution" {
   origin {
     domain_name = aws_s3_bucket.static_bucket.bucket_regional_domain_name
     origin_id = local.s3_origin_id
     origin_access_control_id = aws_cloudfront_origin_access_control.cf_origin_access_control.id
   }
+
+  aliases = [local.domain_name]
 
   enabled = true
   default_root_object = "index.html"
@@ -89,8 +96,10 @@ resource "aws_cloudfront_distribution" "static_distribution" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn = aws_acm_certificate.certificate.arn
+    cloudfront_default_certificate = false
     minimum_protocol_version = "TLSv1.2_2021"
+    ssl_support_method = "sni-only"
   }
 
   # Route everything to index.html for single page app

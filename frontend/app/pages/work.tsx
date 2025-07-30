@@ -21,7 +21,7 @@ export default function Work() {
   return (
     <div>
       <TitleBar route="work"/>
-      {projects.map((project) => (<ProjectDisplay/>))}
+      <p>Coming soon...</p>
     </div>
   )
 }
