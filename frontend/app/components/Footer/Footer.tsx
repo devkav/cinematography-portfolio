@@ -4,13 +4,15 @@ import IconButton from "../IconButton/IconButton";
 import { MdOutlineEmail } from "react-icons/md";
 
 
-export default function Footer({darkMode} : {darkMode?: boolean}) {
+export default function Footer({darkMode, noCopyright} : {darkMode?: boolean, noCopyright?: boolean}) {
     const currentTime = new Date()
     const year = currentTime.getFullYear()
 
     return (
         <div id="footer">
-            <p>&#169; {year} Maggie Lucy</p>
+            {!noCopyright &&
+              <p className={darkMode ? "dark" : ""}>&#169; {year} Maggie Lucy</p>
+            }
 
             <div className={`icon-row ${darkMode ? "icon-row-dark" : ""}`}>
                 <IconButton href="https://www.instagram.com/maggielucyscamera">

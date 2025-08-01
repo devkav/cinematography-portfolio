@@ -11,23 +11,33 @@
   display: none;
 }
 
-#title-container {
+#footer-container {
+  z-index: 1;
   position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  z-index: 3;
+}
+
+#title-container {
+  justify-content: center;
+  align-items: center;
   z-index: 2;
+  position: absolute;
   top: 0;
   left: 0;
   height: 100svh;
   width: 100vw;
   display: flex;
   flex-flow: column;
-  justify-content: center;
-  align-items: center;
 }
 
 #title {
   color: white;
   font-family: "Starblues";
   font-size: 120px;
+  font-weight: normal;
 }
 
 #work {
