@@ -1,9 +1,10 @@
-import "~/styles/about.css"
+import "~/styles/contact.css"
 import Footer from "~/components/Footer/Footer";
 import type { Route } from "./+types/home";
 import { FaAngleDown } from "react-icons/fa";
 import TitleBar from "~/components/TitleBar/TitleBar";
 import maggieBillboard from "~/assets/images/maggie-billboard.jpeg";
+import maggiePortrait from "~/assets/images/maggie-portrait.jpg";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -18,7 +19,7 @@ for composition, lighting, and storytelling within her work.  With a BFA in Film
  of Technology. Maggie is always pushing boundaries for uniquely captivating visual narratives is 
  always on the table.`
 
-export default function About() {
+export default function Contact() {
   const onClick = () => {
     const content = document.getElementById('content');
     content?.scrollIntoView({behavior: 'smooth'});
@@ -28,20 +29,21 @@ export default function About() {
     <div>
         <img id="billboard" src={maggieBillboard}/>
         <div id="name-container">
-          <TitleBar route="about" darkMode/>
+          <TitleBar route="contact" darkMode/>
           <FaAngleDown id="down-arrow" onClick={onClick} />
         </div>
 
         <div id="content">
-          <h1 id="jumbo-name">Maggie Lucy</h1>
-          <h2 id="word-blob">Cinematographer. Visual Communicator.<br/>Artist. Photographer. Filmmaker</h2>
-
-          <div id="text-container">
+          <div id="photo-col" className="content-col">
+            <img src={maggiePortrait} id="portrait"/>
+          </div>
+          <div id="text-col" className="content-col">
+            <h2 id="word-blob">Cinematographer.Visual Communicator.<br/>Artist. Photographer. Filmmaker.</h2>
             <p>{content}</p>
           </div>
         </div>
 
-        <Footer/>
+        <Footer darkMode/>
     </div>
   )
 }

@@ -12,7 +12,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Reel() {
   return (
-    <div id="reel-page">
+    <div>
       <TitleBar route="reel" darkMode/>
       <div id="reel-container">
         <iframe id="reel-iframe" src="https://www.youtube.com/embed/IF0gXTvGxnk"/>

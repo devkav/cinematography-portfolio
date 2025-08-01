@@ -19,13 +19,15 @@
   height: 100svh;
   width: 100vw;
   display: flex;
-  flex-flow: row;
+  flex-flow: column;
   justify-content: center;
-  align-items: start;
+  align-items: center;
 }
 
 #title {
   color: white;
+  font-family: "Starblues";
+  font-size: 120px;
 }
 
 #work {
@@ -42,7 +44,6 @@
 }
 
 #welcome-button-row {
-  margin-bottom: 50px;
   z-index: 2;
   display: flex;
   flex-flow: row;
@@ -57,4 +58,16 @@
   font-family: "Tusker-Grotesk";
   text-transform: uppercase;
   color: white;
+}
+
+@media only screen and (max-width: 600px) {
+  #title {
+    font-size: 50px;
+  }
+
+  #welcome-button-row a {
+    font-size: 18px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
 }
