@@ -11,21 +11,33 @@
   display: none;
 }
 
-#title-container {
+#footer-container {
+  z-index: 1;
   position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  z-index: 3;
+}
+
+#title-container {
+  justify-content: center;
+  align-items: center;
   z-index: 2;
+  position: absolute;
   top: 0;
   left: 0;
   height: 100svh;
   width: 100vw;
   display: flex;
-  flex-flow: row;
-  justify-content: center;
-  align-items: start;
+  flex-flow: column;
 }
 
 #title {
   color: white;
+  font-family: "Starblues";
+  font-size: 120px;
+  font-weight: normal;
 }
 
 #work {
@@ -42,7 +54,6 @@
 }
 
 #welcome-button-row {
-  margin-bottom: 50px;
   z-index: 2;
   display: flex;
   flex-flow: row;
@@ -57,4 +68,16 @@
   font-family: "Tusker-Grotesk";
   text-transform: uppercase;
   color: white;
+}
+
+@media only screen and (max-width: 600px) {
+  #title {
+    font-size: 50px;
+  }
+
+  #welcome-button-row a {
+    font-size: 18px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
 }

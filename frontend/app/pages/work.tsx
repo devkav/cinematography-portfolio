@@ -1,6 +1,7 @@
-import ProjectDisplay from "~/components/ProjectDisplay/ProjectDisplay";
 import type { Route } from "./+types/home";
 import TitleBar from "~/components/TitleBar/TitleBar";
+import Footer from "~/components/Footer/Footer";
+import "~/styles/work.css";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -19,9 +20,10 @@ const projects = [
 
 export default function Work() {
   return (
-    <div>
+    <div id="content">
       <TitleBar route="work"/>
-      <p>Coming soon...</p>
+      <p id="text">Coming Soon</p>
+      <Footer/>
     </div>
   )
 }

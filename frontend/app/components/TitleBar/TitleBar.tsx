@@ -1,16 +1,14 @@
 import "~/components/TitleBar/title-bar.css";
 import { MenuRoute } from "~/types/MenuRoute";
-import type { MenuRouteObj } from "~/types/MenuRoute";
 
 interface Props {
   route: MenuRoute;
   darkMode?: boolean; 
 }
 
-export default function TitleBar({route: routeKey, darkMode=false} : Props) {
-  const route: MenuRouteObj = MenuRoute[routeKey];
+export default function TitleBar({darkMode=false} : Props) {
   const buttons = Object.keys(MenuRoute).filter(
-    key => key !== routeKey
+    key => key !== "home"
   ).map(
     key => MenuRoute[key]
   ).sort(
@@ -21,7 +19,9 @@ export default function TitleBar({route: routeKey, darkMode=false} : Props) {
 
   return (
     <div id="title-container" className={darkMode ? "dark-mode" : ""}>
-      <h1 id="page-title">{route.title}</h1>
+      <div id="logo-container">
+        <a id="logo" href="/">Maggie Lucy</a>
+      </div>
       <div id="title-button-row">
         {buttons}
       </div>

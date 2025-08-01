@@ -1,33 +1,62 @@
 #title-container {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  flex-flow: column;
+  flex-flow: row;
+  width: 100%;
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
 
-#title-container a, #title-container h1 {
+#title-container a {
   color: black
 }
 
-#title-container.dark-mode a, #title-container.dark-mode h1 {
+#title-container.dark-mode a {
   color: white;
 }
 
 #title-container a {
   margin-left: 10px;
   margin-right: 10px;
-  font-size: 20px;
-  font-family: "Tusker-Grotesk";
-  text-transform: uppercase;
 }
 
 #title-button-row {
   display: flex;
   flex-flow: row;
+  margin-right: 40px;
 }
 
-#page-title {
-  margin-top: 16px;
-  margin-bottom: 4px;
+#title-button-row a {
+  font-size: 20px;
+  font-family: "Tusker-Grotesk";
   text-transform: uppercase;
+}
+
+#logo-container {
+  margin-left: 40px;
+}
+
+#logo {
+  font-family: "Starblues";
+  font-size: 30px;
+  font-weight: normal;
+}
+
+@media only screen and (max-width: 600px) {
+  #logo {
+    font-size: 20px;
+  }
+
+  #title-button-row a {
+    font-size: 18px;
+  }
+
+  #logo-container {
+    margin-left: 14px;
+  }
+
+  #title-button-row {
+    margin-right: 14px;
+  }
 }

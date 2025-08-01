@@ -58,8 +58,14 @@ data "aws_iam_policy_document" "cloudfront_private_content" {
 
 resource "aws_acm_certificate" "certificate" {
   domain_name = local.domain_name
+  region = "us-east-1"
   validation_method = "DNS"
+  key_algorithm = "RSA_2048"
 
+  subject_alternative_names = [
+    local.domain_name,
+    "*.${local.domain_name}"
+  ]
 }
 
 
@@ -70,7 +76,10 @@ resource "aws_cloudfront_distribution" "static_distribution" {
     origin_access_control_id = aws_cloudfront_origin_access_control.cf_origin_access_control.id
   }
 
-  aliases = [local.domain_name]
+  aliases = [
+    local.domain_name,
+    "www.${local.domain_name}"
+  ]
 
   enabled = true
   default_root_object = "index.html"
