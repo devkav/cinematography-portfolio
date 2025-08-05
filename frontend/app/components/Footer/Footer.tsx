@@ -1,8 +1,6 @@
-import "~/components/Footer/footer.css"
 import { FaInstagram, FaLinkedin } from "react-icons/fa";
 import IconButton from "../IconButton/IconButton";
 import { MdOutlineEmail } from "react-icons/md";
-
 
 export default function Footer({darkMode, noCopyright} : {darkMode?: boolean, noCopyright?: boolean}) {
     const currentTime = new Date()

@@ -5,12 +5,25 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLocation
 } from "react-router";
 
 import type { Route } from "./+types/root";
-import "./styles/index.css";
+
+import "~/styles/index.css";
+import "~/styles/home.css";
+import "~/styles/work.css";
+import "~/styles/reel.css";
+import "~/styles/contact.css";
+
+import "~/components/Footer/footer.css";
+import "~/components/TitleBar/title-bar.css";
+import "~/components/ProjectDisplay/project-display.css";
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const {pathname} = useLocation()
+  const lightMode = pathname == "/work";
+
   return (
     <html lang="en">
       <head>
@@ -19,7 +32,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body style={{
+        color: lightMode ? "black" : "white",
+        backgroundColor: lightMode ? "white" : "black"
+      }}>
         {children}
         <ScrollRestoration />
         <Scripts />

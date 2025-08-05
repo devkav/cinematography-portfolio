@@ -1,4 +1,3 @@
-import "~/styles/contact.css"
 import Footer from "~/components/Footer/Footer";
 import type { Route } from "./+types/home";
 import { FaAngleDown } from "react-icons/fa";
@@ -33,7 +32,7 @@ export default function Contact() {
           <FaAngleDown id="down-arrow" onClick={onClick} />
         </div>
 
-        <div id="content">
+        <div id="contact-content">
           <div id="photo-col" className="content-col">
             <img src={maggiePortrait} id="portrait"/>
           </div>

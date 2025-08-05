@@ -1,6 +1,6 @@
 import type { Route } from "./+types/home";
+import { Link } from "react-router";
 import Footer from "~/components/Footer/Footer";
-import "~/styles/home.css";
 import landingVideo from "~/assets/videos/landing-video.mp4";
 
 export function meta({}: Route.MetaArgs) {
@@ -18,9 +18,9 @@ export default function Home() {
         <h1 id="title" className="page-title">Maggie Lucy</h1>
 
         <div id="welcome-button-row">
-          <a href="/work">Work</a>
-          <a href="/reel">Reel</a>
-          <a href="/contact">Contact</a>
+          <Link to="/work">Work</Link>
+          <Link to="/reel">Reel</Link>
+          <Link to="/contact">Contact</Link>
         </div>
       </div>
 

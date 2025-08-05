@@ -1,4 +1,4 @@
-#title-container {
+#title-bar-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -8,15 +8,15 @@
   padding-bottom: 40px;
 }
 
-#title-container a {
+#title-bar-container a {
   color: black
 }
 
-#title-container.dark-mode a {
+#title-bar-container.dark-mode a {
   color: white;
 }
 
-#title-container a {
+#title-bar-container a {
   margin-left: 10px;
   margin-right: 10px;
 }
@@ -41,11 +41,13 @@
   font-family: "Starblues";
   font-size: 30px;
   font-weight: normal;
+  padding: 14px;
 }
 
 @media only screen and (max-width: 600px) {
   #logo {
     font-size: 20px;
+    padding: 10px;
   }
 
   #title-button-row a {

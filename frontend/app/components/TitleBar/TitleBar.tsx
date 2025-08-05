@@ -1,5 +1,5 @@
-import "~/components/TitleBar/title-bar.css";
 import { MenuRoute } from "~/types/MenuRoute";
+import { Link } from "react-router";
 
 interface Props {
   route: MenuRoute;
@@ -14,13 +14,13 @@ export default function TitleBar({darkMode=false} : Props) {
   ).sort(
     (a, b) => a.order > b.order ? 1 : -1
   ).map(
-    ({title, route}) => (<a href={route}>{title}</a>)
+    ({title, route}) => (<Link to={route}>{title}</Link>)
   )
 
   return (
-    <div id="title-container" className={darkMode ? "dark-mode" : ""}>
+    <div id="title-bar-container" className={darkMode ? "dark-mode" : ""}>
       <div id="logo-container">
-        <a id="logo" href="/">Maggie Lucy</a>
+        <Link id="logo" to="/">Maggie Lucy</Link>
       </div>
       <div id="title-button-row">
         {buttons}

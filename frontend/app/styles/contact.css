@@ -1,9 +1,4 @@
-body {
-  background-color: #000;
-  color: white;
-}
-
-#content {
+#contact-content {
   width: 100%;
   display: grid;
   grid-template-columns: 50% 50%;
