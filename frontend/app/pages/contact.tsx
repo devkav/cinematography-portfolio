@@ -20,7 +20,7 @@ for composition, lighting, and storytelling within her work.  With a BFA in Film
 
 export default function Contact() {
   const onClick = () => {
-    const content = document.getElementById('content');
+    const content = document.getElementById('contact-content');
     content?.scrollIntoView({behavior: 'smooth'});
   }
 
