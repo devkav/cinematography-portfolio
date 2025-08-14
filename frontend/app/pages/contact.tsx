@@ -29,7 +29,21 @@ export default function Contact() {
         <img id="billboard" src={maggieBillboard}/>
         <div id="name-container">
           <TitleBar route="contact" darkMode/>
-          <FaAngleDown id="down-arrow" onClick={onClick} />
+          <div id="information-container">
+            <div id="information-top-container">
+              <p className="contact-header">Contact:</p>
+              <p>E: <a href="mailto:maggieclucy@gmail.com">maggieclucy@gmail.com</a></p>
+              <p>IG: <a href="https://www.instagram.com/maggielucyscamera">maggielucyscamera</a></p>
+            </div>
+            <div id="information-bottom-container">
+              <p id="contact-college-label">RIT College of Art and Design Graduate</p>
+              <p id="contact-location-label">Based in Atlanta</p>
+            </div>
+          </div>
+          <div id="down-arrow-container" onClick={onClick}>
+            <p>About Me</p>
+            <FaAngleDown id="down-arrow" />
+          </div>
         </div>
 
         <div id="contact-content">
@@ -37,8 +51,9 @@ export default function Contact() {
             <img src={maggiePortrait} id="portrait"/>
           </div>
           <div id="text-col" className="content-col">
-            <h2 id="word-blob">Cinematographer.Visual Communicator.<br/>Artist. Photographer. Filmmaker.</h2>
-            <p>{content}</p>
+            <h2 id="word-blob">Cinematographer.<br/>Visual Communicator.<br/>Artist. Photographer. Filmmaker.</h2>
+            <p id="about-content">{content}</p>
+            <a href="">Résumé</a>
           </div>
         </div>
 

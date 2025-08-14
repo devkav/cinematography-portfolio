@@ -24,9 +24,9 @@
 }
 
 @keyframes bounce {
-  0% {margin-bottom: 50px;}
-  50% {margin-bottom: 60px;}
-  100% {margin-bottom: 50px;}
+  0% {margin-top: 0px;}
+  50% {margin-top: 10px;}
+  100% {margin-top: 0px;}
 }
 
 #down-arrow {
@@ -34,15 +34,29 @@
   animation-timing-function: ease-in-out;
   -webkit-animation-timing-function: ease-in-out;
   text-align: center;
-  margin-bottom: 50px;
+  margin-top: 50px;
   font-size: 24px;
-  transition: opacity 0.25s;
   color: white;
 }
 
-#down-arrow:hover {
+#down-arrow-container {
+  height: 70px;
+  margin-bottom: 70px;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  transition: opacity 0.25s;
+}
+
+#down-arrow-container:hover {
   cursor: pointer;
   opacity: 0.75;
+}
+
+#down-arrow-container p {
+  margin: 0;
+  margin-bottom: 5px;
+  font-weight: bold;
 }
 
 #name-container * {
@@ -56,17 +70,110 @@
   align-items: center;
   width: 100vw;
   height: 100svh;
+  text-transform: uppercase;
+}
+
+#information-container {
+  width: 100%;
+  padding-left: 20%;
+  height: 50svh;
+  font-size: 1rem;
+}
+
+#information-contaier *, #text-col a {
+  font-family: "Roboto", sans-serif !important;
+}
+
+#information-container a, #text-col a {
+  color: white;
+  text-decoration: underline;
+}
+
+#information-top-container {
+  height: 60%;
+}
+
+#information-bottom-container {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  height: 40%
+}
+
+#text-col a {
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+#contact-location-label {
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.contact-header {
+  font-weight: bold;
+}
+
+#text-col {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 #word-blob {
-  margin: 0;
   text-transform: uppercase;
   font-size: 2.5vw;
 }
 
+#about-content {
+  line-height: 2;
+}
+
+#word-blob, #about-content {
+  margin-top: 0;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 40px;
+}
+
 @media only screen and (max-width: 600px) {
-  .content-col {
-    padding-left: 10px;
-    padding-right: 10px;
+  #contact-content {
+    grid-template-columns: 100%;
+  }
+
+  #word-blob {
+    font-size: 5vw;
+    margin-top: 40px;
+  }
+}
+
+@media only screen and (max-width: 450px),
+screen and (max-height: 600px) {
+  #information-container, #down-arrow-container p {
+    font-size: 0.75rem;
+  }
+
+  #contact-location-label {
+    font-size: 16px;
+  }
+}
+
+@media only screen and (max-height: 600px) {
+  #down-arrow-container {
+    margin-bottom: 30px;
+  }
+}
+
+@media only screen and (max-height: 420px) {
+  #information-bottom-container {
+    display: block;
+  }
+}
+
+@media only screen and (max-height: 300px) {
+  #information-bottom-container * {
+    margin: 0;
   }
 }
