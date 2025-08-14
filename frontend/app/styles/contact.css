@@ -160,7 +160,8 @@ screen and (max-height: 600px) {
   }
 }
 
-@media only screen and (max-height: 600px) {
+@media only screen and (max-width: 750px),
+screen and (max-height: 600px) {
   #down-arrow-container {
     margin-bottom: 30px;
   }
