@@ -21,6 +21,7 @@ export default function TitleBar({darkMode=false} : Props) {
     <div id="title-bar-container" className={darkMode ? "dark-mode" : ""}>
       <div id="logo-container">
         <Link id="logo" to="/">Maggie Lucy</Link>
+        <Link id="logo-sub" to="/">Cinematographer</Link>
       </div>
       <div id="title-button-row">
         {buttons}

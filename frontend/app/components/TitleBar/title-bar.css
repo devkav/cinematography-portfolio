@@ -33,8 +33,29 @@
   text-transform: uppercase;
 }
 
+#logo-sub {
+  font-size: 12px;
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+}
+
+#logo-sub:hover, #logo:hover {
+  opacity: initial;
+}
+
 #logo-container {
   margin-left: 40px;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  transition: opacity .25s;
+}
+
+#logo-container:hover {
+  opacity: .75;
+  cursor: pointer;
 }
 
 #logo {
@@ -42,12 +63,19 @@
   font-size: 30px;
   font-weight: normal;
   padding: 14px;
+  text-transform: none;
+  font-weight: normal !important;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 600px),
+screen and (max-height: 400px) {
   #logo {
     font-size: 20px;
     padding: 10px;
+  }
+
+  #logo-sub {
+    font-size: 8px;
   }
 
   #title-button-row a {
@@ -60,5 +88,10 @@
 
   #title-button-row {
     margin-right: 14px;
+  }
+
+  #title-bar-container {
+    padding-top: 20px;
+    padding-bottom: 20px;
   }
 }
