@@ -1,11 +1,12 @@
 import type { Route } from "./+types/home";
 import Footer from "~/components/Footer/Footer";
 import TitleBar from "~/components/TitleBar/TitleBar";
+import { pageDescription } from "~/root";
 
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Maggie Lucy" },
-    { name: "description", content: "Cinematography portfolio" },
+    { name: "description", content: pageDescription },
   ];
 }
 

@@ -4,11 +4,12 @@ import { FaAngleDown } from "react-icons/fa";
 import TitleBar from "~/components/TitleBar/TitleBar";
 import maggieBillboard from "~/assets/images/maggie-billboard.jpeg";
 import maggiePortrait from "~/assets/images/maggie-portrait.jpg";
+import { pageDescription } from "~/root";
 
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Maggie Lucy" },
-    { name: "description", content: "Cinematography portfolio" },
+    { name: "description", content: pageDescription },
   ];
 }
 

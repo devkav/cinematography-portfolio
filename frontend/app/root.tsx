@@ -20,6 +20,11 @@ import "~/components/Footer/footer.css";
 import "~/components/TitleBar/title-bar.css";
 import "~/components/ProjectDisplay/project-display.css";
 
+export const pageDescription = `Maggie Lucy is an Atlanta-based cinematographer working to express her eye 
+for composition, lighting, and storytelling within her work.  With a BFA in Film and Animation,
+ a concentration in Cinematography, and a minor in Advertising Photography from Rochester Institute 
+ of Technology.`
+
 export function Layout({ children }: { children: React.ReactNode }) {
   const {pathname} = useLocation()
   const lightMode = pathname == "/work";

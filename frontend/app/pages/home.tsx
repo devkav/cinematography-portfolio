@@ -2,11 +2,12 @@ import type { Route } from "./+types/home";
 import { Link } from "react-router";
 import Footer from "~/components/Footer/Footer";
 import landingVideo from "~/assets/videos/landing-video.mp4";
+import { pageDescription } from "~/root";
 
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Maggie Lucy" },
-    { name: "description", content: "Cinematography portfolio" },
+    { name: "description", content: pageDescription },
   ];
 }
 
