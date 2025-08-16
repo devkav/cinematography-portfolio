@@ -14,7 +14,7 @@ export default function TitleBar({darkMode=false} : Props) {
   ).sort(
     (a, b) => a.order > b.order ? 1 : -1
   ).map(
-    ({title, route}) => (<Link to={route}>{title}</Link>)
+    ({title, route}) => (<Link to={route} key={`route-${title}`}>{title}</Link>)
   )
 
   return (

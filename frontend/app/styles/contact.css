@@ -1,8 +1,13 @@
 #contact-content {
   width: 100%;
+  padding-top: 50px;
+  padding-bottom: 40px;
+  background-color: black;
+}
+
+#about-columns {
   display: grid;
   grid-template-columns: 50% 50%;
-  padding-top: 50px;
 }
 
 .content-col {
@@ -15,12 +20,13 @@
 }
 
 #billboard {
-  position: absolute;
+  position: fixed;
   object-fit: cover;
   width: 100vw;
   height: 100svh;
+  top: 0;
   right: 0;
-  z-index: 1;
+  z-index: -1;
 }
 
 @keyframes bounce {
@@ -139,7 +145,7 @@
 }
 
 @media only screen and (max-width: 600px) {
-  #contact-content {
+  #about-columns {
     grid-template-columns: 100%;
   }
 

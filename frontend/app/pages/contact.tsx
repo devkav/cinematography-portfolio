@@ -48,17 +48,19 @@ export default function Contact() {
         </div>
 
         <div id="contact-content">
-          <div id="photo-col" className="content-col">
-            <img src={maggiePortrait} id="portrait"/>
+          <div id="about-columns">
+            <div id="photo-col" className="content-col">
+              <img src={maggiePortrait} id="portrait"/>
+            </div>
+            <div id="text-col" className="content-col">
+              <h2 id="word-blob">Cinematographer.<br/>Visual Communicator.<br/>Artist. Photographer. Filmmaker.</h2>
+              <p id="about-content">{content}</p>
+              <a href="">Résumé</a>
+            </div>
           </div>
-          <div id="text-col" className="content-col">
-            <h2 id="word-blob">Cinematographer.<br/>Visual Communicator.<br/>Artist. Photographer. Filmmaker.</h2>
-            <p id="about-content">{content}</p>
-            <a href="">Résumé</a>
-          </div>
-        </div>
 
-        <Footer darkMode/>
+          <Footer darkMode/>
+        </div>
     </div>
   )
 }
