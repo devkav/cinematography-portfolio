@@ -2,8 +2,6 @@ import Footer from "~/components/Footer/Footer";
 import type { Route } from "./+types/home";
 import { FaAngleDown } from "react-icons/fa";
 import TitleBar from "~/components/TitleBar/TitleBar";
-import maggieBillboard from "~/assets/images/maggie-billboard.jpeg";
-import maggiePortrait from "~/assets/images/maggie-portrait.jpg";
 import { pageDescription } from "~/root";
 
 export function meta({}: Route.MetaArgs) {
@@ -27,7 +25,7 @@ export default function Contact() {
 
   return (
     <div>
-        <img id="billboard" src={maggieBillboard}/>
+        <img id="billboard" src="https://d1939xyn32rd8o.cloudfront.net/assets/images/maggie-billboard.jpeg"/>
         <div id="name-container">
           <TitleBar route="contact" darkMode/>
           <div id="information-container">
@@ -50,7 +48,7 @@ export default function Contact() {
         <div id="contact-content">
           <div id="about-columns">
             <div id="photo-col" className="content-col">
-              <img src={maggiePortrait} id="portrait"/>
+              <img id="portrait" src="https://d1939xyn32rd8o.cloudfront.net/assets/images/maggie-portrait.jpg"/>
             </div>
             <div id="text-col" className="content-col">
               <h2 id="word-blob">Cinematographer.<br/>Visual Communicator.<br/>Artist. Photographer. Filmmaker.</h2>
