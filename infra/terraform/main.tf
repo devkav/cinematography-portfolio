@@ -8,7 +8,7 @@ locals {
   static_bucket_name = "prod-static-maggieclucy"
   assets_bucket_name = "prod-assets-maggieclucy"
 
-  domain_name = "maggieclucy.com"
+ domain_name = "maggieclucy.com"
   aws_region = "us-east-1"
 }
 
@@ -220,6 +220,27 @@ resource "aws_cloudfront_distribution" "assets_distribution" {
 
   viewer_certificate {
     cloudfront_default_certificate = true
+  }
+}
+
+
+#############
+# Assets DB #
+#############
+resource "aws_dynamodb_table" "assets_db" {
+  name = "assets_db"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key = "Page"
+  range_key = "AssetID"
+
+  attribute {
+    name = "Page"
+    type = "S"
+  }
+
+  attribute {
+    name = "AssetID"
+    type = "S"
   }
 }
 
