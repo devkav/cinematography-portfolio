@@ -13,7 +13,7 @@ export function meta({}: Route.MetaArgs) {
 export default function Home() {
   return (
     <div>
-      <video autoPlay muted loop playsInline id="jumbo-video" src="https://d1939xyn32rd8o.cloudfront.net/assets/videos/landing-video.mp4"/>
+      <video autoPlay muted loop playsInline id="jumbo-video" src="https://d3amd0zp63qrni.cloudfront.net/assets/videos/landing-video.mp4"/>
       <div id="title-container">
         <h1 id="title" className="page-title">Maggie Lucy</h1>
 
