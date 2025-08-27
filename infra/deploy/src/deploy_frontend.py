@@ -15,8 +15,7 @@ def main():
     for current_bucket in s3.buckets.all():
         if re.match(r'^terraform', current_bucket.name) != None:
             if bucket_name != None:
-                print_colored_message("\nFound multiple possible buckets. Exiting...", FAIL)
-                return
+                raise Exception("Found multiple possible buckets.")
             
             bucket_name = current_bucket.name
 
@@ -51,8 +50,7 @@ def main():
     if len(distributions) != 1:
         # TODO: Should have a standard naming convention to find the distribution in the future
         # For now, just assume we only have 1 distribution on our AWS account
-        print_colored_message("Found multiple possible distributions. Exiting...", FAIL)
-        return
+        raise Exception("Found multiple possible distributions.")
 
     distribution = distributions[0]
     distribution_id = distribution["Id"]
