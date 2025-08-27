@@ -1,8 +1,8 @@
 import boto3
-import re
 import datetime
 from util.output import print_colored_message, FAIL, WARNING, OK
 from util.aws import delete_bucket_objects, upload_directory_to_bucket, get_file_path_to_s3_key
+from config.aws import STATIC_BUCKET_NAME
 
 
 BUILD_DIRECTORY_STR = "frontend/build/client"
@@ -10,18 +10,7 @@ BUILD_DIRECTORY_STR = "frontend/build/client"
 
 def main():
     s3 = boto3.resource('s3')
-    bucket_name = None
-
-    for current_bucket in s3.buckets.all():
-        if re.match(r'^terraform', current_bucket.name) != None:
-            if bucket_name != None:
-                raise Exception("Found multiple possible buckets.")
-            
-            bucket_name = current_bucket.name
-
-    if bucket_name == None:
-        print_colored_message("\nCould not find bucket. Exiting...", FAIL)
-        return
+    bucket_name = STATIC_BUCKET_NAME
 
     file_path_to_key = get_file_path_to_s3_key(BUILD_DIRECTORY_STR)
     keys_set = set(file_path_to_key.values()) # Checking .values() is O(n), so convert to set for O(1)
@@ -46,13 +35,19 @@ def main():
 
     cloudfront = boto3.client("cloudfront")
     distributions = cloudfront.list_distributions()["DistributionList"]["Items"]
+    matching_domain_name = lambda item: item["DomainName"].split(".")[0] == bucket_name
 
-    if len(distributions) != 1:
+    filtered_distributions = list(filter(
+        lambda distribution: any(matching_domain_name(item) for item in distribution["Origins"]["Items"]),
+        distributions
+    ))
+
+    if len(filtered_distributions) != 1:
         # TODO: Should have a standard naming convention to find the distribution in the future
         # For now, just assume we only have 1 distribution on our AWS account
         raise Exception("Found multiple possible distributions.")
 
-    distribution = distributions[0]
+    distribution = filtered_distributions[0]
     distribution_id = distribution["Id"]
     timestamp = datetime.datetime.now().timestamp()
     invalid_items = [f"/{deleted_object}" for deleted_object in deleted_object_names]

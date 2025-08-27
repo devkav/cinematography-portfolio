@@ -25,7 +25,7 @@ export default function Contact() {
 
   return (
     <div>
-        <img id="billboard" src="https://d1939xyn32rd8o.cloudfront.net/assets/images/maggie-billboard.jpeg"/>
+        <img id="billboard" src="https://d3amd0zp63qrni.cloudfront.net/assets/images/maggie-billboard.jpeg"/>
         <div id="name-container">
           <TitleBar route="contact" darkMode/>
           <div id="information-container">
@@ -48,7 +48,7 @@ export default function Contact() {
         <div id="contact-content">
           <div id="about-columns">
             <div id="photo-col" className="content-col">
-              <img id="portrait" src="https://d1939xyn32rd8o.cloudfront.net/assets/images/maggie-portrait.jpg"/>
+              <img id="portrait" src="https://d3amd0zp63qrni.cloudfront.net/assets/images/maggie-portrait.jpg"/>
             </div>
             <div id="text-col" className="content-col">
               <h2 id="word-blob">Cinematographer.<br/>Visual Communicator.<br/>Artist. Photographer. Filmmaker.</h2>
