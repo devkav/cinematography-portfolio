@@ -76,3 +76,14 @@ def download_bucket_contents(bucket_name: str, download_directory: str):
         os.makedirs(str(downloaded_file_path.parent), exist_ok=True)
 
         bucket.download_file(s3_object.key, str(downloaded_file_path))
+
+
+def upload_pdf(bucket_name, key, file_path):
+    with open(file_path, "rb") as file_data:
+        s3.put_object(
+            Body=file_data,
+            Bucket=bucket_name,
+            Key=key,
+            ContentType="application/pdf",
+            ContentDisposition="inline"
+        )

@@ -53,7 +53,7 @@ export default function Contact() {
             <div id="text-col" className="content-col">
               <h2 id="word-blob">Cinematographer.<br/>Visual Communicator.<br/>Artist. Photographer. Filmmaker.</h2>
               <p id="about-content">{content}</p>
-              <a href="">Résumé</a>
+              <a href="https://d3amd0zp63qrni.cloudfront.net/resume.pdf" target="_blank">Résumé</a>
             </div>
           </div>
 
