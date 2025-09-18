@@ -3,5 +3,11 @@
   flex-flow: column;
   justify-content: space-between;
   align-items: center;
-  height: 100svh;
+  min-height: 100svh;
+}
+
+#masonry-container {
+  margin-left: 16px;
+  margin-right: 16px;
+  width: calc(100vw - 32px);
 }
