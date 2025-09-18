@@ -27,7 +27,7 @@ for composition, lighting, and storytelling within her work.  With a BFA in Film
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const {pathname} = useLocation()
-  const lightMode = pathname == "/work";
+  const lightMode = false;
 
   return (
     <html lang="en">

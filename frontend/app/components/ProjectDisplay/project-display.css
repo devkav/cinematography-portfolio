@@ -1,6 +1,50 @@
 .project-display {
-    width: 100px;
-    height: 100px;
-    background-color: aqua;
-    border-radius: 10px;
+  border-radius: 10px;
+
+  &.clickable {
+    cursor: pointer;
+  }
+}
+
+.project-display video {
+  width: 100%;
+}
+
+.project-display-label-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 0.25s;
+  background-image: linear-gradient(to top, black, rgba(0,0,0,0));
+}
+
+.project-display-label {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+}
+
+.project-display-title, .project-display-subtitle {
+  color: white;
+  font-weight: bold;
+  margin: 0px;
+}
+
+.project-display-title {
+  font-family: 'Impact';
+  font-size: 30px;
+  text-transform: uppercase;
+}
+
+.project-display-subtitle {
+  font-family: 'Helvetica';
+  font-size: 12px;
+  text-transform: lowercase;
+}
+
+.project-display:hover .project-display-label-container {
+  opacity: 1;
 }
