@@ -35,16 +35,37 @@
 
 .project-display-title {
   font-family: 'Impact';
-  font-size: 30px;
+  font-size: 50px;
   text-transform: uppercase;
 }
 
 .project-display-subtitle {
   font-family: 'Helvetica';
-  font-size: 12px;
+  font-size: 20px;
   text-transform: lowercase;
 }
 
 .project-display:hover .project-display-label-container {
   opacity: 1;
+}
+
+.project-display-laurel {
+  width: 170px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+@media only screen and (max-width: 1000px) {
+  .project-display-title {
+    font-size: 30px;
+  }
+
+  .project-display-subtitle {
+    font-size: 12px;
+  }
+
+  .project-display-laurel {
+    width: 100px;
+  }
 }

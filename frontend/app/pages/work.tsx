@@ -4,6 +4,7 @@ import Footer from "~/components/Footer/Footer";
 import ProjectDisplay from "~/components/ProjectDisplay/ProjectDisplay";
 import { pageDescription } from "~/root";
 import { Masonry } from "masonic";
+import londonLaurel from "~/assets/images/london_laurel.png";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -56,6 +57,7 @@ let projects = [
     title: "Sketchy Characters",
     subtitle: "(comedy short film)",
     src: "https://d3amd0zp63qrni.cloudfront.net/assets/videos/Sketchy.mp4",
+    laurels: [londonLaurel]
   },
   {
     id: 9,
@@ -74,6 +76,13 @@ let projects = [
     title: "Adrenaline Rush",
     subtitle: "(virtual production short film)",
     src: "https://d3amd0zp63qrni.cloudfront.net/assets/videos/AdrenalineRush.mp4",
+  },
+  {
+    id: 12,
+    title: "Echos of Eden",
+    subtitle: "(creative & technical analysis)",
+    src: "https://d3amd0zp63qrni.cloudfront.net/assets/videos/EchosOfEden.mp4",
+    link: "https://youtu.be/uz1GZ5O2K6g"
   },
   {
     id: 7,

@@ -3,14 +3,15 @@ interface ProjectDisplayData {
   src: string,
   title: string,
   subtitle: string,
-  link?: string
+  link?: string,
+  laurels?: any[];
 }
 
 interface Props {
   data: ProjectDisplayData;
 }
 
-export default function ProjectDisplay({data: { id, src, title, subtitle, link }}: Props) {
+export default function ProjectDisplay({data: { id, src, title, subtitle, link, laurels=[] }}: Props) {
   let className = "project-display";
 
   if (link != undefined) {
@@ -26,6 +27,7 @@ export default function ProjectDisplay({data: { id, src, title, subtitle, link }
   return (
     <div className={className} onClick={onClick}>
       <div className="project-display-label-container">
+        {laurels.map((laurel) => <img className="project-display-laurel" src={laurel}/>)}
         <div className="project-display-label">
           <p className="project-display-title">{title}</p>
           <p className="project-display-subtitle">{subtitle}</p>
