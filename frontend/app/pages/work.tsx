@@ -78,6 +78,13 @@ let projects = [
     src: "https://d3amd0zp63qrni.cloudfront.net/assets/videos/AdrenalineRush.mp4",
   },
   {
+    id: 12,
+    title: "Echos of Eden",
+    subtitle: "(creative & technical analysis)",
+    src: "https://d3amd0zp63qrni.cloudfront.net/assets/videos/EchosOfEden.mp4",
+    link: "https://youtu.be/uz1GZ5O2K6g"
+  },
+  {
     id: 7,
     title: "Frontside Boardslide",
     subtitle: "(documentary short film)",
