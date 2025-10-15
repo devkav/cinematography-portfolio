@@ -15,7 +15,7 @@ export default function VideoRow({ videos, parentWidth }: Props) {
       return
     }
 
-    const videoPadding = 8; // Must agree with the padding in project-display.css
+    const videoPadding = window.innerWidth <= 450 ? 4 : 8; // Must agree with the padding in project-display.css
     const targetWidth = parentWidth - (videos.length * videoPadding)
     const percWidth = rowRef.current.scrollWidth / targetWidth;
     const percToIncrease = 1 / percWidth;
