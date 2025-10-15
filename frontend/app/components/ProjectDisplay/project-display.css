@@ -1,5 +1,6 @@
 .project-display {
   border-radius: 10px;
+  position: relative;
 
   &.clickable {
     cursor: pointer;
@@ -7,7 +8,9 @@
 }
 
 .project-display video {
-  width: 100%;
+  height: 100%;
+  width: auto;
+  object-fit: cover;
 }
 
 .project-display-label-container {

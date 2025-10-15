@@ -19,6 +19,7 @@ import "~/styles/contact.css";
 import "~/components/Footer/footer.css";
 import "~/components/TitleBar/title-bar.css";
 import "~/components/ProjectDisplay/project-display.css";
+import "~/components/VideoRow/video-row.css";
 
 export const pageDescription = `Maggie Lucy is an Atlanta-based cinematographer working to express her eye 
 for composition, lighting, and storytelling within her work.  With a BFA in Film and Animation,
