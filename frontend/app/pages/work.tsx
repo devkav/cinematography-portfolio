@@ -95,6 +95,7 @@ let projects = [
 
 
 export default function Work() {
+  const videosPerRow = 2;
   const rowContainerRef = useRef(null);
   const [parentWidth, setParentWidth] = useState(0)
   const rows: any= [];
@@ -108,16 +109,21 @@ export default function Work() {
       }
     }
 
-    window.addEventListener("resize", updateParentWidth)
-    return () => window.removeEventListener("resize", updateParentWidth);
-  }, [rowContainerRef]);
+    const updateTwice = () => {
+      updateParentWidth();
+      updateParentWidth();
+    }
 
-  console.log(parentWidth)
+    window.addEventListener("resize", updateTwice)
+    updateParentWidth();
+
+    return () => window.removeEventListener("resize", updateTwice);
+  }, [rowContainerRef]);
 
   projects.forEach((project, index) => {
     currentRow.push(project)
 
-    if (currentRow.length >= 3) {
+    if (currentRow.length >= videosPerRow) {
       rows.push(<VideoRow videos={currentRow} parentWidth={parentWidth} key={index}/>)
       currentRow = []
     }
@@ -125,9 +131,11 @@ export default function Work() {
 
   return (
     <div id="work-content">
-      <TitleBar route="work" darkMode/>
-      <div id="row-container" ref={rowContainerRef}>
-        {rows}
+      <div>
+        <TitleBar route="work" darkMode/>
+        <div id="work-row-container" ref={rowContainerRef}>
+          {rows}
+        </div>
       </div>
       <Footer darkMode/>
     </div>

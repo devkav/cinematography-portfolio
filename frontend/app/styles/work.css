@@ -6,8 +6,12 @@
   min-height: 100svh;
 }
 
-#row-container {
-  margin-left: 16px;
-  margin-right: 16px;
+#work-row-container {
+  padding-left: 16px;
+  padding-right: 16px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
   /* Width and padding must agree with the numbers in work.tsx */
 }
