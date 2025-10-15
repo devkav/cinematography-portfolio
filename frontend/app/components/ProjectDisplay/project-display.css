@@ -1,5 +1,6 @@
 .project-display {
   border-radius: 10px;
+  position: relative;
 
   &.clickable {
     cursor: pointer;
@@ -7,7 +8,13 @@
 }
 
 .project-display video {
-  width: 100%;
+  height: 100%;
+  width: auto;
+  object-fit: cover;
+  padding: 8px; /* Must agree with the padding in VideoRow.tsx */
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .project-display-label-container {
@@ -56,7 +63,21 @@
   right: 20px;
 }
 
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 650px) {
+  .project-display-title {
+    font-size: 12px;
+  }
+
+  .project-display-subtitle {
+    font-size: 8px;
+  }
+
+  .project-display-laurel {
+    width: 50px;
+  }
+}
+
+@media only screen and (max-width: 1000px) and (min-width: 650px) {
   .project-display-title {
     font-size: 30px;
   }
