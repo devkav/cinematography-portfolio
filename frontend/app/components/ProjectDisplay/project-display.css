@@ -63,6 +63,12 @@
   right: 20px;
 }
 
+@media only screen and (max-width: 450px) {
+  .project-display video {
+    padding: 4px; /* Must agree with the padding in VideoRow.tsx */
+  }
+}
+
 @media only screen and (max-width: 650px) {
   .project-display-title {
     font-size: 12px;
