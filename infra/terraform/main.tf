@@ -8,7 +8,7 @@ locals {
   static_bucket_name = "prod-static-maggieclucy"
   assets_bucket_name = "prod-assets-maggieclucy"
 
- domain_name = "maggieclucy.com"
+  domain_name = "maggieclucy.com"
   aws_region = "us-east-1"
 }
 
@@ -244,6 +244,94 @@ resource "aws_dynamodb_table" "assets_db" {
   }
 }
 
+#######
+# API #
+#######
+resource "aws_iam_role" "lambda_exec" {
+  name = "lambda_exec_role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action    = "sts:AssumeRole"
+      Principal = { Service = "lambda.amazonaws.com" }
+      Effect    = "Allow"
+    }]
+  })
+}
+
+resource "aws_api_gateway_rest_api" "api" {
+  name        = "assets_api"
+  description = "API to retrieve assets"
+}
+
+resource "aws_api_gateway_resource" "api_assets_resource" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  parent_id   = aws_api_gateway_rest_api.api.root_resource_id
+  path_part   = "assets"
+}
+
+data "archive_file" "zip_api_assets" {
+  type        = "zip"
+  source_file  = "./api/get_assets.py"
+  output_path = "./api/get_assets.zip"
+}
+
+resource "aws_lambda_function" "get_assets_lambda_function" {
+  function_name    = "get_assets_lambda_function"
+  handler          = "get_assets.handler"
+  runtime          = "python3.13"
+  role             = aws_iam_role.lambda_exec.arn
+  source_code_hash = data.archive_file.zip_api_assets.output_base64sha256
+  filename         = data.archive_file.zip_api_assets.output_path
+}
+
+# API Gateway method
+resource "aws_api_gateway_method" "get_assets" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  resource_id   = aws_api_gateway_resource.api_assets_resource.id
+  http_method   = "GET"
+  authorization = "NONE"
+  request_parameters = {
+    "method.request.querystring.length" = true
+    "method.request.querystring.width" = true
+  }
+}
+
+# Lambda permission for API Gateway Lambda permission for API Gateway
+resource "aws_lambda_permission" "allow_api_gateway_assets" {
+  statement_id  = "AllowExecutionFromAPIGatewayCurrent"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.get_assets_lambda_function.function_name
+  principal     = "apigateway.amazonaws.com"
+  # The source ARN of the API Gateway
+  source_arn = "${aws_api_gateway_rest_api.api.execution_arn}/*"
+}
+
+# API Gateway integration with Lambda
+resource "aws_api_gateway_integration" "api_gateway_assets_integration" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.api_assets_resource.id
+  http_method = aws_api_gateway_method.get_assets.http_method
+
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.get_assets_lambda_function.invoke_arn
+}
+
+resource "aws_api_gateway_deployment" "assets_api_deployment" {
+  depends_on = [
+    aws_api_gateway_integration.api_gateway_assets_integration,
+  ]
+  rest_api_id = aws_api_gateway_rest_api.api.id
+}
+
+resource "aws_api_gateway_stage" "cloudcast_api_gateway_stage" {
+  deployment_id = aws_api_gateway_deployment.assets_api_deployment.id
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  stage_name    = "prod"
+}
+
 
 ###########
 # Outputs #
@@ -258,4 +346,8 @@ output "assets_bucket_name" {
 
 output "domain" {
   value = aws_cloudfront_distribution.static_distribution.domain_name
+}
+
+output "api_url" {
+  value = aws_api_gateway_stage.cloudcast_api_gateway_stage.invoke_url
 }
