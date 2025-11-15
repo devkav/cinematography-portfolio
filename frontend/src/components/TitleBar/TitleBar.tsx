@@ -8,7 +8,7 @@ interface Props {
   darkMode?: boolean; 
 }
 
-export default function TitleBar({darkMode=false} : Props) {
+export default function TitleBar({darkMode=true} : Props) {
   const buttons = Object.keys(MenuRoute).filter(
     key => key !== "home"
   ).map(

@@ -8,6 +8,7 @@ import Home from "./pages/home"
 import Reel from "./pages/reel"
 import Work from "./pages/work"
 import Contact from "./pages/contact"
+import Photo from "./pages/photo";
 import londonLaurel from "./assets/images/london_laurel.png";
 
 import XMLHttpRequest from 'xhr2';
@@ -106,8 +107,6 @@ function App() {
   const [loadedProjects, setLoadedProjects] = useState<any>([]);
 
   useEffect(() => {
-    console.log("Use effect called")
-
     projects.forEach((project) => {
       var xhr = new XMLHttpRequest();
       xhr.open("GET", project.src, true);
@@ -132,8 +131,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Home/>} />
         <Route path="/reel" element={<Reel/>} />
-        <Route path="/work" element={<Work projects={projects}/>} />
+        <Route path="/video" element={<Work projects={projects}/>} />
         <Route path="/contact" element={<Contact/>} />
+        <Route path="/photo" element={<Photo/>} />
       </Routes>
     </BrowserRouter>
   )

@@ -45,12 +45,12 @@ export default function Work({projects}: {projects: Project[]}) {
   return (
     <div id="work-content">
       <div>
-        <TitleBar route="work" darkMode/>
+        <TitleBar route="work"/>
         <div id="work-row-container" ref={rowContainerRef}>
           {rows}
         </div>
       </div>
-      <Footer darkMode/>
+      <Footer/>
     </div>
   )
 }

@@ -4,7 +4,7 @@ import { MdOutlineEmail } from "react-icons/md";
 
 import "./footer.css";
 
-export default function Footer({darkMode, noCopyright} : {darkMode?: boolean, noCopyright?: boolean}) {
+export default function Footer({darkMode=true, noCopyright} : {darkMode?: boolean, noCopyright?: boolean}) {
     const currentTime = new Date()
     const year = currentTime.getFullYear()
 

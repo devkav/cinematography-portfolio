@@ -21,7 +21,7 @@ export default function Contact() {
     <div>
         <img id="billboard" src="https://d3amd0zp63qrni.cloudfront.net/assets/images/maggie-billboard.jpeg"/>
         <div id="name-container">
-          <TitleBar route="contact" darkMode/>
+          <TitleBar route="contact"/>
           <div id="information-container">
             <div id="information-top-container">
               <p className="contact-header">Contact:</p>
@@ -51,7 +51,7 @@ export default function Contact() {
             </div>
           </div>
 
-          <Footer darkMode/>
+          <Footer/>
         </div>
     </div>
   )
