@@ -1,3 +1,6 @@
+import "./project-display.css";
+
+
 interface ProjectDisplayData {
   id: number,
   src: string,

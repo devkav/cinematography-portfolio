@@ -1,17 +1,12 @@
-import type { Route } from "./+types/home";
-import TitleBar from "~/components/TitleBar/TitleBar";
-import Footer from "~/components/Footer/Footer";
-import VideoRow from "~/components/VideoRow/VideoRow";
-import { pageDescription } from "~/root";
-import londonLaurel from "~/assets/images/london_laurel.png";
+import TitleBar from "../components/TitleBar/TitleBar";
+import Footer from "../components/Footer/Footer";
+import VideoRow from "../components/VideoRow/VideoRow";
+import londonLaurel from "../assets/images/london_laurel.png";
 import { useRef, useEffect, useState } from "react";
+import XMLHttpRequest from 'xhr2';
 
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Maggie Lucy" },
-    { name: "description", content: pageDescription },
-  ];
-}
+import "../styles/work.css";
+
 
 let projects = [
   {
@@ -100,6 +95,19 @@ export default function Work() {
   const [parentWidth, setParentWidth] = useState(0)
   const rows: any= [];
   let currentRow: any = [];
+
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", projects[0].src, true);
+  xhr.responseType = "blob";
+
+  xhr.addEventListener("load", function() {
+    console.log("Hello")
+    console.log(xhr);
+  })
+
+  xhr.send()
+
 
   useEffect(() => {
     const updateParentWidth = () => {

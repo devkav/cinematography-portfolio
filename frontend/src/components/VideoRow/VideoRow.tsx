@@ -1,5 +1,7 @@
 import { useRef, useEffect, useState } from "react";
-import ProjectDisplay from "~/components/ProjectDisplay/ProjectDisplay";
+import ProjectDisplay from "../ProjectDisplay/ProjectDisplay";
+
+import "./video-row.css";
 
 interface Props {
   videos: any;

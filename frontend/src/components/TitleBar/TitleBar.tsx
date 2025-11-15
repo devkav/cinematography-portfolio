@@ -1,5 +1,7 @@
-import { MenuRoute } from "~/types/MenuRoute";
+import { MenuRoute } from "../../types/MenuRoute";
 import { Link } from "react-router";
+
+import "./title-bar.css";
 
 interface Props {
   route: MenuRoute;

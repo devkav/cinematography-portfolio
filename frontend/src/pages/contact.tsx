@@ -1,15 +1,9 @@
-import Footer from "~/components/Footer/Footer";
-import type { Route } from "./+types/home";
+import Footer from "../components/Footer/Footer";
 import { FaAngleDown } from "react-icons/fa";
-import TitleBar from "~/components/TitleBar/TitleBar";
-import { pageDescription } from "~/root";
+import TitleBar from "../components/TitleBar/TitleBar";
 
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Maggie Lucy" },
-    { name: "description", content: pageDescription },
-  ];
-}
+import "../styles/contact.css";
+
 
 const content = `Maggie Lucy is an Atlanta-based cinematographer working to express her eye 
 for composition, lighting, and storytelling within her work.  With a BFA in Film and Animation,

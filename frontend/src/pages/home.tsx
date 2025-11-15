@@ -1,14 +1,7 @@
-import type { Route } from "./+types/home";
 import { Link } from "react-router";
-import Footer from "~/components/Footer/Footer";
-import { pageDescription } from "~/root";
+import Footer from "../components/Footer/Footer";
+import "../styles/home.css";
 
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Maggie Lucy" },
-    { name: "description", content: pageDescription },
-  ];
-}
 
 export default function Home() {
   return (
