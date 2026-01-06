@@ -341,34 +341,12 @@ const photos: PhotoProject[] = [
 
 
 function App() {
-  const [loadedProjects, setLoadedProjects] = useState<any>([]);
-
-  useEffect(() => {
-    projects.forEach((project) => {
-      var xhr = new XMLHttpRequest();
-      xhr.open("GET", project.src, true);
-      xhr.responseType = "blob";
-
-      xhr.addEventListener("load", function() {
-        if (xhr.status === 200) {
-          var URL = window.URL || window.webkitURL;
-          var blob_url = URL.createObjectURL(xhr.response);
-
-          project.src = blob_url
-          setLoadedProjects([project, ...loadedProjects]);
-        }
-      })
-
-      xhr.send()
-    })
-  }, [])
-
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home/>} />
         <Route path="/reel" element={<Reel/>} />
-        <Route path="/video" element={<Work projects={projects}/>} />
+        <Route path="/film" element={<Work projects={projects}/>} />
         <Route path="/contact" element={<Contact/>} />
         <Route path="/photo" element={<Photo photos={photos}/>} />
       </Routes>
