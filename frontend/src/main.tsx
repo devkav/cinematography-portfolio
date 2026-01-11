@@ -1,7 +1,7 @@
 import "./styles/index.css";
 
 import { BrowserRouter, Routes, Route } from "react-router";
-import { StrictMode, useEffect, useState } from 'react'
+import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
 import Home from "./pages/home"
@@ -10,9 +10,6 @@ import Work from "./pages/work"
 import Contact from "./pages/contact"
 import Photo from "./pages/photo";
 import londonLaurel from "./assets/images/london_laurel.png";
-
-import XMLHttpRequest from 'xhr2';
-
 
 export interface Project {
   id: number;
@@ -131,54 +128,13 @@ const photos: PhotoProject[] = [
     ],
   },
   {
-    title: "Commercial",
-    photos: [
-      {
-        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/grad-pic-138.jpg",
-      },
-      {
-        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/grad-pic-154.jpg",
-      },
-      {
-        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/grad-pic-160.jpg",
-      },
-      {
-        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/grad-pic-203.jpg",
-      },
-      {
-        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/grad-pic-53.jpg",
-      },
-      {
-        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/grad-pic-56.jpg",
-      },
-      {
-        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/grad-pic-60.jpg",
-      },
-      {
-        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/grad-pic-88.jpg",
-      },
-      {
-        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/headshot-129.jpg",
-      },
-      {
-        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/headshot-132.jpg",
-      },
-      {
-        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/headshot-37.jpg",
-      },
-      {
-        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/headshot-65.jpg",
-      },
-    ],
-  },
-  {
     title: "Costa Rica",
     photos: [
       {
-        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/costa-rica/_DSC0401.jpg",
+        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/costa-rica/01.jpg",
       },
       {
-        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/costa-rica/01.jpg",
+        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/costa-rica/_DSC0401.jpg",
       },
       {
         src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/costa-rica/reflection1.jpg",
@@ -337,6 +293,47 @@ const photos: PhotoProject[] = [
         src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/patrol/IMG_6923.PNG",
       },
     ]
+  },
+  {
+    title: "Commercial",
+    photos: [
+      {
+        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/grad-pic-138.jpg",
+      },
+        {
+        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/grad-pic-154.jpg",
+      },
+      {
+        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/grad-pic-160.jpg",
+      },
+      {
+        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/grad-pic-203.jpg",
+      },
+      {
+        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/grad-pic-53.jpg",
+      },
+      {
+        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/grad-pic-56.jpg",
+      },
+      {
+        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/grad-pic-60.jpg",
+      },
+      {
+        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/grad-pic-88.jpg",
+      },
+      {
+        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/headshot-129.jpg",
+      },
+      {
+        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/headshot-132.jpg",
+      },
+      {
+        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/headshot-37.jpg",
+      },
+      {
+        src: "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/headshot-65.jpg",
+      },
+    ],
   },
 ]
 
