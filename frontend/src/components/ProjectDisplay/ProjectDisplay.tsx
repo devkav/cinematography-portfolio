@@ -18,15 +18,13 @@ interface Props {
 }
 
 export default function ProjectDisplay({data: { id, src, title, subtitle, link, laurels=[] }, onLoadCallback, playing}: Props) {
-  const videoRef = useRef(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     if (playing) {
-      console.log(`Playing video: ${title}`)
-      videoRef.current.play();
+      videoRef.current?.play();
     } else {
-      console.log(`Pausing video: ${title}`)
-      videoRef.current.pause();
+      videoRef.current?.pause();
     }
   }, [playing])
 

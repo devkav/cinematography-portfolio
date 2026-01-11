@@ -1,3 +1,11 @@
+:root {
+  --button-size: 36px;
+  --button-margin: 16px;
+  --padding-top: 20px;
+}
+
+
+
 #photo-page {
   height: 100vh;
   display: flex;
@@ -35,12 +43,12 @@
   flex-direction: row;
   align-items: center;
   justify-content: center; 
-  padding-top: 20px;
+  padding-top: var(--padding-top);
 }
 
 #display-container img {
-  max-width: calc(100% - 120px);
-  max-height: calc(100% - 20px);
+  max-width: calc(100% - calc(var(--button-size) + calc(var(--button-margin) * 2)));
+  max-height: calc(100% - var(--padding-top));
   object-fit: contain;
 }
 
@@ -61,19 +69,30 @@
 }
 
 .photo-button {
-  font-size: 36px;
+  font-size: var(--button-size);
+  flex-grow: 1;
+  height: 100%;
 
   &:hover {
     cursor: pointer;
   }
+}
 
-  &#next {
-    margin-left: 24px;
-  }
+.photo-button-col {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  height: 100%;
+}
 
-  &#prev {
-    margin-right: 24px;
-  }
+#next-col {
+  align-items: flex-start;
+  margin-left: var(--button-margin);
+}
+
+#prev-col {
+  align-items: flex-end;
+  margin-right: var(--button-margin);
 }
 
 #footer {
