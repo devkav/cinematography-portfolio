@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import ProjectDisplay from "../ProjectDisplay/ProjectDisplay";
 
 import "./video-row.css";
+import useOnScreen from "../../hooks/useOnScreen";
 
 interface Props {
   videos: any;
@@ -11,6 +12,7 @@ interface Props {
 export default function VideoRow({ videos, parentWidth }: Props) {
   const rowRef = useRef(null);
   const [height, setHeight] = useState(100);
+  const isVisible = useOnScreen(rowRef);
 
   const updateHeight = () => {
     if (parentWidth == 0 || rowRef.current == null) {
@@ -41,6 +43,6 @@ export default function VideoRow({ videos, parentWidth }: Props) {
   }
 
   return (<div className="video-row" ref={rowRef} style={{ height: `${height}px`}}>
-    {videos.map((data) => (<ProjectDisplay data={data} onLoadCallback={onLoadCallback} key={data.id}/>))}
+    {videos.map((data) => (<ProjectDisplay data={data} onLoadCallback={onLoadCallback} playing={isVisible} key={data.id}/>))}
   </div>)
 }

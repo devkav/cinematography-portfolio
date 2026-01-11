@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import "./project-display.css";
 
 
@@ -13,9 +14,22 @@ interface ProjectDisplayData {
 interface Props {
   data: ProjectDisplayData;
   onLoadCallback: () => void;
+  playing: boolean;
 }
 
-export default function ProjectDisplay({data: { id, src, title, subtitle, link, laurels=[] }, onLoadCallback}: Props) {
+export default function ProjectDisplay({data: { id, src, title, subtitle, link, laurels=[] }, onLoadCallback, playing}: Props) {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (playing) {
+      console.log(`Playing video: ${title}`)
+      videoRef.current.play();
+    } else {
+      console.log(`Pausing video: ${title}`)
+      videoRef.current.pause();
+    }
+  }, [playing])
+
   let className = "project-display";
 
   if (link != undefined) {
@@ -41,7 +55,7 @@ export default function ProjectDisplay({data: { id, src, title, subtitle, link, 
           <p className="project-display-subtitle">{subtitle}</p>
         </div>
       </div>
-      <video autoPlay muted loop playsInline onLoadedData={onLoad} src={src}/>
+      <video muted loop playsInline onLoadedData={onLoad} src={src} ref={videoRef}/>
     </div>
   );
 }

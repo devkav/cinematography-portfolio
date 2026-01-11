@@ -9,7 +9,6 @@ export default function Photo({ photos } : { photos: PhotoProject[] }) {
   const [projectIndex, setProjectIndex] = useState<number>(0);
   const [photoIndex, setPhotoIndex] = useState<number>(0);
 
-
   const getKey = () => `proj${projectIndex}-phot${photoIndex}`
   const nextImage = () => changeImage(1);
   const prevImage = () => changeImage(-1);
