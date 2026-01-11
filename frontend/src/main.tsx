@@ -46,7 +46,8 @@ const projects: Project[] = [
     id: 3,
     title: "Josh",
     subtitle: "(mock ad)",
-    src: "https://d3amd0zp63qrni.cloudfront.net/assets/videos/Josh2.mp4"
+    src: "https://d3amd0zp63qrni.cloudfront.net/assets/videos/Josh2.mp4",
+    link: "https://www.instagram.com/reel/DA3uj79PNei"
   },
   {
     id: 6,
