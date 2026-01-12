@@ -100,8 +100,8 @@ const projects: Project[] = [
   },
   {
     id: 13,
-    title: "RIT SOFA Senior Thesis",
-    subtitle: "(capstone presentation)",
+    title: "Senior Thesis",
+    subtitle: "(cinematography capstone presentation)",
     src: "https://d3amd0zp63qrni.cloudfront.net/assets/videos/teaser.mp4",
     link: "https://www.youtube.com/watch?v=_y2nxgTp7NU"
   },
