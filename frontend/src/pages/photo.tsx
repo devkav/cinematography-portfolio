@@ -16,46 +16,18 @@ export default function Photo({ photos } : { photos: PhotoProject[] }) {
   const [imageCache, setImageCache] = useState<ImageCache>(new Map());
   const [initialLoad, setInitialLoad] = useState(false);
 
-  useEffect(() => {
-    const newImageCache: ImageCache = new Map();
-
-    photos.forEach(({photos}, currentProjectIndex) => {
-      if (!newImageCache.has(currentProjectIndex)) {
-        newImageCache.set(currentProjectIndex, new Map());
-      }
-
-      for (let i = 0; i <= PRELOAD_DISTANCE; i++) {
-        for (let reverse = 0; reverse <= 1; reverse++) {
-          if (i == 0 && reverse) {continue;}
-
-          const currentIndex = reverse == 0 ? i : photos.length - i;
-
-          if (currentIndex >= photos.length || currentIndex < 0) {
-            continue;
-          }
-
-          const imageObj = new Image();
-          imageObj.src = photos[currentIndex]?.src;
-          newImageCache.get(currentProjectIndex)?.set(currentIndex, imageObj);
-        }
-      }
-
-      setImageCache(newImageCache);
-      setInitialLoad(true);
-    })
-  }, [photos])
-
-  useEffect(() => {
-    if (!initialLoad) {return;}
-    const newImageCache: ImageCache = new Map(imageCache);
+  const loadAround = ({initialPhotoIndex, projectIndex, loadInitial}: {initialPhotoIndex: number, projectIndex: number, loadInitial: boolean}) => {
+    const projectCache: Map<number, any> = new Map(imageCache.get(projectIndex));
     const project = photos[projectIndex];
     const numPhotos = project.photos.length;
     let changesMade = false;
 
-    for (let i = 1; i <= PRELOAD_DISTANCE; i++) {
+    for (let i = 0; i <= PRELOAD_DISTANCE; i++) {
       for (let reverse = 0; reverse <= 1; reverse++) {
+        if (i == 0 && (loadInitial && reverse == 1 || !loadInitial)) {continue;}
+
         let addition = i * (reverse ? -1 : 1);
-        let currentIndex = (photoIndex + addition) % numPhotos; 
+        let currentIndex = (initialPhotoIndex + addition) % numPhotos; 
 
         if (currentIndex < 0) {
           currentIndex += numPhotos;
@@ -64,17 +36,39 @@ export default function Photo({ photos } : { photos: PhotoProject[] }) {
         // Check if image has already been loaded
         if (imageCache.get(projectIndex)?.get(currentIndex)) {continue;}
 
-        changesMade = true;
-
         const imageObj = new Image();
         imageObj.src = photos[projectIndex].photos[currentIndex].src;
-        newImageCache.get(projectIndex)?.set(currentIndex, imageObj)
+        projectCache.set(currentIndex, imageObj)
+        changesMade = true;
       }
     }
 
-    if (changesMade) {
-      setImageCache(newImageCache);
-    }
+    return {projectCache, changesMade};
+  }
+
+  useEffect(() => {
+    const newImageCache: ImageCache = new Map(imageCache);
+
+    photos.forEach((_, currentProjectIndex) => {
+      const {projectCache} = loadAround({initialPhotoIndex: 0, projectIndex: currentProjectIndex, loadInitial: true});
+      newImageCache.set(currentProjectIndex, projectCache);
+    })
+
+    console.log("Initial load: ", newImageCache)
+    setImageCache(newImageCache);
+    setInitialLoad(true);
+  }, [photos])
+
+  useEffect(() => {
+    if (!initialLoad) {return;}
+
+    const {projectCache, changesMade} = loadAround({initialPhotoIndex: photoIndex, projectIndex, loadInitial: false});
+
+    if (!changesMade) {return;}
+
+    const newImageCache = new Map(imageCache);
+    newImageCache.set(projectIndex, projectCache);
+    setImageCache(newImageCache)
   }, [photoIndex, projectIndex])
 
   const getKey = () => `proj${projectIndex}-phot${photoIndex}`
