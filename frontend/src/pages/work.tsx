@@ -11,6 +11,7 @@ export default function Work({projects}: {projects: Project[]}) {
   const videosPerRow = 2;
   const rowContainerRef = useRef(null);
   const [parentWidth, setParentWidth] = useState(0)
+  const [numRowsLoaded, setNumRowsLoaded] = useState(0);
   const rows: any= [];
   let currentRow: any = [];
 
@@ -33,21 +34,49 @@ export default function Work({projects}: {projects: Project[]}) {
     return () => window.removeEventListener("resize", updateTwice);
   }, [rowContainerRef]);
 
+  const allLoadedCallback = (index: number) => {
+    setNumRowsLoaded((prevNumRowsLoaded) => Math.max(prevNumRowsLoaded, index + 1));
+  }
+
   projects.forEach((project, index) => {
     currentRow.push(project)
 
     if (currentRow.length >= videosPerRow) {
-      rows.push(<VideoRow videos={currentRow} parentWidth={parentWidth} key={index}/>)
+      const rowIndex = rows.length;
+
+      rows.push(
+        <VideoRow 
+          videos={currentRow}
+          parentWidth={parentWidth}
+          allLoadedCallback={() => allLoadedCallback(rowIndex)}
+          key={index}
+        />
+      )
       currentRow = []
     }
   })
+
+  if (currentRow.length > 0) {
+    rows.push(
+      <VideoRow 
+        videos={currentRow}
+        parentWidth={parentWidth}
+        allLoadedCallback={() => allLoadedCallback(rows.length)}
+        key={projects.length - 1}
+      />
+    )
+  }
+
+  const loadedRows = rows.reduce(
+    (acc: typeof VideoRow[], videoRow: typeof VideoRow, index: number) => index <= numRowsLoaded ? [...acc, videoRow] : acc
+  , []);
 
   return (
     <div id="work-content">
       <div>
         <TitleBar route="work"/>
         <div id="work-row-container" ref={rowContainerRef}>
-          {rows}
+          {loadedRows}
         </div>
       </div>
       <Footer/>

@@ -54,7 +54,6 @@ export default function Photo({ photos } : { photos: PhotoProject[] }) {
       newImageCache.set(currentProjectIndex, projectCache);
     })
 
-    console.log("Initial load: ", newImageCache)
     setImageCache(newImageCache);
     setInitialLoad(true);
   }, [photos])
@@ -71,7 +70,7 @@ export default function Photo({ photos } : { photos: PhotoProject[] }) {
     setImageCache(newImageCache)
   }, [photoIndex, projectIndex])
 
-  const getKey = () => `proj${projectIndex}-phot${photoIndex}`
+  const getKey = ({photoIndex, projectIndex}: {photoIndex: number, projectIndex: number}) => `proj${projectIndex}-phot${photoIndex}`
   const nextImage = () => changeImage(1);
   const prevImage = () => changeImage(-1);
 
@@ -87,7 +86,33 @@ export default function Photo({ photos } : { photos: PhotoProject[] }) {
   }
 
   const currentImage = imageCache.get(projectIndex)?.get(photoIndex);
+  const nextPhotoIndex = photoIndex + 1 % photos[projectIndex].photos.length;
+  const nextImageObj = imageCache.get(projectIndex)?.get(nextPhotoIndex);
   const sections: any[] = []
+
+  const images = []
+
+  photos.forEach((_, currentProjectIndex) => {
+    if (currentProjectIndex == projectIndex) {return;}
+    const firstImage = imageCache.get(currentProjectIndex)?.get(0);
+
+    images.push(
+      <img className="hidden-preload-image" src={firstImage?.src} loading="eager" key={getKey({projectIndex: currentProjectIndex, photoIndex: 0})}/>
+    )
+  })
+
+  for (let i = -1; i <= 1; i++) {
+    const numPhotos = photos[projectIndex].photos.length;
+    let currentPhotoIndex = photoIndex + i % numPhotos;
+    if (currentPhotoIndex < 0) {currentPhotoIndex += numPhotos}
+
+    const className = i == 0 ? "" : "hidden-preload-image";
+    const imageObj = imageCache.get(projectIndex)?.get(currentPhotoIndex);
+
+    images.push(
+      <img className={className} src={imageObj?.src} loading="eager" key={getKey({projectIndex, photoIndex: currentPhotoIndex})}/>
+    )
+  }
 
   photos.forEach(({title}, index) => {
     const classNames = ["photo-section"]
@@ -118,7 +143,7 @@ export default function Photo({ photos } : { photos: PhotoProject[] }) {
                 <MdNavigateBefore/>
               </div>
             </div>
-            <img src={currentImage?.src} loading="eager" key={getKey()}/>
+            {images}
             <div className="photo-button" onClick={nextImage}>
               <div className="photo-button-col" id="next-col">
                 <MdNavigateNext/>

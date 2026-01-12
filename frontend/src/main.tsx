@@ -98,6 +98,13 @@ const projects: Project[] = [
     subtitle: "(documentary short film)",
     src: "https://d3amd0zp63qrni.cloudfront.net/assets/videos/FSBS.mp4"
   },
+  {
+    id: 13,
+    title: "RIT SOFA Senior Thesis",
+    subtitle: "(capstone presentation)",
+    src: "https://d3amd0zp63qrni.cloudfront.net/assets/videos/teaser.mp4",
+    link: "https://www.youtube.com/watch?v=_y2nxgTp7NU"
+  },
 ]
 
 export interface Photo {

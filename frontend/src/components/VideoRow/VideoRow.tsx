@@ -3,15 +3,18 @@ import ProjectDisplay from "../ProjectDisplay/ProjectDisplay";
 
 import "./video-row.css";
 import useOnScreen from "../../hooks/useOnScreen";
+import type { Project } from "src/main";
 
 interface Props {
-  videos: any;
+  videos: Project[];
   parentWidth: number;
+  allLoadedCallback: () => void;
 }
 
-export default function VideoRow({ videos, parentWidth }: Props) {
-  const rowRef = useRef(null);
+export default function VideoRow({ videos, parentWidth, allLoadedCallback }: Props) {
   const [height, setHeight] = useState(100);
+  const [loadedVideoIds, setLoadedVideoIds] = useState<Set<number>>(new Set());
+  const rowRef = useRef(null);
   const isVisible = useOnScreen(rowRef);
 
   const updateHeight = () => {
@@ -36,13 +39,29 @@ export default function VideoRow({ videos, parentWidth }: Props) {
     updateHeight()
   }, [rowRef, parentWidth]);
 
-  const onLoadCallback = () => {
+  useEffect(() => {
+    const allLoaded = videos.every(({id}) => loadedVideoIds.has(id))
+
+    if (allLoaded) {
+      allLoadedCallback()
+    }
+  }, [loadedVideoIds])
+
+  const onLoadCallback = (id: number) => {
+    setLoadedVideoIds((prevLoadedVideoIds) => new Set([...prevLoadedVideoIds, id]))
     updateHeight()
     // For good measure...
     updateHeight()
   }
 
   return (<div className="video-row" ref={rowRef} style={{ height: `${height}px`}}>
-    {videos.map((data) => (<ProjectDisplay data={data} onLoadCallback={onLoadCallback} playing={isVisible} key={data.id}/>))}
+    {videos.map((data) => (
+      <ProjectDisplay
+        data={data}
+        onLoadCallback={() => {onLoadCallback(data.id)}}
+        playing={isVisible}
+        key={data.id}
+      />
+    ))}
   </div>)
 }
