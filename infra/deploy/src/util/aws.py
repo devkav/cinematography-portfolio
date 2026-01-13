@@ -55,6 +55,7 @@ def upload_directory_to_bucket(bucket_name: str, directory: str, exclude_conditi
 
     for file_path_str, file_key in file_path_to_key.items():
         if exclude_condition(file_key):
+            print_colored_message(f"Skipping file: {file_path_to_key}", WARNING)
             continue
 
         mime_type = get_mime_type(file_path_str)
