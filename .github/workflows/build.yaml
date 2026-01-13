@@ -26,5 +26,7 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v6
 
+      - name: Build frontend
+        run: ./build.sh && ls && ls ./frontend
       - name: Deploy frontend
-        run: ./build.sh && ./deploy
+        run: ./deploy.sh
