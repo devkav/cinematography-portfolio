@@ -1,18 +1,34 @@
+import { useEffect, useRef } from "react";
+import "./project-display.css";
+
+import londonLaurel from "../../assets/images/london_laurel.png";
+
 interface ProjectDisplayData {
   id: number,
   src: string,
   title: string,
   subtitle: string,
   link?: string,
-  laurels?: any[];
+  laurels?: boolean;
 }
 
 interface Props {
   data: ProjectDisplayData;
   onLoadCallback: () => void;
+  playing: boolean;
 }
 
-export default function ProjectDisplay({data: { id, src, title, subtitle, link, laurels=[] }, onLoadCallback}: Props) {
+export default function ProjectDisplay({data: { id, src, title, subtitle, link, laurels=false }, onLoadCallback, playing}: Props) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (playing) {
+      videoRef.current?.play();
+    } else {
+      videoRef.current?.pause();
+    }
+  }, [playing])
+
   let className = "project-display";
 
   if (link != undefined) {
@@ -32,13 +48,13 @@ export default function ProjectDisplay({data: { id, src, title, subtitle, link, 
   return (
     <div className={className} onClick={onClick}>
       <div className="project-display-label-container">
-        {laurels.map((laurel, index) => <img className="project-display-laurel" src={laurel} key={`laurel-${id}-${index}`}/>)}
+        {laurels && <img className="project-display-laurel" src={londonLaurel} key={`laurel-${id}`}/>}
         <div className="project-display-label">
           <p className="project-display-title">{title}</p>
           <p className="project-display-subtitle">{subtitle}</p>
         </div>
       </div>
-      <video autoPlay muted loop playsInline onLoadedData={onLoad} src={src}/>
+      <video muted loop playsInline onLoadedData={onLoad} src={src} ref={videoRef}/>
     </div>
   );
 }

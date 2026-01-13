@@ -1,15 +1,9 @@
-import Footer from "~/components/Footer/Footer";
-import type { Route } from "./+types/home";
+import Footer from "../components/Footer/Footer";
 import { FaAngleDown } from "react-icons/fa";
-import TitleBar from "~/components/TitleBar/TitleBar";
-import { pageDescription } from "~/root";
+import TitleBar from "../components/TitleBar/TitleBar";
 
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Maggie Lucy" },
-    { name: "description", content: pageDescription },
-  ];
-}
+import "../styles/contact.css";
+
 
 const content = `Maggie Lucy is an Atlanta-based cinematographer working to express her eye 
 for composition, lighting, and storytelling within her work.  With a BFA in Film and Animation,
@@ -27,7 +21,7 @@ export default function Contact() {
     <div>
         <img id="billboard" src="https://d3amd0zp63qrni.cloudfront.net/assets/images/maggie-billboard.jpeg"/>
         <div id="name-container">
-          <TitleBar route="contact" darkMode/>
+          <TitleBar route="contact"/>
           <div id="information-container">
             <div id="information-top-container">
               <p className="contact-header">Contact:</p>
@@ -57,7 +51,7 @@ export default function Contact() {
             </div>
           </div>
 
-          <Footer darkMode/>
+          <Footer/>
         </div>
     </div>
   )
