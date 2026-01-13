@@ -16,7 +16,7 @@ export interface Project {
   subtitle: string;
   src: string;
   link?: string;
-  laurels?: any[]
+  laurels?: boolean
 }
 
 export interface Photo {

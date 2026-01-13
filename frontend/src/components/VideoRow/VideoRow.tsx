@@ -14,7 +14,7 @@ interface Props {
 export default function VideoRow({ videos, parentWidth, allLoadedCallback }: Props) {
   const [height, setHeight] = useState(100);
   const [loadedVideoIds, setLoadedVideoIds] = useState<Set<number>>(new Set());
-  const rowRef = useRef(null);
+  const rowRef = useRef<HTMLDivElement>(null);
   const isVisible = useOnScreen(rowRef);
 
   const updateHeight = () => {
