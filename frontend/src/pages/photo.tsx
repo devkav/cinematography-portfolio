@@ -5,6 +5,7 @@ import TitleBar from "../components/TitleBar/TitleBar"
 import "../styles/photo.css"
 import { useEffect, useState } from "react"
 import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
+import useWindowDimensions from "../hooks/useWindowDimensions"
 
 const PRELOAD_DISTANCE = 2;
 const LOCAL_PRELOAD_DISTANCE = 1;
@@ -16,6 +17,7 @@ export default function Photo({ photos } : { photos: PhotoProject[] }) {
   const [photoIndex, setPhotoIndex] = useState<number>(0);
   const [imageCache, setImageCache] = useState<ImageCache>(new Map());
   const [initialLoad, setInitialLoad] = useState(false);
+  const {width} = useWindowDimensions();
 
   const loadAround = ({initialPhotoIndex, projectIndex, loadInitial}: {initialPhotoIndex: number, projectIndex: number, loadInitial: boolean}) => {
     const projectCache: Map<number, any> = new Map(imageCache.get(projectIndex));
@@ -103,6 +105,8 @@ export default function Photo({ photos } : { photos: PhotoProject[] }) {
   const collections: any[] = []
   const images = []
   const renderButtons = photos.length > 0 && photos[projectIndex].photos.length > 1;
+  const compactBar = width > 800;
+  const titleBar = <TitleBar route="photo" compact={compactBar}/>
 
   // Preload images
   photos.forEach((_, currentProjectIndex) => {
@@ -178,10 +182,11 @@ export default function Photo({ photos } : { photos: PhotoProject[] }) {
 
   return (
     <div id="photo-page">
+      {!compactBar && titleBar}
       <div id="photo-content-container">
         <div id="photo-content">
           <div id="sidebar-container">
-            <TitleBar route="photo" compact/>
+            {compactBar && titleBar}
             <div id="photo-sidebar">
               {collections}
             </div>

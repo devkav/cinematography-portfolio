@@ -4,8 +4,6 @@
   --padding-top: 20px;
 }
 
-
-
 #photo-page {
   height: 100vh;
   display: flex;
@@ -25,6 +23,7 @@
   min-height: 0;
   padding-left: 80px;
   padding-right: 80px;
+  flex-flow: row;
 }
 
 #sidebar-container {
@@ -33,7 +32,8 @@
 }
 
 #photo-sidebar {
-  height: 100%;
+  height: calc(100% - 190px);
+  overflow-y: auto;
   display: flex;
   flex-flow: column;
   align-items: center;
@@ -50,7 +50,7 @@
 }
 
 #display-container img {
-  max-width: calc(100% - calc(var(--button-size) + calc(var(--button-margin) * 2)));
+  max-width: calc(100% - calc(calc(var(--button-size) + var(--button-margin)) * 2));
   max-height: calc(100% - var(--padding-top));
   object-fit: contain;
 }
@@ -123,4 +123,48 @@
   opacity: 0;
   position: absolute;
   z-index: -1;
+}
+
+@media only screen and (max-width: 800px) {
+  :root {
+    --padding-top: 0px;
+  }
+
+  #photo-content {
+    flex-flow: column-reverse;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
+  #photo-page {
+    overflow-y: scroll;
+    height: auto;
+  }
+
+  #display-container img {
+    max-height: 100%;
+    max-width: calc(100% - calc(calc(var(--button-size) + calc(var(--button-margin) * 2)) * 2));
+  }
+
+  #display-container {
+    margin-bottom: 20px;
+  }
+
+  #photo-sidebar {
+    height: auto;
+  }
+
+  #footer {
+    margin-top: 40px;
+    margin-bottom: 40px;
+  }
+
+  #sidebar-container {
+    margin-right: 0px;
+  }
+
+  #next-col, #prev-col {
+    margin-left: var(--button-margin);
+    margin-right: var(--button-margin);
+  }
 }
