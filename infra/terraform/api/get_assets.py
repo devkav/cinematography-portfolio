@@ -1,5 +1,5 @@
 import json
-
+from urllib.parse import urlparse
 
 
 FILM_ASSETS = [
@@ -417,7 +417,11 @@ ASSETS_MAP = {
     "photo": PHOTO_ASSETS
 }
 
-ALLOWED_ORIGINS = ["http://localhost:5173", "https://maggieclucy.com"]
+ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "https://maggieclucy.com",
+    "https://www.maggieclucy.com"
+]
 
 def handler(event, _):
     params = event.get("queryStringParameters", {})
@@ -425,15 +429,20 @@ def handler(event, _):
 
     page = params.get("page")
     origin = headers.get("origin")
+    origin_url_obj = urlparse(origin)
 
-    if not origin in ALLOWED_ORIGINS:
+    if not any([
+            urlparse(allowed_origin).netloc == origin_url_obj.netloc and 
+            urlparse(allowed_origin).scheme == origin_url_obj.scheme
+            for allowed_origin in ALLOWED_ORIGINS
+    ]):
         return {
             "statusCode": 403,
             "headers": {
                 "Content-Type": "application/json",
                 "Access-Control-Allow-Origin": origin
             },
-            "body": json.dumps({"error": "Invalid origin"})
+            "body": json.dumps({"error": f"Invalid origin: '{origin}'"})
         }
 
     if not page:
