@@ -6,6 +6,30 @@
   width: 100vw;
   padding-top: 40px;
   padding-bottom: 40px;
+
+  &.compact {
+    flex-flow: column;
+    width: fit-content;
+
+    & #logo-container {
+      margin-left: 0;
+      margin-bottom: 12px;
+    }
+
+    & #logo, #logo-sub {
+      margin: 0;
+    }
+
+    & #title-button-row {
+      margin: 0;
+    }
+
+    & #title-button-row a {
+      font-size: 14px;
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+  }
 }
 
 #title-bar-container a {

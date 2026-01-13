@@ -2,7 +2,9 @@ import { FaInstagram, FaLinkedin } from "react-icons/fa";
 import IconButton from "../IconButton/IconButton";
 import { MdOutlineEmail } from "react-icons/md";
 
-export default function Footer({darkMode, noCopyright} : {darkMode?: boolean, noCopyright?: boolean}) {
+import "./footer.css";
+
+export default function Footer({darkMode=true, noCopyright} : {darkMode?: boolean, noCopyright?: boolean}) {
     const currentTime = new Date()
     const year = currentTime.getFullYear()
 
