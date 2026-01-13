@@ -350,6 +350,66 @@ PHOTO_ASSETS = [
             },
         ],
     },
+    {
+        "title": "Burberry Mock F/W Campaign",
+        "collection": SERIES_COLLECTION,
+        "photos": [
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/recreation.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/recreation-1.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/Lucy_RecreationAssignment_02.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/Lucy_RecreationAssignment_01.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/Lucy_RecreationAssignment_0.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/Lucy_AbstractAssignment_02.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/Lucy_AbstractAssignment_02-8.jpg",
+            },
+        ]
+    },
+    {
+        "title": "Caffeine and Octane",
+        "collection": SERIES_COLLECTION,
+        "photos": [
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/caffeine-and-octane/000027820023.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/caffeine-and-octane/000027820024.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/caffeine-and-octane/000027820025.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/caffeine-and-octane/000027820026.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/caffeine-and-octane/000027820027.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/caffeine-and-octane/000027820028.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/caffeine-and-octane/000027820029.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/caffeine-and-octane/000027820030.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/caffeine-and-octane/000027820031.jpg",
+            },
+        ]
+    }
 ]
 
 ASSETS_MAP = {

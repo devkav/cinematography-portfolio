@@ -37,6 +37,7 @@
   display: flex;
   flex-flow: column;
   align-items: center;
+  padding-right: 14px;
 }
 
 #display-container {
