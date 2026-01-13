@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import "./project-display.css";
 
+import londonLaurel from "../../assets/images/london_laurel.png";
 
 interface ProjectDisplayData {
   id: number,
@@ -8,7 +9,7 @@ interface ProjectDisplayData {
   title: string,
   subtitle: string,
   link?: string,
-  laurels?: any[];
+  laurels?: boolean;
 }
 
 interface Props {
@@ -17,7 +18,7 @@ interface Props {
   playing: boolean;
 }
 
-export default function ProjectDisplay({data: { id, src, title, subtitle, link, laurels=[] }, onLoadCallback, playing}: Props) {
+export default function ProjectDisplay({data: { id, src, title, subtitle, link, laurels=false }, onLoadCallback, playing}: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -47,7 +48,7 @@ export default function ProjectDisplay({data: { id, src, title, subtitle, link, 
   return (
     <div className={className} onClick={onClick}>
       <div className="project-display-label-container">
-        {laurels.map((laurel, index) => <img className="project-display-laurel" src={laurel} key={`laurel-${id}-${index}`}/>)}
+        {laurels && <img className="project-display-laurel" src={londonLaurel} key={`laurel-${id}`}/>}
         <div className="project-display-label">
           <p className="project-display-title">{title}</p>
           <p className="project-display-subtitle">{subtitle}</p>
