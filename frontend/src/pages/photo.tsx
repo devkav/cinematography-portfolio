@@ -7,6 +7,7 @@ import { useEffect, useState } from "react"
 import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
 
 const PRELOAD_DISTANCE = 2;
+const LOCAL_PRELOAD_DISTANCE = 1;
 
 type ImageCache = Map<number, Map<number, any>>;
 
@@ -70,10 +71,10 @@ export default function Photo({ photos } : { photos: PhotoProject[] }) {
     setImageCache(newImageCache)
   }, [photoIndex, projectIndex])
 
-  const getKey = ({photoIndex, projectIndex}: {photoIndex: number, projectIndex: number}) => `proj${projectIndex}-phot${photoIndex}`
+  const getKey = ({photoIndex, projectIndex}: {photoIndex: number, projectIndex: number}) => `proj${projectIndex}-photo${photoIndex}`
   const nextImage = () => changeImage(1);
   const prevImage = () => changeImage(-1);
-
+  
   const changeImage = (change: number) => {
     const numPhotos = photos[projectIndex].photos.length;
     const newIndex = photoIndex + change;
@@ -85,46 +86,94 @@ export default function Photo({ photos } : { photos: PhotoProject[] }) {
     }
   }
 
-  const currentImage = imageCache.get(projectIndex)?.get(photoIndex);
-  const nextPhotoIndex = photoIndex + 1 % photos[projectIndex].photos.length;
-  const nextImageObj = imageCache.get(projectIndex)?.get(nextPhotoIndex);
-  const sections: any[] = []
+  const changeCollection = (collection: number) => {
+    setProjectIndex(collection);
+    setPhotoIndex(0);
+  }
 
+  const sections: Map<string, number[]> = photos.reduce((acc, {collection}, index) => {
+    if (!acc.has(collection)) {
+      acc.set(collection, [])
+    }
+
+    acc.get(collection)?.push(index);
+    return acc;
+  }, new Map<string, number[]>());
+
+  const collections: any[] = []
   const images = []
+  const renderButtons = photos.length > 0 && photos[projectIndex].photos.length > 1;
 
+  // Preload images
   photos.forEach((_, currentProjectIndex) => {
     if (currentProjectIndex == projectIndex) {return;}
     const firstImage = imageCache.get(currentProjectIndex)?.get(0);
 
     images.push(
-      <img className="hidden-preload-image" src={firstImage?.src} loading="eager" key={getKey({projectIndex: currentProjectIndex, photoIndex: 0})}/>
+      <img
+        className="hidden-preload-image"
+        src={firstImage?.src}
+        loading="eager"
+        key={getKey({projectIndex: currentProjectIndex, photoIndex: 0})}
+      />
     )
   })
 
-  for (let i = -1; i <= 1; i++) {
-    const numPhotos = photos[projectIndex].photos.length;
-    let currentPhotoIndex = photoIndex + i % numPhotos;
-    if (currentPhotoIndex < 0) {currentPhotoIndex += numPhotos}
+  // Preload image and surrounding images 
+  for (let i = 0; i <= LOCAL_PRELOAD_DISTANCE; i++) {
+    if (photos.length == 0) {break}
 
-    const className = i == 0 ? "" : "hidden-preload-image";
-    const imageObj = imageCache.get(projectIndex)?.get(currentPhotoIndex);
+    for (let reverse = 0; reverse <= 1; reverse++) {
+      if (i == 0 && reverse == 1) {continue}
 
-    images.push(
-      <img className={className} src={imageObj?.src} loading="eager" key={getKey({projectIndex, photoIndex: currentPhotoIndex})}/>
-    )
+      const numPhotos = photos[projectIndex].photos.length;
+      let currentPhotoIndex = reverse ? numPhotos - i : photoIndex + i;
+      
+      if (reverse == 1 && currentPhotoIndex <= photoIndex + i) {continue}
+
+      const className = i == 0 ? "" : "hidden-preload-image";
+      const imageObj = imageCache.get(projectIndex)?.get(currentPhotoIndex);
+
+      images.push(
+        <img
+          className={className}
+          src={imageObj?.src}
+          loading="eager"
+          key={getKey({projectIndex, photoIndex: currentPhotoIndex})}
+        />
+      )
+    }
   }
 
-  photos.forEach(({title}, index) => {
-    const classNames = ["photo-section"]
+  // Render sidebar
+  Array.from(sections.keys()).forEach((section: string, index) => {
+    const indices = sections.get(section);
 
-    if (index == projectIndex) {
-      classNames.push("photo-section-active");
-    }
+    collections.push(
+      <p
+        className="photo-collection-title"
+        key={`collection-${index}`}>{section}
+      </p>
+    )
 
-    sections.push(<p className={classNames.join(" ")} onClick={() => {
-      setProjectIndex(index);
-      setPhotoIndex(0);
-    }} key={`proj-${index}`}>{title}</p>)
+    indices?.forEach((index) => {
+      const title = photos[index]?.title;
+      const classNames = ["photo-collection"]
+
+      if (index == projectIndex) {
+        classNames.push("photo-collection-active");
+      }
+
+      collections.push(
+        <p
+          className={classNames.join(" ")}
+          onClick={() => {
+            changeCollection(index)
+          }}
+          key={`proj-${index}`}>{title}
+        </p>
+      )
+    })
   })
 
   return (
@@ -134,21 +183,25 @@ export default function Photo({ photos } : { photos: PhotoProject[] }) {
           <div id="sidebar-container">
             <TitleBar route="photo" compact/>
             <div id="photo-sidebar">
-              {sections}
+              {collections}
             </div>
           </div>
           <div id="display-container">
-            <div className="photo-button" onClick={prevImage}>
-              <div className="photo-button-col" id="prev-col">
-                <MdNavigateBefore/>
+            {renderButtons && 
+              <div className="photo-button" onClick={prevImage}>
+                <div className="photo-button-col" id="prev-col">
+                  <MdNavigateBefore/>
+                </div>
               </div>
-            </div>
+            }
             {images}
-            <div className="photo-button" onClick={nextImage}>
-              <div className="photo-button-col" id="next-col">
-                <MdNavigateNext/>
+            {renderButtons && 
+              <div className="photo-button" onClick={nextImage}>
+                <div className="photo-button-col" id="next-col">
+                  <MdNavigateNext/>
+                </div>
               </div>
-            </div>
+            }
           </div>
         </div>
       </div>
