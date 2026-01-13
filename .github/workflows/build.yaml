@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - build_fix
 
 jobs:
   deploy-frontend:
@@ -27,6 +26,6 @@ jobs:
         uses: astral-sh/setup-uv@v6
 
       - name: Build frontend
-        run: ./build.sh && ls && ls ./frontend/dist
+        run: ./build.sh
       - name: Deploy frontend
         run: ./deploy.sh
