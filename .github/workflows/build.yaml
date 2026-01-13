@@ -27,6 +27,6 @@ jobs:
         uses: astral-sh/setup-uv@v6
 
       - name: Build frontend
-        run: ./build.sh && ls && ls ./frontend
+        run: ./build.sh && ls && ls ./frontend/dist
       - name: Deploy frontend
         run: ./deploy.sh

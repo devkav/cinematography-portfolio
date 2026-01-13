@@ -5,7 +5,7 @@ from util.aws import delete_bucket_objects, upload_directory_to_bucket, get_file
 from config.aws import STATIC_BUCKET_NAME
 
 
-BUILD_DIRECTORY_STR = "frontend/build/client"
+BUILD_DIRECTORY_STR = "frontend/dist"
 
 
 def main():
