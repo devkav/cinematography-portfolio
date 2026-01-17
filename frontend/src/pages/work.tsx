@@ -23,15 +23,10 @@ export default function Work({projects}: {projects: Project[]}) {
       }
     }
 
-    const updateTwice = () => {
-      updateParentWidth();
-      updateParentWidth();
-    }
-
-    window.addEventListener("resize", updateTwice)
+    window.addEventListener("resize", updateParentWidth)
     updateParentWidth();
 
-    return () => window.removeEventListener("resize", updateTwice);
+    return () => window.removeEventListener("resize", updateParentWidth);
   }, [rowContainerRef]);
 
   const allLoadedCallback = (index: number) => {
