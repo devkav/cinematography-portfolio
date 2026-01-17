@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import "./project-display.css";
 
 import londonLaurel from "../../assets/images/london_laurel.png";
+import type { VideoDimensions } from "../VideoRow/VideoRow";
 
 interface ProjectDisplayData {
   id: number,
@@ -14,7 +15,7 @@ interface ProjectDisplayData {
 
 interface Props {
   data: ProjectDisplayData;
-  onLoadCallback: () => void;
+  onLoadCallback: ({ width, height }: VideoDimensions) => void;
   playing: boolean;
 }
 
@@ -41,8 +42,8 @@ export default function ProjectDisplay({data: { id, src, title, subtitle, link, 
     }
   }
 
-  const onLoad = () => {
-    onLoadCallback();
+  const onLoad = (e: any) => {
+    onLoadCallback({ width: e.target.videoWidth, height: e.target.videoHeight });
   }
 
   return (
