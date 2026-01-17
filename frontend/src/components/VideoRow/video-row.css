@@ -6,4 +6,15 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+  margin-bottom: 16px; /* Must be 2x the padding defined in project-display.css */
+}
+
+.video-row.unloaded {
+  display: none;
+}
+
+@media only screen and (max-width: 450px) {
+  .video-row {
+    margin-bottom: 8px; /* Must be 2x the padding defined in project-display.css */
+  }
 }

@@ -10,8 +10,10 @@
 .project-display video {
   height: 100%;
   width: auto;
-  object-fit: cover;
-  padding: 8px; /* Must agree with the padding in VideoRow.tsx */
+  object-fit: contain;
+  padding: 0px; /* Must agree with the padding in VideoRow.tsx */
+  padding-left: 8px;
+  padding-right: 8px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -65,7 +67,8 @@
 
 @media only screen and (max-width: 450px) {
   .project-display video {
-    padding: 4px; /* Must agree with the padding in VideoRow.tsx */
+    padding-left: 4px; /* Must agree with the padding in VideoRow.tsx */
+    padding-right: 4px; /* Must agree with the padding in VideoRow.tsx */
   }
 }
 

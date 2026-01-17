@@ -73,11 +73,9 @@ export default function Work({projects}: {projects: Project[]}) {
 
   return (
     <div id="work-content">
-      <div>
-        <TitleBar route="work"/>
-        <div id="work-row-container" ref={rowContainerRef}>
-          {loadedRows}
-        </div>
+      <TitleBar route="work"/>
+      <div id="work-row-container" ref={rowContainerRef}>
+        {loadedRows}
       </div>
       <Footer/>
     </div>
