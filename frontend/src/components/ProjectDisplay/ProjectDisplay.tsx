@@ -22,6 +22,12 @@ interface Props {
 export default function ProjectDisplay({data: { id, src, title, subtitle, link, laurels=false }, onLoadCallback, playing}: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  if (videoRef.current) {
+    // React is bugged and doesn't reflect the "muted" flag on in the DOM. This may lead to different
+    // behaviour on mobile. This forces the flag to be added.
+    videoRef.current.defaultMuted = true;
+  }
+
   useEffect(() => {
     if (playing) {
       videoRef.current?.play();
@@ -55,7 +61,7 @@ export default function ProjectDisplay({data: { id, src, title, subtitle, link, 
           <p className="project-display-subtitle">{subtitle}</p>
         </div>
       </div>
-      <video muted loop playsInline onLoadedData={onLoad} src={src} ref={videoRef}/>
+      <video autoPlay muted loop playsInline onLoadedMetadata={onLoad} src={src} ref={videoRef}/>
     </div>
   );
 }
