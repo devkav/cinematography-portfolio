@@ -12,6 +12,7 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+  width: 100vw;
   /* Width and padding must agree with the numbers in work.tsx */
 }
 
