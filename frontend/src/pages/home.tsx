@@ -2,9 +2,18 @@ import { Link } from "react-router";
 import Footer from "../components/Footer/Footer";
 import { MenuRoute } from "../types/MenuRoute";
 import "../styles/home.css";
+import { useRef } from "react";
 
 
 export default function Home() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  if (videoRef.current) {
+    // React is bugged and doesn't reflect the "muted" flag on in the DOM. This may lead to different
+    // behaviour on mobile. This forces the flag to be added.
+    videoRef.current.defaultMuted = true;
+  }
+
   const buttons = Object.keys(MenuRoute).filter(
       key => key !== "home"
     ).map(
@@ -17,7 +26,7 @@ export default function Home() {
 
   return (
     <div>
-      <video autoPlay muted loop playsInline id="jumbo-video" src="https://d3amd0zp63qrni.cloudfront.net/assets/videos/landing-video.mp4"/>
+      <video autoPlay muted loop playsInline id="jumbo-video" src="https://d3amd0zp63qrni.cloudfront.net/assets/videos/landing-video.mp4" ref={videoRef}/>
       <div id="title-container">
         <h1 id="title" className="page-title">Maggie Lucy</h1>
 
