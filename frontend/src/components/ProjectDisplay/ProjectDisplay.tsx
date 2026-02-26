@@ -22,7 +22,7 @@ interface Props {
 export default function ProjectDisplay({
   data: { id, src, title, subtitle, link, laurels = false },
   onLoadCallback,
-  playing,
+  playing
 }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
 

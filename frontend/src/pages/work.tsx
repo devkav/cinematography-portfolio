@@ -44,7 +44,7 @@ export default function Work({ projects }: { projects: Project[] }) {
           parentWidth={parentWidth}
           allLoadedCallback={() => allLoadedCallback(rowIndex)}
           key={index}
-        />,
+        />
       );
       currentRow = [];
     }
@@ -57,14 +57,14 @@ export default function Work({ projects }: { projects: Project[] }) {
         parentWidth={parentWidth}
         allLoadedCallback={() => allLoadedCallback(rows.length)}
         key={projects.length - 1}
-      />,
+      />
     );
   }
 
   const loadedRows = rows.reduce(
     (acc: (typeof VideoRow)[], videoRow: typeof VideoRow, index: number) =>
       index <= numRowsLoaded ? [...acc, videoRow] : acc,
-    [],
+    []
   );
 
   return (

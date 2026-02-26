@@ -25,7 +25,7 @@ export default function Photo({ photos }: { photos: PhotoProject[] }) {
   const loadAround = ({
     initialPhotoIndex,
     projectIndex,
-    loadInitial,
+    loadInitial
   }: {
     initialPhotoIndex: number;
     projectIndex: number;
@@ -97,7 +97,7 @@ export default function Photo({ photos }: { photos: PhotoProject[] }) {
       const { projectCache } = loadAround({
         initialPhotoIndex: 0,
         projectIndex: currentProjectIndex,
-        loadInitial: true,
+        loadInitial: true
       });
       newImageCache.set(currentProjectIndex, projectCache);
     });
@@ -114,7 +114,7 @@ export default function Photo({ photos }: { photos: PhotoProject[] }) {
     const { projectCache, changesMade } = loadAround({
       initialPhotoIndex: photoIndex,
       projectIndex,
-      loadInitial: false,
+      loadInitial: false
     });
 
     if (!changesMade) {
@@ -178,7 +178,7 @@ export default function Photo({ photos }: { photos: PhotoProject[] }) {
         src={firstImage?.src}
         loading="eager"
         key={getKey({ projectIndex: currentProjectIndex, photoIndex: 0 })}
-      />,
+      />
     );
   });
 
@@ -209,7 +209,7 @@ export default function Photo({ photos }: { photos: PhotoProject[] }) {
           src={imageObj?.src}
           loading="eager"
           key={getKey({ projectIndex, photoIndex: currentPhotoIndex })}
-        />,
+        />
       );
     }
   }
@@ -221,7 +221,7 @@ export default function Photo({ photos }: { photos: PhotoProject[] }) {
     collections.push(
       <p className="photo-collection-title" key={`collection-${index}`}>
         {section}
-      </p>,
+      </p>
     );
 
     indices?.forEach((index) => {
@@ -241,7 +241,7 @@ export default function Photo({ photos }: { photos: PhotoProject[] }) {
           key={`proj-${index}`}
         >
           {title}
-        </p>,
+        </p>
       );
     });
   });
