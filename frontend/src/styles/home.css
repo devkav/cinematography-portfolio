@@ -70,8 +70,7 @@
   color: white;
 }
 
-@media only screen and (max-width: 600px), 
-screen and (max-height: 500px) {
+@media only screen and (max-width: 600px), screen and (max-height: 500px) {
   #title {
     font-size: 50px;
   }

@@ -27,7 +27,7 @@
   left: 0;
   opacity: 0;
   transition: opacity 0.25s;
-  background-image: linear-gradient(to top, black, rgba(0,0,0,0));
+  background-image: linear-gradient(to top, black, rgba(0, 0, 0, 0));
 }
 
 .project-display-label {
@@ -36,20 +36,21 @@
   left: 20px;
 }
 
-.project-display-title, .project-display-subtitle {
+.project-display-title,
+.project-display-subtitle {
   color: white;
   font-weight: bold;
   margin: 0px;
 }
 
 .project-display-title {
-  font-family: 'Impact';
+  font-family: "Impact";
   font-size: 50px;
   text-transform: uppercase;
 }
 
 .project-display-subtitle {
-  font-family: 'Helvetica';
+  font-family: "Helvetica";
   font-size: 20px;
   text-transform: lowercase;
 }

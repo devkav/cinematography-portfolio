@@ -5,11 +5,11 @@ import londonLaurel from "../../assets/images/london_laurel.png";
 import type { VideoDimensions } from "../VideoRow/VideoRow";
 
 interface ProjectDisplayData {
-  id: number,
-  src: string,
-  title: string,
-  subtitle: string,
-  link?: string,
+  id: number;
+  src: string;
+  title: string;
+  subtitle: string;
+  link?: string;
   laurels?: boolean;
 }
 
@@ -19,7 +19,11 @@ interface Props {
   playing: boolean;
 }
 
-export default function ProjectDisplay({data: { id, src, title, subtitle, link, laurels=false }, onLoadCallback, playing}: Props) {
+export default function ProjectDisplay({
+  data: { id, src, title, subtitle, link, laurels = false },
+  onLoadCallback,
+  playing,
+}: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   if (videoRef.current) {
@@ -34,7 +38,7 @@ export default function ProjectDisplay({data: { id, src, title, subtitle, link, 
     } else {
       videoRef.current?.pause();
     }
-  }, [playing])
+  }, [playing]);
 
   let className = "project-display";
 
@@ -46,22 +50,22 @@ export default function ProjectDisplay({data: { id, src, title, subtitle, link, 
     if (link != undefined) {
       window.open(link, "_blank");
     }
-  }
+  };
 
   const onLoad = (e: any) => {
     onLoadCallback({ width: e.target.videoWidth, height: e.target.videoHeight });
-  }
+  };
 
   return (
     <div className={className} onClick={onClick}>
       <div className="project-display-label-container">
-        {laurels && <img className="project-display-laurel" src={londonLaurel} key={`laurel-${id}`}/>}
+        {laurels && <img className="project-display-laurel" src={londonLaurel} key={`laurel-${id}`} />}
         <div className="project-display-label">
           <p className="project-display-title">{title}</p>
           <p className="project-display-subtitle">{subtitle}</p>
         </div>
       </div>
-      <video autoPlay muted loop playsInline onLoadedMetadata={onLoad} src={src} ref={videoRef}/>
+      <video autoPlay muted loop playsInline onLoadedMetadata={onLoad} src={src} ref={videoRef} />
     </div>
   );
 }
