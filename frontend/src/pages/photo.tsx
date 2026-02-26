@@ -6,9 +6,11 @@ import "../styles/photo.css"
 import { useEffect, useState } from "react"
 import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
 import useWindowDimensions from "../hooks/useWindowDimensions"
+import { useSearchParams } from "react-router"
 
 const PRELOAD_DISTANCE = 2;
 const LOCAL_PRELOAD_DISTANCE = 1;
+const PHOTO_SEARCH_PARAM_NAME = "folder"
 
 type ImageCache = Map<number, Map<number, any>>;
 
@@ -17,6 +19,7 @@ export default function Photo({ photos } : { photos: PhotoProject[] }) {
   const [photoIndex, setPhotoIndex] = useState<number>(0);
   const [imageCache, setImageCache] = useState<ImageCache>(new Map());
   const [initialLoad, setInitialLoad] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
   const {width} = useWindowDimensions();
 
   const loadAround = ({initialPhotoIndex, projectIndex, loadInitial}: {initialPhotoIndex: number, projectIndex: number, loadInitial: boolean}) => {
@@ -48,6 +51,28 @@ export default function Photo({ photos } : { photos: PhotoProject[] }) {
 
     return {projectCache, changesMade};
   }
+
+  const getProjectSearchParam = (title: string) => title.toLowerCase().trim().split(" ").join("_");
+
+  useEffect(() => {
+    const folder = searchParams.get(PHOTO_SEARCH_PARAM_NAME);
+
+    if (folder == null) {
+      if (photos.length > 0) {
+        const projectTitle = photos[projectIndex].title;
+        setSearchParams({ [PHOTO_SEARCH_PARAM_NAME]: getProjectSearchParam(projectTitle) })
+      }
+
+      return
+    }
+
+    const folderIndex = photos.findIndex(({ title }) => getProjectSearchParam(title) == folder);
+
+    if (folderIndex == -1) { return }
+    if (folderIndex == projectIndex) { return }
+
+    setProjectIndex(folderIndex)
+  }, [photos])
 
   useEffect(() => {
     const newImageCache: ImageCache = new Map(imageCache);
@@ -91,6 +116,9 @@ export default function Photo({ photos } : { photos: PhotoProject[] }) {
   const changeCollection = (collection: number) => {
     setProjectIndex(collection);
     setPhotoIndex(0);
+
+    const projectTitle = photos[collection].title;
+    setSearchParams({ [PHOTO_SEARCH_PARAM_NAME]: getProjectSearchParam(projectTitle) })
   }
 
   const sections: Map<string, number[]> = photos.reduce((acc, {collection}, index) => {
