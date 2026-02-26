@@ -6,13 +6,12 @@ import { useRef, useEffect, useState } from "react";
 import "../styles/work.css";
 import type { Project } from "src/main";
 
-
-export default function Work({projects}: {projects: Project[]}) {
+export default function Work({ projects }: { projects: Project[] }) {
   const videosPerRow = 2;
   const rowContainerRef = useRef(null);
-  const [parentWidth, setParentWidth] = useState(0)
+  const [parentWidth, setParentWidth] = useState(0);
   const [numRowsLoaded, setNumRowsLoaded] = useState(0);
-  const rows: any= [];
+  const rows: any = [];
   let currentRow: any = [];
 
   useEffect(() => {
@@ -21,9 +20,9 @@ export default function Work({projects}: {projects: Project[]}) {
         // Subtract padding
         setParentWidth(window.innerWidth - 32);
       }
-    }
+    };
 
-    window.addEventListener("resize", updateParentWidth)
+    window.addEventListener("resize", updateParentWidth);
     updateParentWidth();
 
     return () => window.removeEventListener("resize", updateParentWidth);
@@ -31,48 +30,50 @@ export default function Work({projects}: {projects: Project[]}) {
 
   const allLoadedCallback = (index: number) => {
     setNumRowsLoaded((prevNumRowsLoaded) => Math.max(prevNumRowsLoaded, index + 1));
-  }
+  };
 
   projects.forEach((project, index) => {
-    currentRow.push(project)
+    currentRow.push(project);
 
     if (currentRow.length >= videosPerRow) {
       const rowIndex = rows.length;
 
       rows.push(
-        <VideoRow 
+        <VideoRow
           videos={currentRow}
           parentWidth={parentWidth}
           allLoadedCallback={() => allLoadedCallback(rowIndex)}
           key={index}
         />
-      )
-      currentRow = []
+      );
+      currentRow = [];
     }
-  })
+  });
 
   if (currentRow.length > 0) {
     rows.push(
-      <VideoRow 
+      <VideoRow
         videos={currentRow}
         parentWidth={parentWidth}
         allLoadedCallback={() => allLoadedCallback(rows.length)}
         key={projects.length - 1}
       />
-    )
+    );
   }
 
   const loadedRows = rows.reduce(
-    (acc: typeof VideoRow[], videoRow: typeof VideoRow, index: number) => index <= numRowsLoaded ? [...acc, videoRow] : acc
-  , []);
+    (acc: (typeof VideoRow)[], videoRow: typeof VideoRow, index: number) =>
+      index <= numRowsLoaded ? [...acc, videoRow] : acc,
+    []
+  );
 
   return (
     <div id="work-content">
-      <TitleBar route="work"/>
+      <TitleBar route="work" />
       <div id="work-row-container" ref={rowContainerRef}>
         {loadedRows}
       </div>
-      <Footer/>
+      <Footer />
     </div>
-  )
+  );
 }

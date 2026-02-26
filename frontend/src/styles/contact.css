@@ -30,9 +30,15 @@
 }
 
 @keyframes bounce {
-  0% {margin-top: 0px;}
-  50% {margin-top: 10px;}
-  100% {margin-top: 0px;}
+  0% {
+    margin-top: 0px;
+  }
+  50% {
+    margin-top: 10px;
+  }
+  100% {
+    margin-top: 0px;
+  }
 }
 
 #down-arrow {
@@ -86,11 +92,13 @@
   font-size: 1rem;
 }
 
-#information-contaier *, #text-col a {
+#information-contaier *,
+#text-col a {
   font-family: "Roboto", sans-serif !important;
 }
 
-#information-container a, #text-col a {
+#information-container a,
+#text-col a {
   color: white;
   text-decoration: underline;
 }
@@ -103,7 +111,7 @@
   display: flex;
   flex-flow: column;
   justify-content: space-between;
-  height: 40%
+  height: 40%;
 }
 
 #text-col a {
@@ -137,7 +145,8 @@
   line-height: 2;
 }
 
-#word-blob, #about-content {
+#word-blob,
+#about-content {
   margin-top: 0;
   margin-left: 0;
   margin-right: 0;
@@ -155,9 +164,9 @@
   }
 }
 
-@media only screen and (max-width: 450px),
-screen and (max-height: 600px) {
-  #information-container, #down-arrow-container p {
+@media only screen and (max-width: 450px), screen and (max-height: 600px) {
+  #information-container,
+  #down-arrow-container p {
     font-size: 0.75rem;
   }
 
@@ -166,8 +175,7 @@ screen and (max-height: 600px) {
   }
 }
 
-@media only screen and (max-width: 750px),
-screen and (max-height: 600px) {
+@media only screen and (max-width: 750px), screen and (max-height: 600px) {
   #down-arrow-container {
     margin-bottom: 30px;
   }

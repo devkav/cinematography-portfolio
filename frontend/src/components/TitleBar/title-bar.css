@@ -16,7 +16,8 @@
       margin-bottom: 12px;
     }
 
-    & #logo, #logo-sub {
+    & #logo,
+    #logo-sub {
       margin: 0;
     }
 
@@ -33,7 +34,7 @@
 }
 
 #title-bar-container a {
-  color: black
+  color: black;
 }
 
 #title-bar-container.dark-mode a {
@@ -64,7 +65,8 @@
   text-transform: uppercase;
 }
 
-#logo-sub:hover, #logo:hover {
+#logo-sub:hover,
+#logo:hover {
   opacity: initial;
 }
 
@@ -74,11 +76,11 @@
   flex-flow: column;
   justify-content: center;
   align-items: center;
-  transition: opacity .25s;
+  transition: opacity 0.25s;
 }
 
 #logo-container:hover {
-  opacity: .75;
+  opacity: 0.75;
   cursor: pointer;
 }
 
@@ -91,8 +93,7 @@
   font-weight: normal !important;
 }
 
-@media only screen and (max-width: 600px),
-screen and (max-height: 400px) {
+@media only screen and (max-width: 600px), screen and (max-height: 400px) {
   #logo {
     font-size: 20px;
     padding: 10px;

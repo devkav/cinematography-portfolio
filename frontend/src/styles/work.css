@@ -16,8 +16,9 @@
   /* Width and padding must agree with the numbers in work.tsx */
 }
 
-body, #root, .work-row-container {
+body,
+#root,
+.work-row-container {
   max-width: 100vw;
   overflow-x: hidden;
 }
-
