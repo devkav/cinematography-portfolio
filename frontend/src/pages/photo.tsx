@@ -39,7 +39,7 @@ export default function Photo({ photos }: { photos: PhotoProject[] }) {
     for (let i = 0; i <= PRELOAD_DISTANCE; i++) {
       for (let reverse = 0; reverse <= 1; reverse++) {
         if (i == 0 && ((loadInitial && reverse == 1) || !loadInitial)) {
-          continue;
+          continue
         }
 
         let addition = i * (reverse ? -1 : 1);
