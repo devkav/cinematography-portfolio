@@ -79,6 +79,11 @@
   font-size: 20px;
   text-transform: uppercase;
 
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
   transition:
     color 0.25s,
     opacity 0.25s;

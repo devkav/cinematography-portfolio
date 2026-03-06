@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "Pillow>=11.0",
+    "pillow-heif>=0.18",
     "typer>=0.15",
     "rich>=13.0",
 ]

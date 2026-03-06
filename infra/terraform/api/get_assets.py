@@ -90,7 +90,6 @@ FILM_ASSETS = [
 ]
 
 CREATIVE_DIRECTION_COLLECTION = "Creative Direction"
-SERIES_COLLECTION = "Series"
 ADVENTURES_COLLECTION = "Adventures"
 CLIENT_WORK_COLLECTION = "Client Work"
 
@@ -114,23 +113,62 @@ PHOTO_ASSETS = [
         ],
     },
     {
-        "title": "Costa Rica",
-        "collection": ADVENTURES_COLLECTION,
+        "title": "Burberry Mock F/W Campaign",
+        "collection": CREATIVE_DIRECTION_COLLECTION,
         "photos": [
             {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/costa-rica/01.jpg",
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/1st.jpg",
             },
             {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/costa-rica/_DSC0401.jpg",
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/2nd.jpg",
             },
-        ],
-    },
-    {
-        "title": "Aurora Borealis",
-        "collection": ADVENTURES_COLLECTION,
-        "photos": [
             {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/costa-rica/reflection1.jpg",
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/3rd.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/4th.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/5th.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/6th.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/7th.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/8th.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/9th.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/10th.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/recreation.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/recreation-1.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/Lucy_RecreationAssignment_02.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/Lucy_RecreationAssignment_01.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/Lucy_RecreationAssignment_0.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/Lucy_AbstractAssignment_02.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/Lucy_AbstractAssignment_02-8.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/last.jpg",
             },
         ]
     },
@@ -139,7 +177,10 @@ PHOTO_ASSETS = [
         "collection": CREATIVE_DIRECTION_COLLECTION,
         "photos": [
             {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/fashion/catalogue-R13/color_1_3.jpg",
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/fashion/catalogue-R13/lights_off_3_4.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/fashion/catalogue-R13/stop1_full_body.jpg",
             },
             {
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/fashion/catalogue-R13/highkey_1_3.jpg",
@@ -148,16 +189,13 @@ PHOTO_ASSETS = [
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/fashion/catalogue-R13/highkey_full_length.jpg",
             },
             {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/fashion/catalogue-R13/lights_off_3_4.jpg",
-            },
-            {
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/fashion/catalogue-R13/lights_off_full_body.jpg",
             },
             {
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/fashion/catalogue-R13/stop1_1_3.jpg",
             },
             {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/fashion/catalogue-R13/stop1_full_body.jpg",
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/fashion/catalogue-R13/color_1_3.jpg",
             },
         ]
     },
@@ -166,16 +204,13 @@ PHOTO_ASSETS = [
         "collection": CREATIVE_DIRECTION_COLLECTION,
         "photos": [
             {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/fashion/future-of-fashion/LUCY_Future_Fashion_1-edit.jpg",
-            },
-            {
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/fashion/future-of-fashion/Lucy_Future_Fashion_CU.jpg",
             },
             {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/fashion/future-of-fashion/reflection1-11.jpg",
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/fashion/future-of-fashion/reflection1-4.jpg",
             },
             {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/fashion/future-of-fashion/reflection1-4.jpg",
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/fashion/future-of-fashion/reflection1-11.jpg",
             },
             {
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/fashion/future-of-fashion/reflection1-7.jpg",
@@ -183,11 +218,14 @@ PHOTO_ASSETS = [
             {
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/fashion/future-of-fashion/reflection1.jpg",
             },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/fashion/future-of-fashion/LUCY_Future_Fashion_1-edit.jpg",
+            },
         ]
     },
     {
-        "title": "Sadie",
-        "collection": SERIES_COLLECTION,
+        "title": "Pajama Day",
+        "collection": CREATIVE_DIRECTION_COLLECTION,
         "photos": [
             # {
                 # "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/fashion/Lucy_Strobe-as-fill.jpg",
@@ -235,6 +273,9 @@ PHOTO_ASSETS = [
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/freestyle/5N5A0584.jpg",
             },
             {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/freestyle/maggiesdigicam-27.jpg",
+            },
+            {
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/freestyle/5N5A0586-2.jpg",
             },
             {
@@ -247,40 +288,46 @@ PHOTO_ASSETS = [
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/freestyle/5N5A0693.jpg",
             },
             {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/freestyle/maggiesdigicam-66.jpg",
+            },
+            {
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/freestyle/5N5A0698-2.jpg",
             },
             {
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/freestyle/5N5A0753-2.jpg",
             },
-            {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/freestyle/maggiesdigicam-27.jpg",
-            },
-            {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/freestyle/maggiesdigicam-66.jpg",
-            },
         ],
     },
     {
         "title": "The Patrol",
-        "collection": SERIES_COLLECTION,
+        "collection": CREATIVE_DIRECTION_COLLECTION,
         "photos": [
             {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/patrol/Bike_Edit.png",
+            },
+            {
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/patrol/IMG_6923.PNG",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/patrol/_DSC2018.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/patrol/_DSC1975.jpg",
             },
             {
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/patrol/cu-site-side.png",
             },
             {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/patrol/Bike_Edit.png",
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/patrol/_DSC2055.png",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/patrol/_DSC1041.jpg",
             },
             {
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/patrol/_DSC2059.png",
             },
             {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/patrol/_DSC2055.png",
-            },
-            {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/patrol/_DSC2018.jpg",
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/patrol/_DSC1012.png",
             },
             {
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/patrol/_DSC2010.jpg",
@@ -289,16 +336,7 @@ PHOTO_ASSETS = [
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/patrol/_DSC1992.jpg",
             },
             {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/patrol/_DSC1975.jpg",
-            },
-            {
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/patrol/_DSC1943.jpg",
-            },
-            {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/patrol/_DSC1041.jpg",
-            },
-            {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/patrol/_DSC1012.png",
             },
         ]
     },
@@ -318,6 +356,42 @@ PHOTO_ASSETS = [
             {
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/headshot-65.jpg",
             },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/isabella.JPG",
+            },
+        ]
+    },
+    {
+        "title": "Portraits",
+        "collection": CLIENT_WORK_COLLECTION,
+        "photos": [
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/_DSC3219.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/_DSC3255.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/_DSC3346.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/_DSC3377.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/_DSC3462.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/_DSC3594.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/caroline-1.JPG",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/caroline-2.JPG",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/caroline-3.JPG",
+            },
         ]
     },
     {
@@ -325,13 +399,13 @@ PHOTO_ASSETS = [
         "collection": CLIENT_WORK_COLLECTION,
         "photos": [
             {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/grad-pic-160.jpg",
+            },
+            {
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/grad-pic-138.jpg",
             },
             {
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/grad-pic-154.jpg",
-            },
-            {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/grad-pic-160.jpg",
             },
             {
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/grad-pic-203.jpg",
@@ -348,38 +422,17 @@ PHOTO_ASSETS = [
             {
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/grad-pic-88.jpg",
             },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/devgradpic-22.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/commercial/devgradpic-33.jpg",
+            },
         ],
     },
     {
-        "title": "Burberry Mock F/W Campaign",
-        "collection": SERIES_COLLECTION,
-        "photos": [
-            {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/recreation.jpg",
-            },
-            {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/recreation-1.jpg",
-            },
-            {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/Lucy_RecreationAssignment_02.jpg",
-            },
-            {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/Lucy_RecreationAssignment_01.jpg",
-            },
-            {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/Lucy_RecreationAssignment_0.jpg",
-            },
-            {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/Lucy_AbstractAssignment_02.jpg",
-            },
-            {
-                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/burberry/Lucy_AbstractAssignment_02-8.jpg",
-            },
-        ]
-    },
-    {
         "title": "Caffeine and Octane",
-        "collection": SERIES_COLLECTION,
+        "collection": CREATIVE_DIRECTION_COLLECTION,
         "photos": [
             {
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/caffeine-and-octane/000027820023.jpg",
@@ -409,7 +462,67 @@ PHOTO_ASSETS = [
                 "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/caffeine-and-octane/000027820031.jpg",
             },
         ]
-    }
+    },
+    {
+        "title": "Stickered",
+        "collection": CREATIVE_DIRECTION_COLLECTION,
+        "photos": [
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/stickered/1-stick--.jpg"
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/stickered/-2-stick-.jpg"
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/stickered/3-stick.jpg"
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/stickered/4-stick.jpg"
+            },
+        ]
+    },
+    {
+        "title": "Costa Rica",
+        "collection": ADVENTURES_COLLECTION,
+        "photos": [
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/costa-rica/01.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/costa-rica/_DSC0401.jpg",
+            },
+        ],
+    },
+    {
+        "title": "Aurora Borealis",
+        "collection": ADVENTURES_COLLECTION,
+        "photos": [
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/costa-rica/reflection1.jpg",
+            },
+        ]
+    },
+    {
+        "title": "Concerts",
+        "collection": ADVENTURES_COLLECTION,
+        "photos": [
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/concerts/1-green-day.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/concerts/2-greenday.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/concerts/3-green-day.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/concerts/3-greenday.jpg",
+            },
+            {
+                "src": "https://d3amd0zp63qrni.cloudfront.net/assets/images/photo/concerts/5-greeday.jpg",
+            },
+        ]
+    },
 ]
 
 ASSETS_MAP = {
