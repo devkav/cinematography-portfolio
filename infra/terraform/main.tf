@@ -230,11 +230,11 @@ resource "aws_cloudfront_distribution" "assets_distribution" {
 resource "aws_dynamodb_table" "assets_db" {
   name = "assets_db"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key = "Page"
+  hash_key = "Type"
   range_key = "AssetID"
 
   attribute {
-    name = "Page"
+    name = "Type"
     type = "S"
   }
 
@@ -307,6 +307,12 @@ resource "aws_lambda_function" "get_assets_lambda_function" {
   role             = aws_iam_role.lambda_exec.arn
   source_code_hash = data.archive_file.zip_api_assets.output_base64sha256
   filename         = data.archive_file.zip_api_assets.output_path
+
+  environment {
+    variables = {
+      ASSETS_TABLE_NAME = aws_dynamodb_table.assets_db.name
+    }
+  }
 }
 
 # API Gateway method
