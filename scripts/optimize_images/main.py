@@ -1,13 +1,15 @@
 from pathlib import Path
+from urllib.parse import quote
 
+import pillow_heif
 import typer
-from PIL import Image
+from PIL import Image, ImageOps
 from rich.console import Console
 
-IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".tiff", ".tif"}
-MAX_DIMENSION = 2048
-DEFAULT_QUALITY = 85
+from config import Config
 
+
+pillow_heif.register_heif_opener()
 console = Console()
 
 
@@ -15,7 +17,7 @@ def find_images(directory: Path) -> list[Path]:
     images = []
 
     for file in sorted(directory.rglob("*")):
-        if file.suffix.lower() in IMAGE_EXTENSIONS and file.is_file():
+        if file.suffix.lower() in Config.IMAGE_EXTENSIONS and file.is_file():
             images.append(file)
 
     return images
@@ -41,9 +43,20 @@ def strip_metadata(img: Image.Image) -> Image.Image:
     return clean
 
 
-def optimize_image(path: Path, max_dim: int, quality: int) -> None:
+def make_url_safe(path: Path) -> Path:
+    name = path.stem.lower().replace(" ", "-").replace("_", "-")
+    safe_name = quote(name, safe="-")
+    new_path = path.with_stem(safe_name)
+
+    if new_path != path:
+        path.rename(new_path)
+
+    return new_path
+
+
+def optimize_image(path: Path, max_dim: int, quality: int) -> Path:
     with Image.open(path) as img:
-        original_format = img.format
+        img = ImageOps.exif_transpose(img)
         width, height = img.size
 
         if width > max_dim or height > max_dim:
@@ -53,31 +66,35 @@ def optimize_image(path: Path, max_dim: int, quality: int) -> None:
 
         img = strip_metadata(img)
 
-        save_kwargs: dict = {}
-        ext = path.suffix.lower()
+        if img.mode in ("RGBA", "P"):
+            img = img.convert("RGB")
 
-        if ext in (".jpg", ".jpeg"):
+        ext = path.suffix.lower()
+        convert_to_jpeg = ext in Config.CONVERT_TO_JPEG
+
+        save_kwargs: dict = {}
+
+        if convert_to_jpeg or ext in (".jpg", ".jpeg"):
+            save_kwargs["format"] = "JPEG"
             save_kwargs["quality"] = quality
             save_kwargs["optimize"] = True
         elif ext == ".png":
+            save_kwargs["format"] = "PNG"
             save_kwargs["optimize"] = True
-        elif ext == ".webp":
-            save_kwargs["quality"] = quality
-            save_kwargs["method"] = 6
-        elif ext in (".tiff", ".tif"):
-            save_kwargs["compression"] = "tiff_deflate"
 
-        # Preserve format to avoid issues with extension mismatches
-        if original_format:
-            save_kwargs["format"] = original_format
+        output_path = path.with_suffix(".jpg") if convert_to_jpeg else path
+        img.save(output_path, **save_kwargs)
 
-        img.save(path, **save_kwargs)
+        if convert_to_jpeg and output_path != path:
+            path.unlink()
+
+    return output_path
 
 
 def main(
     directory: Path = typer.Argument(help="Directory containing images to optimize"),
-    max_size: int = typer.Option(MAX_DIMENSION, help="Maximum dimension in pixels"),
-    quality: int = typer.Option(DEFAULT_QUALITY, help="JPEG/WebP quality 1-100"),
+    max_size: int = typer.Option(Config.MAX_DIMENSION, help="Maximum dimension in pixels"),
+    quality: int = typer.Option(Config.DEFAULT_QUALITY, help="JPEG/WebP quality 1-100"),
     dry_run: bool = typer.Option(False, help="Show what would be done without modifying files"),
 ) -> None:
     """Optimize images for the web by resizing and compressing them."""
@@ -105,13 +122,17 @@ def main(
 
     console.print()
 
-    for i, path in enumerate(images, 1):
-        relative_path = path.relative_to(directory)
-        size_before = path.stat().st_size
+    processed_images = []
 
-        optimize_image(path, max_size, quality)
+    for i, image_path in enumerate(images, 1):
+        relative_path = image_path.relative_to(directory)
+        size_before = image_path.stat().st_size
 
-        size_after = path.stat().st_size
+        image_path = make_url_safe(image_path)
+        image_path = optimize_image(image_path, max_size, quality)
+        processed_images.append(image_path)
+
+        size_after = image_path.stat().st_size
         change_percent = ((size_before - size_after) / size_before * 100) if size_before > 0 else 0
 
         console.print(
@@ -120,7 +141,7 @@ def main(
             f"[green](-{change_percent:.1f}%)[/green]"
         )
 
-    total_after = get_total_size(images)
+    total_after = get_total_size(processed_images)
     saved = total_before - total_after
     savings_percent = (saved / total_before * 100) if total_before > 0 else 0
 
