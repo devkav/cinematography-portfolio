@@ -58,7 +58,7 @@ function SignInForm({ onAuth }: { onAuth: (username: string, idToken: string) =>
   return (
     <div className="admin-auth-container">
       <form onSubmit={handleSubmit} className="admin-auth-form">
-        <h1>Admin Sign In</h1>
+        <h1>Admin</h1>
         <input
           type="text"
           placeholder="Username"
