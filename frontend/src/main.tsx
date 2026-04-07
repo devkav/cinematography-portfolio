@@ -9,6 +9,8 @@ import Reel from "./pages/reel";
 import Work from "./pages/work";
 import Contact from "./pages/contact";
 import Photo from "./pages/photo";
+import Admin from "./pages/admin";
+import { AuthProvider } from "./auth/AuthContext";
 
 export interface Project {
   id: number;
@@ -29,7 +31,7 @@ export interface PhotoProject {
   photos: Photo[];
 }
 
-const API_URL = "https://zydhwibd16.execute-api.us-east-1.amazonaws.com/prod";
+const API_URL = import.meta.env.VITE_API_URL;
 
 function App() {
   const [photos, setPhotos] = useState<PhotoProject[]>([]);
@@ -45,13 +47,16 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/reel" element={<Reel />} />
-        <Route path="/film" element={<Work projects={filmProjects} />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/photo" element={<Photo photos={photos} />} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/reel" element={<Reel />} />
+          <Route path="/film" element={<Work projects={filmProjects} />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/photo" element={<Photo photos={photos} />} />
+          <Route path="/admin" element={<Admin />} />
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }
