@@ -1,4 +1,4 @@
-import { useState, FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { CognitoUser } from "amazon-cognito-identity-js";
 
 import { signIn, completeNewPassword, signOut } from "../auth/cognito";
