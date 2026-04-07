@@ -3,7 +3,7 @@ import {
   CognitoUser,
   AuthenticationDetails,
   CognitoUserSession,
-  type ICognitoStorage,
+  type ICognitoStorage
 } from "amazon-cognito-identity-js";
 
 const USER_POOL_ID = import.meta.env.VITE_COGNITO_USER_POOL_ID;
@@ -36,7 +36,7 @@ const memoryStorage = new MemoryStorage();
 const userPool = new CognitoUserPool({
   UserPoolId: USER_POOL_ID,
   ClientId: CLIENT_ID,
-  Storage: memoryStorage,
+  Storage: memoryStorage
 });
 
 export type SignInResult =
@@ -47,12 +47,12 @@ export function signIn(username: string, password: string): Promise<SignInResult
   const cognitoUser = new CognitoUser({
     Username: username,
     Pool: userPool,
-    Storage: memoryStorage,
+    Storage: memoryStorage
   });
 
   const authDetails = new AuthenticationDetails({
     Username: username,
-    Password: password,
+    Password: password
   });
 
   return new Promise((resolve, reject) => {
@@ -61,20 +61,20 @@ export function signIn(username: string, password: string): Promise<SignInResult
         resolve({
           kind: "success",
           username: cognitoUser.getUsername(),
-          idToken: session.getIdToken().getJwtToken(),
+          idToken: session.getIdToken().getJwtToken()
         });
       },
       onFailure: (err) => reject(err),
       newPasswordRequired: () => {
         resolve({ kind: "newPasswordRequired", cognitoUser });
-      },
+      }
     });
   });
 }
 
 export function completeNewPassword(
   cognitoUser: CognitoUser,
-  newPassword: string,
+  newPassword: string
 ): Promise<{ username: string; idToken: string }> {
   return new Promise((resolve, reject) => {
     cognitoUser.completeNewPasswordChallenge(
@@ -84,11 +84,11 @@ export function completeNewPassword(
         onSuccess: (session: CognitoUserSession) => {
           resolve({
             username: cognitoUser.getUsername(),
-            idToken: session.getIdToken().getJwtToken(),
+            idToken: session.getIdToken().getJwtToken()
           });
         },
-        onFailure: (err) => reject(err),
-      },
+        onFailure: (err) => reject(err)
+      }
     );
   });
 }

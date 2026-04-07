@@ -23,11 +23,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIdToken(null);
   };
 
-  return (
-    <AuthContext.Provider value={{ username, idToken, setAuth, clearAuth }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ username, idToken, setAuth, clearAuth }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth(): AuthState {

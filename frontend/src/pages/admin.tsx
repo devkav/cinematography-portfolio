@@ -86,7 +86,7 @@ function SignInForm({ onAuth }: { onAuth: (username: string, idToken: string) =>
 
 function NewPasswordForm({
   cognitoUser,
-  onAuth,
+  onAuth
 }: {
   cognitoUser: CognitoUser;
   onAuth: (username: string, idToken: string) => void;
