@@ -5,14 +5,14 @@ import { signIn, completeNewPassword, signOut } from "../auth/cognito";
 import { useAuth } from "../auth/AuthContext";
 
 import "../styles/admin.css";
-import FileUpload from "../components/FileUpload/FileUpload";
+import AdminDashboard from "../components/AdminDashboard/AdminDashboard";
 
 export default function Admin() {
   const { username, idToken, setAuth, clearAuth } = useAuth();
 
   if (idToken && username) {
     return (
-      <Dashboard
+      <AdminDashboard
         username={username}
         onSignOut={() => {
           signOut();
@@ -146,22 +146,3 @@ function NewPasswordForm({
   );
 }
 
-function Dashboard({ username, onSignOut }: { username: string; onSignOut: () => void }) {
-  return (
-    <div className="admin-dashboard">
-      <header className="admin-header">
-        <h1>Admin</h1>
-        <div className="admin-header-right">
-          <span>
-            Signed in as <strong>{username}</strong>
-          </span>
-          <button onClick={onSignOut}>Sign out</button>
-        </div>
-      </header>
-      <main>
-        <p>Admin functionality coming soon.</p>
-        <FileUpload/>
-      </main>
-    </div>
-  );
-}
