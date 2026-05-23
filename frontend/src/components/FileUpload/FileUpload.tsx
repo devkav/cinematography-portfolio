@@ -3,12 +3,6 @@ import { useAuth } from "../../auth/AuthContext";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-type Kind = "photo" | "film";
-
-function kindFor(file: File): Kind {
-  return file.type.startsWith("video/") ? "film" : "photo";
-}
-
 export default function FileUpload() {
   const [files, setFiles] = useState<File[]>([]);
   const [status, setStatus] = useState<string | null>(null);

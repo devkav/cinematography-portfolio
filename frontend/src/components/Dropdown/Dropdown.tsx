@@ -1,4 +1,5 @@
 import type { ChangeEventHandler, ReactNode } from "react"
+import "./dropdown.css"
 
 interface Props {
   placeholder: string
@@ -12,7 +13,7 @@ export default function Dropdown({placeholder, options, onChange}: Props) {
   ))
 
   return (
-    <select defaultValue={-1} onChange={onChange}>
+    <select className="mcl-dropdown" defaultValue={-1} onChange={onChange}>
       <option value={-1} disabled>{placeholder}</option>
       {optionElements}
     </select>
