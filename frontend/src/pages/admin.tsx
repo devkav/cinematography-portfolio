@@ -5,6 +5,7 @@ import { signIn, completeNewPassword, signOut } from "../auth/cognito";
 import { useAuth } from "../auth/AuthContext";
 
 import "../styles/admin.css";
+import FileUpload from "../components/FileUpload/FileUpload";
 
 export default function Admin() {
   const { username, idToken, setAuth, clearAuth } = useAuth();
@@ -159,6 +160,7 @@ function Dashboard({ username, onSignOut }: { username: string; onSignOut: () =>
       </header>
       <main>
         <p>Admin functionality coming soon.</p>
+        <FileUpload/>
       </main>
     </div>
   );
