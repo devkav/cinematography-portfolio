@@ -9,6 +9,7 @@ from boto3.dynamodb.conditions import Key
 
 
 TABLE_NAME = os.getenv("ASSETS_TABLE_NAME", "assets_db")
+CLOUDFRONT_DOMAIN = os.getenv("ASSETS_CLOUDFRONT_DOMAIN")
 
 ALLOWED_ORIGINS = [
     "http://localhost:5173",
@@ -28,6 +29,13 @@ class DecimalEncoder(json.JSONEncoder):
             return int(obj) if obj % 1 == 0 else float(obj)
 
         return super().default(obj)
+
+
+def build_src(key):
+    if not key:
+        return None
+
+    return f"https://{CLOUDFRONT_DOMAIN}/{key}"
 
 
 def build_response(status_code, body, origin):
@@ -62,7 +70,7 @@ def get_film_assets():
             "id": item.get("order"),
             "title": item.get("title"),
             "subtitle": item.get("subtitle"),
-            "src": item.get("src"),
+            "src": build_src(item.get("src")),
         }
 
         if "link" in item:
@@ -112,7 +120,7 @@ def get_photo_assets():
             "collection": folder_info["collection"],
             "order": folder_info["order"],
             "collection_order": collection_order.get(folder_info["collection"], 0),
-            "photos": [{"src": photo.get("src")} for photo in sorted_photos],
+            "photos": [{"src": build_src(photo.get("src"))} for photo in sorted_photos],
         })
 
     assets.sort(key=lambda x: (x["collection_order"], x["order"]))
