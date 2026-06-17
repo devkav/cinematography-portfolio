@@ -1,9 +1,9 @@
-name: Deploy Frontend
+name: Verify Build
 
 on:
-  push:
+  pull_request:
     branches:
-      - main
+      - "*"
 
 jobs:
   deploy-frontend:
@@ -20,21 +20,9 @@ jobs:
       - name: Install dependencies
         run: npm ci --prefix frontend
 
-      - name: Setup AWS Credentials
-        run: |
-          aws configure set region "us-east-1"
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v6
-
       - name: Build frontend
         env:
           VITE_COGNITO_USER_POOL_ID: ${{ vars.VITE_COGNITO_USER_POOL_ID }}
           VITE_COGNITO_USER_POOL_CLIENT_ID: ${{ vars.VITE_COGNITO_USER_POOL_CLIENT_ID }}
           VITE_API_URL: ${{ vars.VITE_API_URL }}
         run: ./build.sh
-
-      - name: Deploy frontend
-        run: ./deploy.sh

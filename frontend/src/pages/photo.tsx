@@ -1,4 +1,4 @@
-import type { PhotoProject } from "src/main";
+import type { PhotoProject } from "src/types/Projects";
 import Footer from "../components/Footer/Footer";
 import TitleBar from "../components/TitleBar/TitleBar";
 
