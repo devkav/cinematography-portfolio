@@ -61,7 +61,7 @@ resource "aws_api_gateway_resource" "api_assets_resource" {
 
 data "archive_file" "zip_api_assets" {
   type        = "zip"
-  source_file  = "./api/get_assets.py"
+  source_file = "./api/get_assets.py"
   output_path = "./api/get_assets.zip"
 }
 
@@ -89,7 +89,7 @@ resource "aws_api_gateway_method" "get_assets" {
   authorization = "NONE"
   request_parameters = {
     "method.request.querystring.length" = true
-    "method.request.querystring.width" = true
+    "method.request.querystring.width"  = true
   }
 }
 
