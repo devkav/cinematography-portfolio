@@ -21,13 +21,13 @@ export default function FileUpload() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: idToken,
+          Authorization: idToken
         },
         body: JSON.stringify({
           page: "photo",
           contentType: file.type,
           folder: "test"
-        }),
+        })
       });
 
       if (!urlResponse.ok) {
@@ -43,7 +43,7 @@ export default function FileUpload() {
       const putResponse = await fetch(url, {
         method: "PUT",
         headers: { "Content-Type": file.type },
-        body: file,
+        body: file
       });
 
       if (!putResponse.ok) {
@@ -55,15 +55,15 @@ export default function FileUpload() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: idToken,
+          Authorization: idToken
         },
         body: JSON.stringify({
           page: "photo",
           src: key,
           collection: "Test",
           folder: "Test"
-        }),
-      })
+        })
+      });
 
       setStatus(`Uploaded as ${key}`);
     } catch (err) {
