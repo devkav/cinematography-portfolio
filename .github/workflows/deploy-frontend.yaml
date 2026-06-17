@@ -34,7 +34,7 @@ jobs:
           VITE_COGNITO_USER_POOL_ID: ${{ vars.VITE_COGNITO_USER_POOL_ID }}
           VITE_COGNITO_USER_POOL_CLIENT_ID: ${{ vars.VITE_COGNITO_USER_POOL_CLIENT_ID }}
           VITE_API_URL: ${{ vars.VITE_API_URL }}
-        run: ./build.sh
+        run: ./scripts/build.sh
 
       - name: Deploy frontend
-        run: ./deploy.sh
+        run: ./scripts/deploy.sh
