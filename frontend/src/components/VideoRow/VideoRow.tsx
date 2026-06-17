@@ -3,7 +3,7 @@ import ProjectDisplay from "../ProjectDisplay/ProjectDisplay";
 
 import "./video-row.css";
 import useOnScreen from "../../hooks/useOnScreen";
-import type { Project } from "src/main";
+import type { Project } from "src/types/Projects";
 
 interface Props {
   videos: Project[];

@@ -4,7 +4,7 @@ import VideoRow from "../components/VideoRow/VideoRow";
 import { useRef, useEffect, useState } from "react";
 
 import "../styles/work.css";
-import type { Project } from "src/main";
+import type { Project } from "src/types/Projects";
 
 export default function Work({ projects }: { projects: Project[] }) {
   const videosPerRow = 2;
