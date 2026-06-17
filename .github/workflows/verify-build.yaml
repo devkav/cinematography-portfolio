@@ -1,4 +1,4 @@
-name: Verify Build
+name: Verify Frontend Build
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
       - "*"
 
 jobs:
-  deploy-frontend:
+  verify-frontend-build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
