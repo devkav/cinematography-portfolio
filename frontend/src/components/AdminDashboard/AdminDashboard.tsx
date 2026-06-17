@@ -47,7 +47,6 @@ export default function AdminDashboard({ username, onSignOut }: { username: stri
         </div>
       </header>
       <main>
-        <p>Admin functionality coming soon.</p>
         <PhotoUploadForm collections={collections} folders={folders}/>
       </main>
     </div>

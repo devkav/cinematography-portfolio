@@ -1,6 +1,11 @@
 import json
+import os
 from urllib.parse import urlparse
 
+import boto3
+from boto3.dynamodb.conditions import Key
+
+TABLE_NAME = os.getenv("ASSETS_TABLE_NAME", "assets_db")
 
 ALLOWED_ORIGINS = [
     "http://localhost:5173",
@@ -9,6 +14,9 @@ ALLOWED_ORIGINS = [
 ]
 
 VALID_PAGES = {"photo", "film"}
+
+dynamodb = boto3.resource("dynamodb")
+table = dynamodb.Table(TABLE_NAME)
 
 
 def build_response(status_code, body, origin):
@@ -57,5 +65,11 @@ def handler(event, _):
         return build_response(400, {"error": "Missing key"}, origin)
 
     # TODO: write asset metadata to DynamoDB
+
+    if page == "photo":
+        collections_response = table.query(KeyConditionExpression=Key("Type").eq("photo_collection"))
+        collection = body.get("collection")
+        folder = body.get("folder")
+
 
     return build_response(200, {"ok": True}, origin)
