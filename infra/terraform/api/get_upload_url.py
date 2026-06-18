@@ -1,19 +1,14 @@
 import json
 import os
 import uuid
-from urllib.parse import urlparse
 
 import boto3
+
+from common import build_response, is_allowed_origin
 
 
 BUCKET_NAME = os.getenv("ASSETS_BUCKET_NAME")
 URL_EXPIRATION_SECONDS = 300
-
-ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "https://maggieclucy.com",
-    "https://www.maggieclucy.com"
-]
 
 ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp", "image/avif"}
 ALLOWED_VIDEO_TYPES = {"video/mp4", "video/quicktime", "video/webm"}
@@ -32,30 +27,6 @@ EXTENSION_BY_CONTENT_TYPE = {
 }
 
 s3 = boto3.client("s3")
-
-
-def build_response(status_code, body, origin):
-    return {
-        "statusCode": status_code,
-        "headers": {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": origin or ""
-        },
-        "body": json.dumps(body)
-    }
-
-
-def is_allowed_origin(origin):
-    if not origin:
-        return False
-
-    origin_parsed = urlparse(origin)
-
-    return any(
-        urlparse(allowed).netloc == origin_parsed.netloc and
-        urlparse(allowed).scheme == origin_parsed.scheme
-        for allowed in ALLOWED_ORIGINS
-    )
 
 
 def handler(event, _):

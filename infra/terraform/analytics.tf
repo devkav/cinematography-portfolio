@@ -70,6 +70,8 @@ resource "aws_lambda_function" "analytics_lambda_function" {
   source_code_hash = data.archive_file.zip_api_analytics.output_base64sha256
   filename         = data.archive_file.zip_api_analytics.output_path
 
+  layers = [aws_lambda_layer_version.common.arn]
+
   environment {
     variables = {
       ANALYTICS_TABLE_NAME = aws_dynamodb_table.analytics_db.name

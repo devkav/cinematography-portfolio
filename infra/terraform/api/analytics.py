@@ -2,18 +2,13 @@ import json
 import os
 import uuid
 from datetime import datetime, timezone
-from urllib.parse import urlparse
 
 import boto3
 
+from common import build_response, is_allowed_origin
+
 
 TABLE_NAME = os.getenv("ANALYTICS_TABLE_NAME", "analytics_db")
-
-ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "https://maggieclucy.com",
-    "https://www.maggieclucy.com"
-]
 
 MAX_SESSION_LENGTH = 128
 MAX_PAGE_LENGTH = 256
@@ -23,30 +18,6 @@ MAX_DURATION_SECONDS = 24 * 60 * 60
 
 dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table(TABLE_NAME)
-
-
-def build_response(status_code, body, origin):
-    return {
-        "statusCode": status_code,
-        "headers": {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": origin or ""
-        },
-        "body": json.dumps(body)
-    }
-
-
-def is_allowed_origin(origin):
-    if not origin:
-        return False
-
-    origin_parsed = urlparse(origin)
-
-    return any(
-        urlparse(allowed).netloc == origin_parsed.netloc and
-        urlparse(allowed).scheme == origin_parsed.scheme
-        for allowed in ALLOWED_ORIGINS
-    )
 
 
 def clean_duration(value):

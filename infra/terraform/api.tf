@@ -77,6 +77,8 @@ resource "aws_lambda_function" "get_assets_lambda_function" {
   source_code_hash = data.archive_file.zip_api_assets.output_base64sha256
   filename         = data.archive_file.zip_api_assets.output_path
 
+  layers = [aws_lambda_layer_version.common.arn]
+
   environment {
     variables = {
       ASSETS_TABLE_NAME        = aws_dynamodb_table.assets_db.name
@@ -207,6 +209,8 @@ resource "aws_lambda_function" "get_upload_url_lambda_function" {
   role             = aws_iam_role.lambda_exec.arn
   source_code_hash = data.archive_file.zip_api_upload_url.output_base64sha256
   filename         = data.archive_file.zip_api_upload_url.output_path
+
+  layers = [aws_lambda_layer_version.common.arn]
 
   environment {
     variables = {
@@ -342,6 +346,8 @@ resource "aws_lambda_function" "upload_asset_lambda_function" {
   role             = aws_iam_role.lambda_exec.arn
   source_code_hash = data.archive_file.zip_api_upload_asset.output_base64sha256
   filename         = data.archive_file.zip_api_upload_asset.output_path
+
+  layers = [aws_lambda_layer_version.common.arn]
 
   environment {
     variables = {
