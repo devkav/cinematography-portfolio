@@ -26,14 +26,30 @@ jobs:
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
+      - name: Read Terraform outputs
+        run: |
+          terraform -chdir=infra/terraform init -input=false
+          {
+            echo "VITE_API_URL=$(terraform -chdir=infra/terraform output -raw api_url)"
+            echo "VITE_ANALYTICS_URL=$(terraform -chdir=infra/terraform output -raw analytics_url)"
+            echo "VITE_COGNITO_USER_POOL_ID=$(terraform -chdir=infra/terraform output -raw cognito_user_pool_id)"
+            echo "VITE_COGNITO_USER_POOL_CLIENT_ID=$(terraform -chdir=infra/terraform output -raw cognito_user_pool_client_id)"
+          } >> "$GITHUB_ENV"
+
       - name: Install uv
         uses: astral-sh/setup-uv@v6
 
       - name: Build frontend
         env:
-          VITE_COGNITO_USER_POOL_ID: ${{ vars.VITE_COGNITO_USER_POOL_ID }}
-          VITE_COGNITO_USER_POOL_CLIENT_ID: ${{ vars.VITE_COGNITO_USER_POOL_CLIENT_ID }}
-          VITE_API_URL: ${{ vars.VITE_API_URL }}
+          VITE_API_URL: ${{ env.VITE_API_URL }}
+          VITE_ANALYTICS_URL: ${{ env.VITE_ANALYTICS_URL }}
+          VITE_COGNITO_USER_POOL_ID: ${{ env.VITE_COGNITO_USER_POOL_ID }}
+          VITE_COGNITO_USER_POOL_CLIENT_ID: ${{ env.VITE_COGNITO_USER_POOL_CLIENT_ID }}
         run: ./scripts/build.sh
 
       - name: Deploy frontend
