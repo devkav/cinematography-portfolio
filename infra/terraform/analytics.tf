@@ -232,10 +232,10 @@ resource "aws_cloudfront_distribution" "analytics_distribution" {
   }
 
   default_cache_behavior {
-    target_origin_id       = "analytics_api_origin"
-    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
-    cached_methods         = ["GET", "HEAD"]
-    viewer_protocol_policy  = "https-only"
+    target_origin_id         = "analytics_api_origin"
+    allowed_methods          = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+    cached_methods           = ["GET", "HEAD"]
+    viewer_protocol_policy   = "https-only"
     cache_policy_id          = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
     origin_request_policy_id = aws_cloudfront_origin_request_policy.analytics_viewer_geo.id
   }
