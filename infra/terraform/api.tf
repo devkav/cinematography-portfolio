@@ -51,6 +51,10 @@ resource "aws_iam_role_policy" "lambda_s3_upload" {
 resource "aws_api_gateway_rest_api" "api" {
   name        = "assets_api"
   description = "API to retrieve assets"
+
+  endpoint_configuration {
+    types = ["REGIONAL"]
+  }
 }
 
 resource "aws_api_gateway_resource" "api_assets_resource" {
@@ -121,6 +125,8 @@ resource "aws_api_gateway_deployment" "assets_api_deployment" {
     aws_api_gateway_integration.options_uploads_integration,
     aws_api_gateway_integration.api_gateway_upload_asset_integration,
     aws_api_gateway_integration.options_upload_asset_integration,
+    aws_api_gateway_integration.api_gateway_analytics_integration,
+    aws_api_gateway_integration.options_analytics_integration,
   ]
   rest_api_id = aws_api_gateway_rest_api.api.id
 
@@ -141,6 +147,12 @@ resource "aws_api_gateway_deployment" "assets_api_deployment" {
       aws_api_gateway_method.options_upload_asset.id,
       aws_api_gateway_integration.api_gateway_upload_asset_integration.id,
       aws_api_gateway_integration.options_upload_asset_integration.id,
+      aws_api_gateway_resource.api_analytics_resource.id,
+      aws_api_gateway_resource.api_analytics_resource.path_part,
+      aws_api_gateway_method.post_analytics.id,
+      aws_api_gateway_method.options_analytics.id,
+      aws_api_gateway_integration.api_gateway_analytics_integration.id,
+      aws_api_gateway_integration.options_analytics_integration.id,
     ]))
   }
 

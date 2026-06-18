@@ -14,6 +14,10 @@ output "api_url" {
   value = aws_api_gateway_stage.cloudcast_api_gateway_stage.invoke_url
 }
 
+output "analytics_url" {
+  value = "https://${aws_cloudfront_distribution.analytics_distribution.domain_name}"
+}
+
 output "cognito_user_pool_id" {
   value = aws_cognito_user_pool.admin_pool.id
 }
