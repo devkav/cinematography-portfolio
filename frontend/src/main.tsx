@@ -11,6 +11,7 @@ import Contact from "./pages/contact";
 import Photo from "./pages/photo";
 import Admin from "./pages/admin";
 import { AuthProvider } from "./auth/AuthContext";
+import { AnalyticsTracker } from "./analytics/AnalyticsTracker";
 import type { PhotoProject, Project } from "./types/Projects";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -29,6 +30,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <AnalyticsTracker />
       <AuthProvider>
         <Routes>
           <Route path="/" element={<Home />} />

@@ -1,21 +1,14 @@
-import json
 import os
 from collections import defaultdict
-from decimal import Decimal
-from urllib.parse import urlparse
 
 import boto3
 from boto3.dynamodb.conditions import Key
 
+from common import build_response, is_allowed_origin
+
 
 TABLE_NAME = os.getenv("ASSETS_TABLE_NAME", "assets_db")
 CLOUDFRONT_DOMAIN = os.getenv("ASSETS_CLOUDFRONT_DOMAIN")
-
-ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "https://maggieclucy.com",
-    "https://www.maggieclucy.com"
-]
 
 VALID_PAGES = {"film", "photo"}
 
@@ -23,40 +16,11 @@ dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table(TABLE_NAME)
 
 
-class DecimalEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, Decimal):
-            return int(obj) if obj % 1 == 0 else float(obj)
-
-        return super().default(obj)
-
-
 def build_src(key):
     if not key:
         return None
 
     return f"https://{CLOUDFRONT_DOMAIN}/{key}"
-
-
-def build_response(status_code, body, origin):
-    return {
-        "statusCode": status_code,
-        "headers": {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": origin
-        },
-        "body": json.dumps(body, cls=DecimalEncoder)
-    }
-
-
-def is_allowed_origin(origin):
-    origin_parsed = urlparse(origin)
-
-    return any(
-        urlparse(allowed).netloc == origin_parsed.netloc and
-        urlparse(allowed).scheme == origin_parsed.scheme
-        for allowed in ALLOWED_ORIGINS
-    )
 
 
 def get_film_assets():

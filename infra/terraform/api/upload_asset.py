@@ -1,46 +1,18 @@
 import json
 import os
-from urllib.parse import urlparse
 
 import boto3
 from boto3.dynamodb.conditions import Key
 
-TABLE_NAME = os.getenv("ASSETS_TABLE_NAME", "assets_db")
+from common import build_response, is_allowed_origin
 
-ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "https://maggieclucy.com",
-    "https://www.maggieclucy.com"
-]
+
+TABLE_NAME = os.getenv("ASSETS_TABLE_NAME", "assets_db")
 
 VALID_PAGES = {"photo", "film"}
 
 dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table(TABLE_NAME)
-
-
-def build_response(status_code, body, origin):
-    return {
-        "statusCode": status_code,
-        "headers": {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": origin or ""
-        },
-        "body": json.dumps(body)
-    }
-
-
-def is_allowed_origin(origin):
-    if not origin:
-        return False
-
-    origin_parsed = urlparse(origin)
-
-    return any(
-        urlparse(allowed).netloc == origin_parsed.netloc and
-        urlparse(allowed).scheme == origin_parsed.scheme
-        for allowed in ALLOWED_ORIGINS
-    )
 
 
 def handler(event, _):
@@ -70,6 +42,5 @@ def handler(event, _):
         collections_response = table.query(KeyConditionExpression=Key("Type").eq("photo_collection"))
         collection = body.get("collection")
         folder = body.get("folder")
-
 
     return build_response(200, {"ok": True}, origin)
