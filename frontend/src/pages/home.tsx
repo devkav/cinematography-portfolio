@@ -38,7 +38,7 @@ export default function Home() {
         playsInline
         id="jumbo-video"
         src="https://d3amd0zp63qrni.cloudfront.net/assets/videos/landing-video.mp4"
-        poster="https://d3amd0zp63qrni.cloudfront.net/assets/images/maggie-billboard.jpeg"
+        poster="https://d3amd0zp63qrni.cloudfront.net/assets/images/landing-poster.jpg"
         ref={videoRef}
       />
       <div id="title-container">
