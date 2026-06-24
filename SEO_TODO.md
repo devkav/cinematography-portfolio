@@ -18,7 +18,6 @@ Category scores after re-audit: Technical 61, Schema 82, Performance 68, GEO 36,
 
 ## Quick wins (new, from re-audit — safe, code-only)
 
-- [ ] **Preload the hero poster.** Add `<link rel="preload" as="image" fetchpriority="high" href="…maggie-billboard.jpeg">` to `index.html`. The poster is currently only discovered after JS runs; preloading it is the largest remaining LCP gain.
 - [ ] **Merge the 4 Google Fonts `<link>`s into 2** combined `?family=A&family=B` requests — fewer render-blocking round-trips.
 - [ ] **Named AI-crawler `Allow` rules in `robots.txt`** (GPTBot, ClaudeBot, PerplexityBot, OAI-SearchBot) — marginal but free positive signal.
 
@@ -56,7 +55,7 @@ Category scores after re-audit: Technical 61, Schema 82, Performance 68, GEO 36,
 
 - [x] Schema `email`: `mailto:` → bare address; **LinkedIn added to `sameAs`** (`index.html`)
 - [x] `font-display: swap` on self-hosted `@font-face` (`index.css`)
-- [x] Hero video `poster` for an instant LCP paint (`home.tsx`)
+- [x] Hero video `poster` — now a dedicated first-frame still (`assets/images/landing-poster.jpg`), so no flash; LCP element paints immediately. Added a matching `<link rel="preload" as="image" fetchpriority="high">` in `index.html`.
 - [x] `noindex, nofollow` on the `/admin` route (`admin.tsx`)
 - [x] Sitemap: `lastmod` added (placeholder dates), `priority` removed (`public/sitemap.xml`)
 - [x] Bio grammar fix — sentence fragment + run-on (`contact.tsx`)
