@@ -24,7 +24,11 @@ export default function Contact() {
         description="Get in touch with Maggie Lucy, an Atlanta-based cinematographer and RIT College of Art and Design graduate."
         path="/contact"
       />
-      <img id="billboard" alt="Maggie Lucy on set" src="https://d3amd0zp63qrni.cloudfront.net/assets/images/maggie-billboard.jpeg" />
+      <img
+        id="billboard"
+        alt="Maggie Lucy on set"
+        src="https://d3amd0zp63qrni.cloudfront.net/assets/images/maggie-billboard.jpeg"
+      />
       <div id="name-container">
         <TitleBar route="contact" />
         <div id="information-container">
@@ -51,7 +55,11 @@ export default function Contact() {
       <div id="contact-content">
         <div id="about-columns">
           <div id="photo-col" className="content-col">
-            <img id="portrait" alt="Portrait of cinematographer Maggie Lucy" src="https://d3amd0zp63qrni.cloudfront.net/assets/images/maggie-portrait.jpg" />
+            <img
+              id="portrait"
+              alt="Portrait of cinematographer Maggie Lucy"
+              src="https://d3amd0zp63qrni.cloudfront.net/assets/images/maggie-portrait.jpg"
+            />
           </div>
           <div id="text-col" className="content-col">
             <h2 id="word-blob">
