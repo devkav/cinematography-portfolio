@@ -59,7 +59,14 @@ export default function ProjectDisplay({
   return (
     <div className={className} onClick={onClick}>
       <div className="project-display-label-container">
-        {laurels && <img className="project-display-laurel" src={londonLaurel} key={`laurel-${id}`} />}
+        {laurels && (
+          <img
+            className="project-display-laurel"
+            src={londonLaurel}
+            alt={`Film festival laurel — ${title}`}
+            key={`laurel-${id}`}
+          />
+        )}
         <div className="project-display-label">
           <p className="project-display-title">{title}</p>
           <p className="project-display-subtitle">{subtitle}</p>

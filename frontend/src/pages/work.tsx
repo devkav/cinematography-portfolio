@@ -1,6 +1,7 @@
 import TitleBar from "../components/TitleBar/TitleBar";
 import Footer from "../components/Footer/Footer";
 import VideoRow from "../components/VideoRow/VideoRow";
+import Seo from "../components/Seo/Seo";
 import { useRef, useEffect, useState } from "react";
 
 import "../styles/work.css";
@@ -69,6 +70,11 @@ export default function Work({ projects }: { projects: Project[] }) {
 
   return (
     <div id="work-content">
+      <Seo
+        title="Film"
+        description="Selected film and cinematography work by Maggie Lucy, an Atlanta-based cinematographer."
+        path="/film"
+      />
       <TitleBar route="work" />
       <div id="work-row-container" ref={rowContainerRef}>
         {loadedRows}

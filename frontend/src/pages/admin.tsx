@@ -10,19 +10,22 @@ import AdminDashboard from "../components/AdminDashboard/AdminDashboard";
 export default function Admin() {
   const { username, idToken, setAuth, clearAuth } = useAuth();
 
-  if (idToken && username) {
-    return (
-      <AdminDashboard
-        username={username}
-        onSignOut={() => {
-          signOut();
-          clearAuth();
-        }}
-      />
-    );
-  }
-
-  return <SignInForm onAuth={setAuth} />;
+  return (
+    <>
+      <meta name="robots" content="noindex, nofollow" />
+      {idToken && username ? (
+        <AdminDashboard
+          username={username}
+          onSignOut={() => {
+            signOut();
+            clearAuth();
+          }}
+        />
+      ) : (
+        <SignInForm onAuth={setAuth} />
+      )}
+    </>
+  );
 }
 
 function SignInForm({ onAuth }: { onAuth: (username: string, idToken: string) => void }) {
