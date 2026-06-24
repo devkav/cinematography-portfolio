@@ -57,6 +57,26 @@ resource "aws_api_gateway_rest_api" "api" {
   }
 }
 
+resource "aws_api_gateway_gateway_response" "default_4xx" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  response_type = "DEFAULT_4XX"
+
+  response_parameters = {
+    "gatewayresponse.header.Access-Control-Allow-Origin"  = "'*'"
+    "gatewayresponse.header.Access-Control-Allow-Headers" = "'Content-Type,Authorization'"
+  }
+}
+
+resource "aws_api_gateway_gateway_response" "default_5xx" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  response_type = "DEFAULT_5XX"
+
+  response_parameters = {
+    "gatewayresponse.header.Access-Control-Allow-Origin"  = "'*'"
+    "gatewayresponse.header.Access-Control-Allow-Headers" = "'Content-Type,Authorization'"
+  }
+}
+
 resource "aws_api_gateway_resource" "api_assets_resource" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   parent_id   = aws_api_gateway_rest_api.api.root_resource_id
@@ -129,6 +149,8 @@ resource "aws_api_gateway_deployment" "assets_api_deployment" {
     aws_api_gateway_integration.options_upload_asset_integration,
     aws_api_gateway_integration.api_gateway_analytics_integration,
     aws_api_gateway_integration.options_analytics_integration,
+    aws_api_gateway_integration.api_gateway_get_analytics_integration,
+    aws_api_gateway_integration.options_get_analytics_integration,
   ]
   rest_api_id = aws_api_gateway_rest_api.api.id
 
@@ -155,6 +177,12 @@ resource "aws_api_gateway_deployment" "assets_api_deployment" {
       aws_api_gateway_method.options_analytics.id,
       aws_api_gateway_integration.api_gateway_analytics_integration.id,
       aws_api_gateway_integration.options_analytics_integration.id,
+      aws_api_gateway_resource.api_get_analytics_resource.id,
+      aws_api_gateway_resource.api_get_analytics_resource.path_part,
+      aws_api_gateway_method.get_analytics.id,
+      aws_api_gateway_method.options_get_analytics.id,
+      aws_api_gateway_integration.api_gateway_get_analytics_integration.id,
+      aws_api_gateway_integration.options_get_analytics_integration.id,
     ]))
   }
 

@@ -252,3 +252,163 @@ resource "aws_cloudfront_distribution" "analytics_distribution" {
     cloudfront_default_certificate = true
   }
 }
+
+#####################################
+# Admin read API — GET /analytics   #
+#####################################
+resource "aws_iam_role" "get_analytics_lambda_exec" {
+  name = "get_analytics_lambda_exec_role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action    = "sts:AssumeRole"
+      Principal = { Service = "lambda.amazonaws.com" }
+      Effect    = "Allow"
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "get_analytics_lambda_logs" {
+  role       = aws_iam_role.get_analytics_lambda_exec.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_iam_role_policy" "get_analytics_lambda_dynamodb" {
+  name = "get_analytics_lambda_dynamodb_policy"
+  role = aws_iam_role.get_analytics_lambda_exec.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect   = "Allow"
+      Action   = ["dynamodb:Scan"]
+      Resource = aws_dynamodb_table.analytics_db.arn
+    }]
+  })
+}
+
+data "archive_file" "zip_api_get_analytics" {
+  type        = "zip"
+  source_file = "./api/get_analytics.py"
+  output_path = "./api/get_analytics.zip"
+}
+
+resource "aws_lambda_function" "get_analytics_lambda_function" {
+  function_name    = "get_analytics_lambda_function"
+  handler          = "get_analytics.handler"
+  runtime          = "python3.13"
+  role             = aws_iam_role.get_analytics_lambda_exec.arn
+  source_code_hash = data.archive_file.zip_api_get_analytics.output_base64sha256
+  filename         = data.archive_file.zip_api_get_analytics.output_path
+
+  layers = [aws_lambda_layer_version.common.arn]
+
+  environment {
+    variables = {
+      ANALYTICS_TABLE_NAME = aws_dynamodb_table.analytics_db.name
+    }
+  }
+}
+
+resource "aws_api_gateway_resource" "api_get_analytics_resource" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  parent_id   = aws_api_gateway_rest_api.api.root_resource_id
+  path_part   = "analytics"
+}
+
+resource "aws_api_gateway_method" "get_analytics" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  resource_id   = aws_api_gateway_resource.api_get_analytics_resource.id
+  http_method   = "GET"
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
+}
+
+resource "aws_lambda_permission" "allow_api_gateway_get_analytics" {
+  statement_id  = "AllowExecutionFromAPIGatewayGetAnalytics"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.get_analytics_lambda_function.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_api_gateway_rest_api.api.execution_arn}/*"
+}
+
+resource "aws_api_gateway_integration" "api_gateway_get_analytics_integration" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.api_get_analytics_resource.id
+  http_method = aws_api_gateway_method.get_analytics.http_method
+
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.get_analytics_lambda_function.invoke_arn
+}
+
+resource "aws_api_gateway_method_response" "get_analytics_200" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.api_get_analytics_resource.id
+  http_method = aws_api_gateway_method.get_analytics.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin" = true
+  }
+}
+
+resource "aws_api_gateway_integration_response" "get_analytics_integration_response" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.api_get_analytics_resource.id
+  http_method = aws_api_gateway_method.get_analytics.http_method
+  status_code = aws_api_gateway_method_response.get_analytics_200.status_code
+
+  depends_on = [
+    aws_api_gateway_integration.api_gateway_get_analytics_integration
+  ]
+}
+
+resource "aws_api_gateway_method" "options_get_analytics" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  resource_id   = aws_api_gateway_resource.api_get_analytics_resource.id
+  http_method   = "OPTIONS"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_integration" "options_get_analytics_integration" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.api_get_analytics_resource.id
+  http_method = aws_api_gateway_method.options_get_analytics.http_method
+
+  type = "MOCK"
+  request_templates = {
+    "application/json" = "{\"statusCode\": 200}"
+  }
+}
+
+resource "aws_api_gateway_method_response" "options_get_analytics_200" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.api_get_analytics_resource.id
+  http_method = aws_api_gateway_method.options_get_analytics.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin"  = true
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+  }
+}
+
+resource "aws_api_gateway_integration_response" "options_get_analytics_integration_response" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.api_get_analytics_resource.id
+  http_method = aws_api_gateway_method.options_get_analytics.http_method
+  status_code = aws_api_gateway_method_response.options_get_analytics_200.status_code
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,Authorization'"
+    "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS'"
+  }
+
+  depends_on = [
+    aws_api_gateway_integration.options_get_analytics_integration
+  ]
+}

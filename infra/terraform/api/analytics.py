@@ -20,18 +20,6 @@ dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table(TABLE_NAME)
 
 
-def clean_duration(value):
-    try:
-        duration = int(value)
-    except (TypeError, ValueError):
-        return None
-
-    if 0 <= duration <= MAX_DURATION_SECONDS:
-        return duration
-
-    return None
-
-
 def handler(event, _):
     headers = event.get("headers") or {}
     headers_lower = {key.lower(): value for key, value in headers.items()}
@@ -73,8 +61,12 @@ def handler(event, _):
         "userAgent": headers_lower.get("user-agent"),
     }
 
-    duration_seconds = clean_duration(body.get("durationSeconds"))
-    if duration_seconds is not None:
+    try:
+        duration_seconds = int(body.get("durationSeconds"))
+    except (TypeError, ValueError):
+        duration_seconds = None
+
+    if duration_seconds is not None and 0 <= duration_seconds <= MAX_DURATION_SECONDS:
         item["durationSeconds"] = duration_seconds
 
     item = {key: value for key, value in item.items() if value is not None}

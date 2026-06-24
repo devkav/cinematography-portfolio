@@ -8,7 +8,11 @@ interface Props {
 }
 
 export default function Dropdown({ placeholder, options, onChange }: Props) {
-  const optionElements: ReactNode[] = options.map((option, index) => <option value={index}>{option}</option>);
+  const optionElements: ReactNode[] = options.map((option, index) => (
+    <option value={index} key={`dropdown-${index}`}>
+      {option}
+    </option>
+  ));
 
   return (
     <select className="mcl-dropdown" defaultValue={-1} onChange={onChange}>
