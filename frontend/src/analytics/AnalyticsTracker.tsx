@@ -10,6 +10,8 @@ export function AnalyticsTracker() {
   const viewId = useRef(crypto.randomUUID());
 
   useEffect(() => {
+    if (pathname.startsWith("/admin")) return;
+
     enteredAtMs.current = Date.now();
     enteredAtIso.current = new Date().toISOString();
     viewId.current = crypto.randomUUID();

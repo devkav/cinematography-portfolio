@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
+import "./admin-dashboard.css";
 
+import { Link } from "react-router";
 import PhotoUploadForm from "../PhotoUploadForm/PhotoUploadForm";
 import type { PhotoProject, Project } from "src/types/Projects";
+import type { TabbedPage } from "../Tabs/Tabs";
+import Tabs from "../Tabs/Tabs";
+import AnalyticsDashboard from "../AnalyticsDashboard/AnalyticsDashboard";
+import { MdFileUpload, MdOutlineShowChart } from "react-icons/md";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -9,8 +15,21 @@ export default function AdminDashboard({ username, onSignOut }: { username: stri
   const [photos, setPhotos] = useState<PhotoProject[]>([]);
   const [collections, setCollections] = useState<string[]>([]);
   const [folders, setFolders] = useState<string[]>([]);
-
   const [filmProjects, setFilmProjects] = useState<Project[]>([]);
+
+  const pages: TabbedPage[] = [
+    {
+      name: "Analytics",
+      content: <AnalyticsDashboard/>,
+      icon: <MdOutlineShowChart />
+
+    },
+    {
+      name: "Upload",
+      content: <PhotoUploadForm collections={collections} folders={folders} />,
+      icon: <MdFileUpload/>
+    },
+  ]
 
   useEffect(() => {
     const tempCollections = new Set<string>();
@@ -33,13 +52,15 @@ export default function AdminDashboard({ username, onSignOut }: { username: stri
     fetch(`${API_URL}/assets?page=film`).then((data) => data.json().then((data) => setFilmProjects(data)));
   }, []);
 
-  console.log(collections);
-  console.log(folders);
+
 
   return (
     <div className="admin-dashboard">
       <header className="admin-header">
-        <h1>Admin</h1>
+
+        <Link id="logo" to="/">
+          Maggie Lucy
+        </Link>
         <div className="admin-header-right">
           <span>
             Signed in as <strong>{username}</strong>
@@ -47,9 +68,7 @@ export default function AdminDashboard({ username, onSignOut }: { username: stri
           <button onClick={onSignOut}>Sign out</button>
         </div>
       </header>
-      <main>
-        <PhotoUploadForm collections={collections} folders={folders} />
-      </main>
+      <Tabs pages={pages}/>
     </div>
   );
 }

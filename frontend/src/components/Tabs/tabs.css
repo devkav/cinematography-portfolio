@@ -1,0 +1,49 @@
+.tab-row {
+  display: flex;
+  flex-flow: row;
+}
+
+.tab {
+  padding: 10px;
+  display: flex;
+  flex-flow: row;
+
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #333;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #333;
+  }
+}
+
+.tab p {
+  margin: 0;
+  margin-left: 4px;
+}
+
+.tab.active p {
+  text-shadow: 0.4px 0 0 currentColor, -0.4px 0 0 currentColor;
+}
+
+.tab-filler {
+  display: flex;
+  flex-grow: 1;
+
+  border-bottom-color: #333;
+}
+
+.tab-filler, .tab {
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #333;
+
+  transition: border-bottom-color 0.25s, background-color 0.25s;
+
+  &.active {
+    border-bottom-width: 2px;
+    border-bottom-color: rgb(197, 78, 130);
+  }
+}
+

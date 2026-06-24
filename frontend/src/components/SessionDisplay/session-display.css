@@ -1,0 +1,144 @@
+
+.session-display {
+  margin: 4px;
+  padding: 8px;
+  border-radius: 4px;
+  border-color: #333;
+  border-style: solid;
+  border-width: 1px;
+}
+
+.session-display p {
+  margin: 0;
+}
+
+.session-display-header {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.session-display-label {
+  display: flex;
+  flex-flow: row;
+  min-width: 300px;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.session-location-label {
+  font-weight: bold;
+}
+
+.session-display-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  margin-left: 12px;
+  width: 32px;
+  height: 32px;
+  transition: background-color 0.25s;
+  border-radius: 4px;
+
+  &:hover {
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.session-id-label {
+  font-size: 12px;
+  color: #828282;
+}
+
+.session-details {
+  margin-top: 12px;
+}
+
+.session-details p {
+  font-size: 14px;
+}
+
+.session-details p:not(.action-label) {
+  margin-bottom: 8px;
+}
+
+.actions-container {
+  margin-top: 12px;
+}
+
+.action-item {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+}
+
+.action-timeline {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  margin-right: 8px;
+}
+
+.action-timeline-line {
+  background-color: rgb(197, 78, 130);
+  width: 2px;
+  height: 10px;
+}
+
+.action-timeline-tick {
+  width: 8px;
+  height: 8px;
+  border-radius: 10px;
+  border-style: solid;
+  border-color: rgb(197, 78, 130);
+  border-width: 2px;
+}
+
+.action-label {
+  margin: 0;
+}
+
+.session-controls {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+}
+
+.session-page-button {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
+  margin-right: 10px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.session-page-button p {
+  margin: 0;
+}
+
+.session-page-button.active {
+  font-weight: bold;
+}
+
+.session-prev-page-button, .session-next-page-button {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
