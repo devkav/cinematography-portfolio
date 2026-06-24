@@ -5,7 +5,6 @@ import { useAuth } from "../../auth/AuthContext";
 import SessionDisplay from "../SessionDisplay/SessionDisplay";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
-
 const API_URL = import.meta.env.VITE_API_URL;
 
 export interface Action {
@@ -48,43 +47,43 @@ export default function AnalyticsDashboard() {
     })
       .then((res) => res.json())
       .then((data: AnalyticsData) => {
-        setData(data)
-      })
+        setData(data);
+      });
   }, [idToken, page]);
 
   const nextPage = () => {
     if (data == undefined) {
-      return
+      return;
     }
 
     if (page < data?.totalPages) {
       setData(undefined);
       setPage(data?.page + 1);
     }
-  }
+  };
 
   const prevPage = () => {
     if (data == undefined) {
-      return
+      return;
     }
 
     if (page > 1) {
       setData(undefined);
       setPage(data?.page - 1);
     }
-  }
+  };
 
   const goToPage = (page: number) => {
-      setData(undefined);
-      setPage(page);
-  }
+    setData(undefined);
+    setPage(page);
+  };
 
   const pageButtons = Array.from({ length: data?.totalPages ?? 0 }, (_, index) => {
     const actingIndex = index + 1;
-    let className = "session-page-button"
+    let className = "session-page-button";
 
     if (actingIndex == page) {
-      className += " active"
+      className += " active";
     }
 
     return (
@@ -92,22 +91,24 @@ export default function AnalyticsDashboard() {
         <p>{actingIndex}</p>
       </div>
     );
-  })
+  });
 
   return (
     <div>
       <h3>Analytics</h3>
       <div className="session-controls">
         <div className="session-prev-page-button" onClick={prevPage}>
-          <MdChevronLeft/>
+          <MdChevronLeft />
         </div>
         {pageButtons}
         <div className="session-next-page-button" onClick={nextPage}>
-          <MdChevronRight/>
+          <MdChevronRight />
         </div>
       </div>
       <div className="session-display-list">
-        {data?.sessions.map((session, index) => <SessionDisplay session={session} key={`sessionDisplay-${session.sessionId}`}/>)}
+        {data?.sessions.map((session, index) => (
+          <SessionDisplay session={session} key={`sessionDisplay-${session.sessionId}`} />
+        ))}
       </div>
     </div>
   );

@@ -20,16 +20,15 @@ export default function AdminDashboard({ username, onSignOut }: { username: stri
   const pages: TabbedPage[] = [
     {
       name: "Analytics",
-      content: <AnalyticsDashboard/>,
+      content: <AnalyticsDashboard />,
       icon: <MdOutlineShowChart />
-
     },
     {
       name: "Upload",
       content: <PhotoUploadForm collections={collections} folders={folders} />,
-      icon: <MdFileUpload/>
-    },
-  ]
+      icon: <MdFileUpload />
+    }
+  ];
 
   useEffect(() => {
     const tempCollections = new Set<string>();
@@ -52,12 +51,9 @@ export default function AdminDashboard({ username, onSignOut }: { username: stri
     fetch(`${API_URL}/assets?page=film`).then((data) => data.json().then((data) => setFilmProjects(data)));
   }, []);
 
-
-
   return (
     <div className="admin-dashboard">
       <header className="admin-header">
-
         <Link id="logo" to="/">
           Maggie Lucy
         </Link>
@@ -68,7 +64,7 @@ export default function AdminDashboard({ username, onSignOut }: { username: stri
           <button onClick={onSignOut}>Sign out</button>
         </div>
       </header>
-      <Tabs pages={pages}/>
+      <Tabs pages={pages} />
     </div>
   );
 }

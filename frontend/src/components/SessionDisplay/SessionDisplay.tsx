@@ -1,4 +1,4 @@
-import "./session-display.css"
+import "./session-display.css";
 
 import type { Session } from "../AnalyticsDashboard/AnalyticsDashboard";
 import { MdKeyboardArrowDown } from "react-icons/md";
@@ -33,13 +33,13 @@ function timeAgo(timestamp: string): string {
   return "Just now";
 }
 
-export default function SessionDisplay({session}: Props) {
+export default function SessionDisplay({ session }: Props) {
   const [open, setOpen] = useState(false);
 
   const toggleOpen = () => setOpen(!open);
 
   const firstTimestamp = timeAgo(session.actions[0].timestamp);
-  const location = session.city ? `${session.city}, ${session.region}` :session.regionName;
+  const location = session.city ? `${session.city}, ${session.region}` : session.regionName;
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${session.latitude},${session.longitude}`;
 
   const { browser, os, device } = UAParser(session.userAgent);
@@ -65,21 +65,30 @@ export default function SessionDisplay({session}: Props) {
             <p className="session-location-label">{location}</p>
             <p className="session-timestamp-label">{firstTimestamp}</p>
           </div>
-            <p className="session-id-label">{session.sessionId}</p>
+          <p className="session-id-label">{session.sessionId}</p>
         </div>
         <div className="session-display-icon" onClick={toggleOpen}>
           <MdKeyboardArrowDown />
         </div>
       </div>
-      {open && <div className="session-details">
-        <p>Device: {userAgentLabel} ({deviceLabel})</p>
-        <p>Location: {location}, {session.country}</p>
-        <p>Coordinates (approx.): <a href={mapsUrl} rel="noreferrer" target="_blank">{session.latitude}, {session.longitude}</a></p>
+      {open && (
+        <div className="session-details">
+          <p>
+            Device: {userAgentLabel} ({deviceLabel})
+          </p>
+          <p>
+            Location: {location}, {session.country}
+          </p>
+          <p>
+            Coordinates (approx.):{" "}
+            <a href={mapsUrl} rel="noreferrer" target="_blank">
+              {session.latitude}, {session.longitude}
+            </a>
+          </p>
 
-        <div className="actions-container">
-          {actions}
+          <div className="actions-container">{actions}</div>
         </div>
-      </div>}
+      )}
     </div>
-  )
+  );
 }

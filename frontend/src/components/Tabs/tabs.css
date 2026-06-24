@@ -24,7 +24,9 @@
 }
 
 .tab.active p {
-  text-shadow: 0.4px 0 0 currentColor, -0.4px 0 0 currentColor;
+  text-shadow:
+    0.4px 0 0 currentColor,
+    -0.4px 0 0 currentColor;
 }
 
 .tab-filler {
@@ -34,16 +36,18 @@
   border-bottom-color: #333;
 }
 
-.tab-filler, .tab {
+.tab-filler,
+.tab {
   border-bottom-style: solid;
   border-bottom-width: 1px;
   border-bottom-color: #333;
 
-  transition: border-bottom-color 0.25s, background-color 0.25s;
+  transition:
+    border-bottom-color 0.25s,
+    background-color 0.25s;
 
   &.active {
     border-bottom-width: 2px;
     border-bottom-color: rgb(197, 78, 130);
   }
 }
-

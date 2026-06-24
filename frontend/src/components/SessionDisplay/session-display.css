@@ -1,4 +1,3 @@
-
 .session-display {
   margin: 4px;
   padding: 8px;
@@ -130,7 +129,8 @@
   font-weight: bold;
 }
 
-.session-prev-page-button, .session-next-page-button {
+.session-prev-page-button,
+.session-next-page-button {
   width: 20px;
   height: 20px;
   display: flex;
