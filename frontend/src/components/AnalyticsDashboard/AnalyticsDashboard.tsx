@@ -103,7 +103,7 @@ export default function AnalyticsDashboard() {
         <MdChevronRight />
       </div>
     </div>
-  )
+  );
 
   return (
     <div>
