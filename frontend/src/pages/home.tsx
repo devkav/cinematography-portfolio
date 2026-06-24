@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import Footer from "../components/Footer/Footer";
+import Seo from "../components/Seo/Seo";
 import { MenuRoute } from "../types/MenuRoute";
 import "../styles/home.css";
 import { useRef } from "react";
@@ -25,6 +26,11 @@ export default function Home() {
 
   return (
     <div>
+      <Seo
+        title="Atlanta Cinematographer"
+        description="Maggie Lucy is an Atlanta-based cinematographer with an eye for composition, lighting, and storytelling. Explore her film reel, cinematography work, and photography."
+        path="/"
+      />
       <video
         autoPlay
         muted
@@ -32,6 +38,7 @@ export default function Home() {
         playsInline
         id="jumbo-video"
         src="https://d3amd0zp63qrni.cloudfront.net/assets/videos/landing-video.mp4"
+        poster="https://d3amd0zp63qrni.cloudfront.net/assets/images/maggie-billboard.jpeg"
         ref={videoRef}
       />
       <div id="title-container">

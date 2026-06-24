@@ -1,6 +1,7 @@
 import type { PhotoProject } from "src/types/Projects";
 import Footer from "../components/Footer/Footer";
 import TitleBar from "../components/TitleBar/TitleBar";
+import Seo from "../components/Seo/Seo";
 
 import "../styles/photo.css";
 import { useEffect, useState } from "react";
@@ -176,6 +177,7 @@ export default function Photo({ photos }: { photos: PhotoProject[] }) {
       <img
         className="hidden-preload-image"
         src={firstImage?.src}
+        alt={`${photos[currentProjectIndex].title} photography by Maggie Lucy`}
         loading="eager"
         key={getKey({ projectIndex: currentProjectIndex, photoIndex: 0 })}
       />
@@ -207,6 +209,7 @@ export default function Photo({ photos }: { photos: PhotoProject[] }) {
         <img
           className={className}
           src={imageObj?.src}
+          alt={`${photos[projectIndex].title} photography by Maggie Lucy`}
           loading="eager"
           key={getKey({ projectIndex, photoIndex: currentPhotoIndex })}
         />
@@ -248,6 +251,11 @@ export default function Photo({ photos }: { photos: PhotoProject[] }) {
 
   return (
     <div id="photo-page">
+      <Seo
+        title="Photography"
+        description="Photography portfolio of Maggie Lucy, an Atlanta-based cinematographer and photographer."
+        path="/photo"
+      />
       {!compactBar && titleBar}
       <div id="photo-content-container">
         <div id="photo-content">

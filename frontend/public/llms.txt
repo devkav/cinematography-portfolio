@@ -1,0 +1,21 @@
+# Maggie Lucy
+
+> Maggie Lucy is an Atlanta-based cinematographer with an eye for composition, lighting, and storytelling. She holds a BFA in Film and Animation, with a concentration in Cinematography and a minor in Advertising Photography, from the Rochester Institute of Technology.
+
+## Profile
+- Name: Maggie Lucy
+- Role: Cinematographer
+- Location: Atlanta, GA, USA
+- Education: BFA in Film and Animation (Cinematography concentration), Rochester Institute of Technology
+
+## Pages
+- [Home](https://maggieclucy.com/): Introduction and navigation
+- [Reel](https://maggieclucy.com/reel): Cinematography demo reel
+- [Film](https://maggieclucy.com/film): Selected film and cinematography work
+- [Photography](https://maggieclucy.com/photo): Photography portfolio
+- [Contact](https://maggieclucy.com/contact): Bio, résumé, and contact details
+
+## Contact
+- Email: maggieclucy@gmail.com
+- Instagram: https://www.instagram.com/maggielucyscamera
+- LinkedIn: https://www.linkedin.com/in/maggie-lucy/
