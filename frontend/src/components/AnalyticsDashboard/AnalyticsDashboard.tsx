@@ -93,22 +93,27 @@ export default function AnalyticsDashboard() {
     );
   });
 
+  const pageControls = (
+    <div className="session-controls">
+      <div className="session-prev-page-button" onClick={prevPage}>
+        <MdChevronLeft />
+      </div>
+      {pageButtons}
+      <div className="session-next-page-button" onClick={nextPage}>
+        <MdChevronRight />
+      </div>
+    </div>
+  );
+
   return (
     <div>
       <h3>Analytics</h3>
-      <div className="session-controls">
-        <div className="session-prev-page-button" onClick={prevPage}>
-          <MdChevronLeft />
-        </div>
-        {pageButtons}
-        <div className="session-next-page-button" onClick={nextPage}>
-          <MdChevronRight />
-        </div>
-      </div>
       <div className="session-display-list">
+        {data && pageControls}
         {data?.sessions.map((session, index) => (
           <SessionDisplay session={session} key={`sessionDisplay-${session.sessionId}`} />
         ))}
+        {data && pageControls}
       </div>
     </div>
   );
