@@ -2,13 +2,13 @@ const SITE_NAME = "Maggie Lucy";
 const SITE_URL = "https://maggieclucy.com";
 
 interface Props {
-  title: string;
+  title?: string;
   description: string;
   path: string;
 }
 
 export default function Seo({ title, description, path }: Props) {
-  const fullTitle = `${title} | ${SITE_NAME}`;
+  const fullTitle = title ? `${title} | ${SITE_NAME}` : SITE_NAME;
   const url = `${SITE_URL}${path}`;
 
   return (

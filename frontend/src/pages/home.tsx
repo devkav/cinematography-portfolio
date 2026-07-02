@@ -27,7 +27,6 @@ export default function Home() {
   return (
     <div>
       <Seo
-        title="Atlanta Cinematographer"
         description="Maggie Lucy is an Atlanta-based cinematographer with an eye for composition, lighting, and storytelling. Explore her film reel, cinematography work, and photography."
         path="/"
       />

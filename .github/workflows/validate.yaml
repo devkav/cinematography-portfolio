@@ -18,10 +18,11 @@ jobs:
           node-version: '23'
 
       - name: Install dependencies
-        run: npm install --save-dev --save-exact prettier
+        run: npm ci --prefix frontend
 
       - name: Run Prettier check
-        run: npx prettier ./frontend --check
+        run: npx prettier . --check
+        working-directory: frontend
 
   lint-backend:
     runs-on: ubuntu-latest
