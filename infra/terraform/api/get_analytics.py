@@ -46,14 +46,18 @@ def handler(event, _):
 
     for session_id, views in grouped.items():
         views.sort(key=lambda view: view.get("Timestamp", ""))
-
         actions = []
+        total_duration = 0
+
         for view in views:
             timestamp = view.get("Timestamp")
+            duration = view.get("durationSeconds", 0)
+            total_duration += duration
+
             action = {
                 "page": view.get("page"),
                 "timestamp": timestamp.split("#", 1)[0] if timestamp else timestamp,
-                "durationSeconds": view.get("durationSeconds")
+                "durationSeconds": duration
             }
 
             actions.append(action)
@@ -62,6 +66,7 @@ def handler(event, _):
         session = {"sessionId": session_id}
         session.update({field: first[field] for field in GEO_FIELDS if first.get(field) is not None})
         session["actions"] = actions
+        session["totalDuration"] = total_duration
         sessions.append(session)
 
     sessions.sort(key=lambda session: session["actions"][-1]["timestamp"], reverse=True)

@@ -18,6 +18,15 @@ const UNITS: [Intl.RelativeTimeFormatUnit, number][] = [
   ["second", 1]
 ];
 
+const UNIT_LABELS: Record<string, string> = {
+  year: "yr",
+  month: "mo",
+  day: "d",
+  hour: "hr",
+  minute: "min",
+  second: "s"
+};
+
 const relativeFormat = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
 
 function timeAgo(timestamp: string): string {
@@ -33,6 +42,16 @@ function timeAgo(timestamp: string): string {
   return "Just now";
 }
 
+function formatDuration(seconds: number): string {
+  for (const [unit, secondsPerUnit] of UNITS) {
+    if (seconds >= secondsPerUnit || unit === "second") {
+      return `${Math.floor(seconds / secondsPerUnit)}${UNIT_LABELS[unit]}`;
+    }
+  }
+
+  return "0s";
+}
+
 export default function SessionDisplay({ session }: Props) {
   const [open, setOpen] = useState(false);
 
@@ -40,6 +59,7 @@ export default function SessionDisplay({ session }: Props) {
 
   const firstTimestamp = timeAgo(session.actions[0].timestamp);
   const location = session.city ? `${session.city}, ${session.region}` : session.regionName;
+  const totalDuration = session.totalDuration;
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${session.latitude},${session.longitude}`;
 
   const { browser, os, device } = UAParser(session.userAgent);
@@ -62,7 +82,7 @@ export default function SessionDisplay({ session }: Props) {
       <div className="session-display-header">
         <div className="session-display-label-container">
           <div className="session-display-label">
-            <p className="session-location-label">{location}</p>
+            <p className="session-location-label">{`${location} (${formatDuration(totalDuration)})`}</p>
             <p className="session-timestamp-label">{firstTimestamp}</p>
           </div>
           <p className="session-id-label">{session.sessionId}</p>
