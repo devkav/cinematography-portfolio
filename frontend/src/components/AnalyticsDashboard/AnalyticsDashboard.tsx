@@ -22,6 +22,7 @@ export interface Session {
   region: string;
   regionName: string;
   sessionId: string;
+  totalDuration: number;
   userAgent: string;
 }
 
@@ -110,7 +111,7 @@ export default function AnalyticsDashboard() {
       <h3>Analytics</h3>
       <div className="session-display-list">
         {data && pageControls}
-        {data?.sessions.map((session, index) => (
+        {data?.sessions.map((session) => (
           <SessionDisplay session={session} key={`sessionDisplay-${session.sessionId}`} />
         ))}
         {data && pageControls}
