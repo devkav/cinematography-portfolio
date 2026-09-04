@@ -91,9 +91,9 @@ export default function AnalyticsDashboard() {
     if (page < halfway_page) {
       start = 1;
     } else if (page + halfway_page > data?.totalPages) {
-      start = (data?.totalPages - NUM_PAGE_NUMBERS) + 1;
+      start = data?.totalPages - NUM_PAGE_NUMBERS + 1;
     } else {
-      start = (page - halfway_page) + 1;
+      start = page - halfway_page + 1;
     }
   }
 
