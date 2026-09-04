@@ -65,6 +65,12 @@ resource "aws_api_gateway_gateway_response" "default_4xx" {
     "gatewayresponse.header.Access-Control-Allow-Origin"  = "'*'"
     "gatewayresponse.header.Access-Control-Allow-Headers" = "'Content-Type,Authorization'"
   }
+
+  # API Gateway applies this template by default when none is given. Declaring
+  # it here keeps it out of every plan as a spurious in-place update.
+  response_templates = {
+    "application/json" = "{\"message\":$context.error.messageString}"
+  }
 }
 
 resource "aws_api_gateway_gateway_response" "default_5xx" {
@@ -74,6 +80,12 @@ resource "aws_api_gateway_gateway_response" "default_5xx" {
   response_parameters = {
     "gatewayresponse.header.Access-Control-Allow-Origin"  = "'*'"
     "gatewayresponse.header.Access-Control-Allow-Headers" = "'Content-Type,Authorization'"
+  }
+
+  # API Gateway applies this template by default when none is given. Declaring
+  # it here keeps it out of every plan as a spurious in-place update.
+  response_templates = {
+    "application/json" = "{\"message\":$context.error.messageString}"
   }
 }
 

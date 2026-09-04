@@ -6,6 +6,7 @@ import SessionDisplay from "../SessionDisplay/SessionDisplay";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
 const API_URL = import.meta.env.VITE_API_URL;
+const NUM_PAGE_NUMBERS = 5;
 
 export interface Action {
   durationSeconds: number;
@@ -74,13 +75,30 @@ export default function AnalyticsDashboard() {
     }
   };
 
-  const goToPage = (page: number) => {
+  const goToPage = (page_index: number) => {
+    if (page_index == page) {
+      return;
+    }
+
     setData(undefined);
-    setPage(page);
+    setPage(page_index);
   };
 
-  const pageButtons = Array.from({ length: data?.totalPages ?? 0 }, (_, index) => {
-    const actingIndex = index + 1;
+  const halfway_page = Math.ceil(NUM_PAGE_NUMBERS / 2);
+  let start;
+
+  if (data?.totalPages) {
+    if (page < halfway_page) {
+      start = 1;
+    } else if (page + halfway_page > data?.totalPages) {
+      start = data?.totalPages - NUM_PAGE_NUMBERS + 1;
+    } else {
+      start = page - halfway_page + 1;
+    }
+  }
+
+  const pageButtons = Array.from({ length: start ? NUM_PAGE_NUMBERS : 0 }, (_, index) => {
+    const actingIndex = start! + index;
     let className = "session-page-button";
 
     if (actingIndex == page) {
