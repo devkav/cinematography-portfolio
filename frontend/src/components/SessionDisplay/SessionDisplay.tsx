@@ -64,7 +64,8 @@ export default function SessionDisplay({ session }: Props) {
 
   const { browser, os, device } = UAParser(session.userAgent);
   const userAgentLabel = [browser.name, os.name].filter(Boolean).join(" on ") || "Unknown device";
-  const deviceLabel = [device.vendor, device.type ?? "desktop"].filter(Boolean).join(" ");
+  let deviceLabel = [device.vendor, device.type ?? "desktop"].filter(Boolean).join(" ");
+  deviceLabel = deviceLabel.charAt(0).toUpperCase() + deviceLabel.slice(1);
 
   const actions = session.actions.map((action, index) => (
     <div className="action-item" key={`${session.sessionId}-action${index}`}>
@@ -81,11 +82,14 @@ export default function SessionDisplay({ session }: Props) {
     <div className="session-display">
       <div className="session-display-header">
         <div className="session-display-label-container">
-          <div className="session-display-label">
+          <div className="session-display-label" id="session-display-label-primary">
             <p className="session-location-label">{`${location} (${formatDuration(totalDuration)})`}</p>
             <p className="session-timestamp-label">{firstTimestamp}</p>
           </div>
-          <p className="session-id-label">{session.sessionId}</p>
+          <div className="session-display-label">
+            <p className="session-sub-label">{deviceLabel}</p>
+            <p className="session-sub-label">{session.actions.length} pages visited</p>
+          </div>
         </div>
         <div className="session-display-icon" onClick={toggleOpen}>
           <MdKeyboardArrowDown />
