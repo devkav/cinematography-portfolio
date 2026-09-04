@@ -137,15 +137,25 @@ export default function Photo({ photos }: { photos: PhotoProject[] }) {
     const newIndex = photoIndex + change;
 
     if (newIndex < 0) {
-      setPhotoIndex(numPhotos + change);
+      changeCollection(projectIndex - 1, false);
+    } else if (newIndex >= numPhotos) {
+      changeCollection(projectIndex + 1, true);
     } else {
-      setPhotoIndex(newIndex % numPhotos);
+      setPhotoIndex(newIndex);
     }
   };
 
-  const changeCollection = (collection: number) => {
+  const changeCollection = (collection: number, start: boolean) => {
+    const numProjects = photos.length;
+
+    if (collection < 0) {
+      collection = numProjects - 1;
+    } else if (collection >= numProjects) {
+      collection = 0;
+    }
+
     setProjectIndex(collection);
-    setPhotoIndex(0);
+    setPhotoIndex(start ? 0 : photos[collection].photos.length - 1);
 
     const projectTitle = photos[collection].title;
     setSearchParams({ [PHOTO_SEARCH_PARAM_NAME]: getProjectSearchParam(projectTitle) });
@@ -162,7 +172,6 @@ export default function Photo({ photos }: { photos: PhotoProject[] }) {
 
   const collections: any[] = [];
   const images = [];
-  const renderButtons = photos.length > 0 && photos[projectIndex].photos.length > 1;
   const compactBar = width > 800;
   const titleBar = <TitleBar route="photo" compact={compactBar} />;
 
@@ -239,7 +248,7 @@ export default function Photo({ photos }: { photos: PhotoProject[] }) {
         <p
           className={classNames.join(" ")}
           onClick={() => {
-            changeCollection(index);
+            changeCollection(index, true);
           }}
           key={`proj-${index}`}
         >
@@ -264,21 +273,17 @@ export default function Photo({ photos }: { photos: PhotoProject[] }) {
             <div id="photo-sidebar">{collections}</div>
           </div>
           <div id="display-container">
-            {renderButtons && (
-              <div className="photo-button" onClick={prevImage}>
-                <div className="photo-button-col" id="prev-col">
-                  <MdNavigateBefore />
-                </div>
+            <div className="photo-button" onClick={prevImage}>
+              <div className="photo-button-col" id="prev-col">
+                <MdNavigateBefore />
               </div>
-            )}
+            </div>
             {images}
-            {renderButtons && (
-              <div className="photo-button" onClick={nextImage}>
-                <div className="photo-button-col" id="next-col">
-                  <MdNavigateNext />
-                </div>
+            <div className="photo-button" onClick={nextImage}>
+              <div className="photo-button-col" id="next-col">
+                <MdNavigateNext />
               </div>
-            )}
+            </div>
           </div>
         </div>
       </div>
