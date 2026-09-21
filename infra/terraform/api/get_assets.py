@@ -4,7 +4,7 @@ from collections import defaultdict
 import boto3
 from boto3.dynamodb.conditions import Key
 
-from common import build_response, is_allowed_origin
+from common import build_response, is_allowed_origin, get_asset_id
 
 
 TABLE_NAME = os.getenv("ASSETS_TABLE_NAME", "assets_db")
@@ -66,8 +66,8 @@ def handler(event, _):
     folders_response = table.query(KeyConditionExpression=Key("Type").eq("photo_folder"))
     photos_response = table.query(KeyConditionExpression=Key("Type").eq("photo"))
 
-    collection_order = {
-        item["AssetID"]: item.get("order", 0)
+    collections_by_id = {
+        item["AssetID"]: item
         for item in collections_response["Items"]
     }
 
@@ -87,11 +87,13 @@ def handler(event, _):
     for folder_id, folder_info in folders_by_id.items():
         sorted_photos = sorted(photos_by_folder.get(folder_id, []), key=lambda x: x.get("order", 0))
 
+        collection_item = collections_by_id.get(get_asset_id(folder_info["collection"] or ""), {})
+
         assets.append({
             "title": folder_info["title"],
-            "collection": folder_info["collection"],
+            "collection": collection_item.get("title", folder_info["collection"]),
             "order": folder_info["order"],
-            "collection_order": collection_order.get(folder_info["collection"], 0),
+            "collection_order": collection_item.get("order", 0),
             "photos": [{"src": build_src(photo.get("src"))} for photo in sorted_photos],
         })
 

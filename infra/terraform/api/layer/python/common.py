@@ -1,6 +1,8 @@
+import re
 import json
 from decimal import Decimal
 from urllib.parse import urlparse
+from enum import Enum
 
 
 ALLOWED_ORIGINS = [
@@ -8,6 +10,26 @@ ALLOWED_ORIGINS = [
     "https://maggieclucy.com",
     "https://www.maggieclucy.com"
 ]
+
+
+class Page(str, Enum):
+    PHOTO = "photo"
+    FILM = "film"
+
+
+class AssetType(str, Enum):
+    PHOTO_FOLDER = "photo_folder"
+    PHOTO_COLLECTION = "photo_collection"
+    PHOTO = "photo"
+    FILM = "film"
+
+
+def get_asset_id(title):
+    title = title.lower().strip()
+    title = re.sub(r"[^\w\s-]", "", title)
+    title = re.sub(r"[\s_]+", "-", title)
+    title = re.sub(r"-+", "-", title)
+    return title
 
 
 class DecimalEncoder(json.JSONEncoder):
@@ -40,3 +62,6 @@ def is_allowed_origin(origin):
         urlparse(allowed).scheme == origin_parsed.scheme
         for allowed in ALLOWED_ORIGINS
     )
+
+
+

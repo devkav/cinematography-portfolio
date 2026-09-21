@@ -4,7 +4,7 @@ import uuid
 
 import boto3
 
-from common import build_response, is_allowed_origin
+from common import build_response, is_allowed_origin, get_asset_id
 
 
 BUCKET_NAME = os.getenv("ASSETS_BUCKET_NAME")
@@ -54,8 +54,12 @@ def handler(event, _):
 
     if page == "photo":
         folder = body.get("folder")
+
+        if not folder:
+            return build_response(400, {"error": "Missing folder"}, origin)
+
         file_name = f"{uuid.uuid4()}.{extension}"
-        key = f"assets/images/photo/{folder}/{file_name}"
+        key = f"assets/images/photo/{get_asset_id(folder)}/{file_name}"
 
         url = s3.generate_presigned_url(
             "put_object",
@@ -67,4 +71,4 @@ def handler(event, _):
             ExpiresIn=URL_EXPIRATION_SECONDS
         )
 
-        return build_response(200, {"url": url, "key": file_name}, origin)
+        return build_response(200, {"url": url, "key": key}, origin)
