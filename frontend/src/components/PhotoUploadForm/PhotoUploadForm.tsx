@@ -6,10 +6,10 @@ import FileUpload from "../FileUpload/FileUpload";
 
 interface Props {
   collections: string[];
-  folders: string[];
+  foldersByCollection: Record<string, string[]>;
 }
 
-export default function PhotoUploadForm({ collections, folders }: Props) {
+export default function PhotoUploadForm({ collections, foldersByCollection }: Props) {
   const [collectionIndex, setCollection] = useState<number>();
   const [newCollectionName, setNewCollectionName] = useState<string>();
   const [folderIndex, setFolder] = useState<number>();
@@ -20,6 +20,8 @@ export default function PhotoUploadForm({ collections, folders }: Props) {
 
     if (selectedIndex >= 0) {
       setCollection(selectedIndex);
+      setFolder(undefined);
+      setNewFolderName(undefined);
     }
   };
 
@@ -40,8 +42,13 @@ export default function PhotoUploadForm({ collections, folders }: Props) {
   };
 
   const showCollectionInput = collectionIndex == collections.length;
+  const collection = showCollectionInput ? newCollectionName : collections[collectionIndex!];
+
+  const folders = (collection && foldersByCollection[collection]) || [];
+
   const showFolderDropdown = collectionIndex && (!showCollectionInput || (showCollectionInput && newCollectionName));
   const showFolderInput = folderIndex == folders.length;
+  const folder = showFolderInput ? newFolderName : folders[folderIndex!];
   const showUploadButton = folderIndex && (!showFolderInput || (showFolderInput && newFolderName));
 
   return (
@@ -72,7 +79,7 @@ export default function PhotoUploadForm({ collections, folders }: Props) {
         </>
       )}
 
-      {showUploadButton && <FileUpload />}
+      {showUploadButton && collection && folder && <FileUpload collection={collection} folder={folder} />}
     </div>
   );
 }

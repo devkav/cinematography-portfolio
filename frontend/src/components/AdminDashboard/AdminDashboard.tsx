@@ -14,7 +14,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 export default function AdminDashboard({ username, onSignOut }: { username: string; onSignOut: () => void }) {
   const [photos, setPhotos] = useState<PhotoProject[]>([]);
   const [collections, setCollections] = useState<string[]>([]);
-  const [folders, setFolders] = useState<string[]>([]);
+  const [foldersByCollection, setFoldersByCollection] = useState<Record<string, string[]>>({});
   const [filmProjects, setFilmProjects] = useState<Project[]>([]);
 
   const pages: TabbedPage[] = [
@@ -25,24 +25,22 @@ export default function AdminDashboard({ username, onSignOut }: { username: stri
     },
     {
       name: "Upload",
-      content: <PhotoUploadForm collections={collections} folders={folders} />,
+      content: <PhotoUploadForm collections={collections} foldersByCollection={foldersByCollection} />,
       icon: <MdFileUpload />
     }
   ];
 
   useEffect(() => {
-    const tempCollections = new Set<string>();
-    const tempFolders = new Set<string>();
-
     fetch(`${API_URL}/assets?page=photo`).then((data) =>
       data.json().then((data: PhotoProject[]) => {
-        data.forEach((collection) => {
-          tempCollections.add(collection.collection);
-          tempFolders.add(collection.title);
+        const grouped: Record<string, string[]> = {};
+
+        data.forEach((project) => {
+          grouped[project.collection] = [...(grouped[project.collection] ?? []), project.title];
         });
 
-        setCollections(Array.from(tempCollections));
-        setFolders(Array.from(tempFolders));
+        setCollections(Object.keys(grouped));
+        setFoldersByCollection(grouped);
       })
     );
   }, []);
