@@ -22,7 +22,7 @@
 .project-display-label-container {
   position: absolute;
   width: 100%;
-  height: 100%;
+  height: calc(100% + 1px); /* Removes gap caused by fractional pixels */
   top: 0;
   left: 0;
   opacity: 0;
@@ -74,6 +74,10 @@
 }
 
 @media only screen and (max-width: 650px) {
+  .project-display-label {
+    bottom: 6px;
+  }
+
   .project-display-title {
     font-size: 12px;
   }
@@ -88,6 +92,10 @@
 }
 
 @media only screen and (max-width: 1000px) and (min-width: 650px) {
+  .project-display-label {
+    bottom: 12px;
+  }
+
   .project-display-title {
     font-size: 30px;
   }
