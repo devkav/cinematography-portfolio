@@ -63,6 +63,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Build Lambda layers
+        run: ./scripts/build_layers.sh
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 

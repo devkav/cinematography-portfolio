@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - infra/terraform/**
+      - scripts/build_layers.sh
 
 jobs:
   deploy-backend:
@@ -19,6 +20,12 @@ jobs:
           aws configure set region "us-east-1"
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Build Lambda layers
+        run: ./scripts/build_layers.sh
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
