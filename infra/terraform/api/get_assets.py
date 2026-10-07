@@ -24,8 +24,8 @@ def build_src(key):
 
 
 def handler(event, _):
-    params = event.get("queryStringParameters", {})
-    headers = event.get("headers", {})
+    params = event.get("queryStringParameters") or {}
+    headers = event.get("headers") or {}
 
     page = params.get("page")
     origin = headers.get("origin")

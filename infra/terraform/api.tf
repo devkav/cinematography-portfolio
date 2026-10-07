@@ -49,6 +49,38 @@ resource "aws_iam_role_policy" "lambda_s3_upload" {
   })
 }
 
+resource "aws_iam_role" "get_assets_lambda_exec" {
+  name = "get_assets_lambda_exec_role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action    = "sts:AssumeRole"
+      Principal = { Service = "lambda.amazonaws.com" }
+      Effect    = "Allow"
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "get_assets_lambda_logs" {
+  role       = aws_iam_role.get_assets_lambda_exec.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_iam_role_policy" "get_assets_lambda_dynamodb" {
+  name = "get_assets_lambda_dynamodb_policy"
+  role = aws_iam_role.get_assets_lambda_exec.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect   = "Allow"
+      Action   = ["dynamodb:GetItem", "dynamodb:Query", "dynamodb:Scan"]
+      Resource = aws_dynamodb_table.assets_db.arn
+    }]
+  })
+}
+
 resource "aws_api_gateway_rest_api" "api" {
   name        = "assets_api"
   description = "API to retrieve assets"
@@ -106,7 +138,7 @@ resource "aws_lambda_function" "get_assets_lambda_function" {
   function_name    = "get_assets_lambda_function"
   handler          = "get_assets.handler"
   runtime          = "python3.13"
-  role             = aws_iam_role.lambda_exec.arn
+  role             = aws_iam_role.get_assets_lambda_exec.arn
   source_code_hash = data.archive_file.zip_api_assets.output_base64sha256
   filename         = data.archive_file.zip_api_assets.output_path
 
@@ -232,6 +264,28 @@ resource "aws_api_gateway_stage" "cloudcast_api_gateway_stage" {
   deployment_id = aws_api_gateway_deployment.assets_api_deployment.id
   rest_api_id   = aws_api_gateway_rest_api.api.id
   stage_name    = "prod"
+}
+
+resource "aws_api_gateway_method_settings" "default_throttling" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  stage_name  = aws_api_gateway_stage.cloudcast_api_gateway_stage.stage_name
+  method_path = "*/*"
+
+  settings {
+    throttling_rate_limit  = 20
+    throttling_burst_limit = 40
+  }
+}
+
+resource "aws_api_gateway_method_settings" "analytics_ingest_throttling" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  stage_name  = aws_api_gateway_stage.cloudcast_api_gateway_stage.stage_name
+  method_path = "${aws_api_gateway_resource.api_analytics_resource.path_part}/POST"
+
+  settings {
+    throttling_rate_limit  = 10
+    throttling_burst_limit = 20
+  }
 }
 
 #####################

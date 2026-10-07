@@ -37,6 +37,7 @@ export interface LabelledCount {
 
 interface PeriodTotals {
   visits: number;
+  uniqueVisitors?: number | null;
   pageviews: number;
   avgDurationSeconds: number;
   bounceRate: number;
@@ -46,7 +47,7 @@ export interface AnalyticsSummary {
   days: number;
   current: PeriodTotals;
   previous: PeriodTotals;
-  daily: { date: string; visits: number; pageviews: number }[];
+  daily: { date: string; visits: number; visitors?: number; pageviews: number }[];
   topPages: { page: string; views: number; avgDurationSeconds: number }[];
   entryPages: LabelledCount[];
   countries: LabelledCount[];

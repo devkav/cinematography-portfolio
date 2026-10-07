@@ -15,7 +15,13 @@ interface Props {
   loading: boolean;
 }
 
-type ChartMetric = "visits" | "pageviews";
+type ChartMetric = "visits" | "visitors" | "pageviews";
+
+const CHART_LABELS: Record<ChartMetric, string> = {
+  visits: "Visits",
+  visitors: "Unique visitors",
+  pageviews: "Pageviews"
+};
 
 const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
 const TOP_REGIONS = 10;
@@ -47,13 +53,13 @@ export default function AnalyticsOverview({ summary, loading }: Props) {
   const { current, previous } = summary;
   const avgMinutes = Math.floor(current.avgDurationSeconds / 60);
   const avgSeconds = Math.round(current.avgDurationSeconds % 60);
-  const chartLabel = chartMetric === "visits" ? "Visits" : "Pageviews";
+  const chartLabel = CHART_LABELS[chartMetric];
 
   const tiles: {
     label: string;
     value: string;
-    current: number;
-    previous: number;
+    current: number | null;
+    previous: number | null;
     goodWhenUp: boolean;
     metric?: ChartMetric;
   }[] = [
@@ -64,6 +70,14 @@ export default function AnalyticsOverview({ summary, loading }: Props) {
       previous: previous.visits,
       goodWhenUp: true,
       metric: "visits"
+    },
+    {
+      label: "Unique visitors",
+      value: current.uniqueVisitors?.toLocaleString() ?? "—",
+      current: current.uniqueVisitors ?? null,
+      previous: previous.uniqueVisitors ?? null,
+      goodWhenUp: true,
+      metric: "visitors"
     },
     {
       label: "Pageviews",
@@ -119,7 +133,8 @@ export default function AnalyticsOverview({ summary, loading }: Props) {
       <div className="analytics-card">
         <div className="analytics-tiles">
           {tiles.map((tile) => {
-            const change = tile.previous ? ((tile.current - tile.previous) / tile.previous) * 100 : null;
+            const change =
+              tile.current !== null && tile.previous ? ((tile.current - tile.previous) / tile.previous) * 100 : null;
             const isGood = change !== null && change > 0 === tile.goodWhenUp;
             let className = "analytics-tile";
             let changeClassName = "analytics-tile-change";
@@ -156,7 +171,7 @@ export default function AnalyticsOverview({ summary, loading }: Props) {
         </p>
         <VisitsChart
           label={chartLabel}
-          points={summary.daily.map((day) => ({ date: day.date, value: day[chartMetric] }))}
+          points={summary.daily.map((day) => ({ date: day.date, value: day[chartMetric] ?? 0 }))}
         />
       </div>
 

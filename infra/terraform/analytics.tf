@@ -74,9 +74,15 @@ resource "aws_lambda_function" "analytics_lambda_function" {
 
   environment {
     variables = {
-      ANALYTICS_TABLE_NAME = aws_dynamodb_table.analytics_db.name
+      ANALYTICS_TABLE_NAME    = aws_dynamodb_table.analytics_db.name
+      ANALYTICS_ORIGIN_SECRET = random_password.analytics_origin_secret.result
     }
   }
+}
+
+resource "random_password" "analytics_origin_secret" {
+  length  = 48
+  special = false
 }
 
 #########################
@@ -223,6 +229,11 @@ resource "aws_cloudfront_distribution" "analytics_distribution" {
     domain_name = "${aws_api_gateway_rest_api.api.id}.execute-api.${local.aws_region}.amazonaws.com"
     origin_id   = "analytics_api_origin"
     origin_path = "/${aws_api_gateway_stage.cloudcast_api_gateway_stage.stage_name}"
+
+    custom_header {
+      name  = "X-Origin-Verify"
+      value = random_password.analytics_origin_secret.result
+    }
 
     custom_origin_config {
       http_port              = 80

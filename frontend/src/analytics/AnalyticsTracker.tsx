@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 
-import { sendPageView } from "./track";
+import { sendPageView, startSessionView } from "./track";
 
 export function AnalyticsTracker() {
   const { pathname } = useLocation();
@@ -16,8 +16,11 @@ export function AnalyticsTracker() {
     enteredAtIso.current = new Date().toISOString();
     viewId.current = crypto.randomUUID();
 
+    const sessionId = startSessionView();
+
     const flush = () =>
       sendPageView({
+        sessionId,
         page: pathname,
         viewId: viewId.current,
         enteredAt: enteredAtIso.current,
