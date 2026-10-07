@@ -3,10 +3,13 @@ import "./analytics-dashboard.css";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../auth/AuthContext";
 import SessionDisplay from "../SessionDisplay/SessionDisplay";
+import AnalyticsOverview from "../AnalyticsOverview/AnalyticsOverview";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const NUM_PAGE_NUMBERS = 5;
+const RANGE_OPTIONS = [7, 30, 90];
+const DEFAULT_RANGE = 30;
 
 export interface Action {
   durationSeconds: number;
@@ -27,112 +30,161 @@ export interface Session {
   userAgent: string;
 }
 
+export interface LabelledCount {
+  label: string;
+  visits: number;
+}
+
+interface PeriodTotals {
+  visits: number;
+  pageviews: number;
+  avgDurationSeconds: number;
+  bounceRate: number;
+}
+
+export interface AnalyticsSummary {
+  days: number;
+  current: PeriodTotals;
+  previous: PeriodTotals;
+  daily: { date: string; visits: number; pageviews: number }[];
+  topPages: { page: string; views: number; avgDurationSeconds: number }[];
+  entryPages: LabelledCount[];
+  countries: LabelledCount[];
+  userAgents: LabelledCount[];
+  usStates?: LabelledCount[];
+  heatmap?: number[][];
+}
+
 interface AnalyticsData {
   sessions: Session[];
   page: number;
   totalPages: number;
+  totalSessions?: number;
+  excludedSessions?: number;
+  summary: AnalyticsSummary;
 }
 
 export default function AnalyticsDashboard() {
   const { idToken } = useAuth();
   const [data, setData] = useState<AnalyticsData>();
+  const [summary, setSummary] = useState<AnalyticsSummary>();
   const [page, setPage] = useState(1);
+  const [days, setDays] = useState(DEFAULT_RANGE);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!idToken) return;
 
+    let cancelled = false;
     const url = new URL(`${API_URL}/analytics`);
     url.searchParams.set("page", String(page));
+    url.searchParams.set("days", String(days));
+    url.searchParams.set("tzOffset", String(new Date().getTimezoneOffset()));
+
+    setLoading(true);
 
     fetch(url, {
       headers: { Authorization: idToken }
     })
       .then((res) => res.json())
       .then((data: AnalyticsData) => {
+        if (cancelled) return;
+
         setData(data);
+        setSummary(data.summary);
+        setLoading(false);
       });
-  }, [idToken, page]);
 
-  const nextPage = () => {
-    if (data == undefined) {
+    return () => {
+      cancelled = true;
+    };
+  }, [idToken, page, days]);
+
+  const totalPages = data?.totalPages ?? 0;
+
+  const goToPage = (pageIndex: number) => {
+    if (pageIndex === page || pageIndex < 1 || pageIndex > totalPages) {
       return;
     }
 
-    if (page < data?.totalPages) {
-      setData(undefined);
-      setPage(data?.page + 1);
-    }
+    setPage(pageIndex);
   };
 
-  const prevPage = () => {
-    if (data == undefined) {
-      return;
-    }
+  const halfwayPage = Math.ceil(NUM_PAGE_NUMBERS / 2);
+  const numPageButtons = Math.min(NUM_PAGE_NUMBERS, totalPages);
+  let start = 1;
 
-    if (page > 1) {
-      setData(undefined);
-      setPage(data?.page - 1);
-    }
-  };
-
-  const goToPage = (page_index: number) => {
-    if (page_index == page) {
-      return;
-    }
-
-    setData(undefined);
-    setPage(page_index);
-  };
-
-  const halfway_page = Math.ceil(NUM_PAGE_NUMBERS / 2);
-  let start;
-
-  if (data?.totalPages) {
-    if (page < halfway_page) {
-      start = 1;
-    } else if (page + halfway_page > data?.totalPages) {
-      start = data?.totalPages - NUM_PAGE_NUMBERS + 1;
-    } else {
-      start = page - halfway_page + 1;
-    }
+  if (page >= halfwayPage) {
+    start = page + halfwayPage > totalPages ? totalPages - numPageButtons + 1 : page - halfwayPage + 1;
   }
 
-  const pageButtons = Array.from({ length: start ? NUM_PAGE_NUMBERS : 0 }, (_, index) => {
-    const actingIndex = start! + index;
-    let className = "session-page-button";
-
-    if (actingIndex == page) {
-      className += " active";
-    }
-
-    return (
-      <div className={className} onClick={() => goToPage(actingIndex)} key={`session-page-btn-${actingIndex}`}>
-        <p>{actingIndex}</p>
-      </div>
-    );
-  });
-
-  const pageControls = (
+  const pageControls = totalPages > 1 && (
     <div className="session-controls">
-      <div className="session-prev-page-button" onClick={prevPage}>
+      <button className="session-page-button" onClick={() => goToPage(page - 1)} disabled={page <= 1}>
         <MdChevronLeft />
-      </div>
-      {pageButtons}
-      <div className="session-next-page-button" onClick={nextPage}>
+      </button>
+      {Array.from({ length: numPageButtons }, (_, index) => start + index).map((pageIndex) => (
+        <button
+          className={`session-page-button${pageIndex === page ? " active" : ""}`}
+          onClick={() => goToPage(pageIndex)}
+          key={`session-page-btn-${pageIndex}`}
+        >
+          {pageIndex}
+        </button>
+      ))}
+      <button className="session-page-button" onClick={() => goToPage(page + 1)} disabled={page >= totalPages}>
         <MdChevronRight />
-      </div>
+      </button>
     </div>
   );
 
   return (
-    <div>
-      <h3>Analytics</h3>
-      <div className="session-display-list">
-        {data && pageControls}
+    <div className="analytics-dashboard">
+      <div className="analytics-heading">
+        <h3>Analytics</h3>
+        <div className="analytics-range">
+          {RANGE_OPTIONS.map((option) => (
+            <button
+              key={`range-${option}`}
+              className={`analytics-range-button${option === days ? " active" : ""}`}
+              onClick={() => setDays(option)}
+            >
+              Last {option} days
+            </button>
+          ))}
+        </div>
+      </div>
+      {summary && <AnalyticsOverview summary={summary} loading={loading} />}
+      {!summary && !loading && (
+        <p className="analytics-empty">Summary data is unavailable. The analytics API may need to be redeployed.</p>
+      )}
+      <div className={`analytics-card session-list${loading ? " loading" : ""}`}>
+        <div className="session-list-title">
+          <div>
+            <p className="analytics-card-title">Sessions</p>
+            {data && (
+              <p className="session-list-count">
+                {data.totalSessions !== undefined && `${data.totalSessions.toLocaleString()} total · `}page {page} of{" "}
+                {Math.max(totalPages, 1)}
+                {!!data.excludedSessions && ` · ${data.excludedSessions.toLocaleString()} likely bots hidden`}
+              </p>
+            )}
+          </div>
+          {pageControls}
+        </div>
+        <div className="session-list-header">
+          <span>Location</span>
+          <span>Started</span>
+          <span>Duration</span>
+          <span>Pages</span>
+          <span>Device</span>
+          <span />
+        </div>
         {data?.sessions.map((session) => (
           <SessionDisplay session={session} key={`sessionDisplay-${session.sessionId}`} />
         ))}
-        {data && pageControls}
+        {data && data.sessions.length === 0 && <p className="analytics-empty session-list-empty">No sessions yet</p>}
+        {data && data.sessions.length > 0 && <div className="session-list-footer">{pageControls}</div>}
       </div>
     </div>
   );

@@ -208,6 +208,7 @@ resource "aws_cloudfront_origin_request_policy" "analytics_viewer_geo" {
         "CloudFront-Viewer-City",
         "CloudFront-Viewer-Latitude",
         "CloudFront-Viewer-Longitude",
+        "CloudFront-Viewer-ASN",
         "Origin",
         "User-Agent",
       ]

@@ -1,0 +1,55 @@
+.visitor-map {
+  position: relative;
+  width: 100%;
+}
+
+.visitor-map svg {
+  display: block;
+}
+
+.visitor-map-sphere {
+  fill: #050505;
+}
+
+.visitor-map-region {
+  fill: #1f1f1f;
+  stroke: #0a0a0a;
+  stroke-width: 0.5;
+  outline: none;
+  transition: fill 0.2s;
+}
+
+.visitor-map-region.active {
+  stroke: white;
+  stroke-width: 1;
+}
+
+.visitor-map-region:focus-visible {
+  stroke: white;
+  stroke-width: 1.5;
+}
+
+.visitor-map-tooltip {
+  transform: translate(-50%, calc(-100% - 12px));
+}
+
+.visitor-map-legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 11px;
+  color: #828282;
+}
+
+.visitor-map-legend-ramp {
+  width: 120px;
+  height: 8px;
+  border-radius: 2px;
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--analytics-accent) 15%, #1f1f1f),
+    var(--analytics-accent)
+  );
+}

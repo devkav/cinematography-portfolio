@@ -8,7 +8,11 @@ import "../styles/admin.css";
 import AdminDashboard from "../components/AdminDashboard/AdminDashboard";
 
 export default function Admin() {
-  const { username, idToken, setAuth, clearAuth } = useAuth();
+  const { username, idToken, restoring, setAuth, clearAuth } = useAuth();
+
+  if (restoring) {
+    return <meta name="robots" content="noindex, nofollow" />;
+  }
 
   return (
     <>
