@@ -1,43 +1,46 @@
-import {
-  CognitoUserPool,
-  CognitoUser,
-  AuthenticationDetails,
-  CognitoUserSession,
-  type ICognitoStorage
-} from "amazon-cognito-identity-js";
+import { CognitoUserPool, CognitoUser, AuthenticationDetails, CognitoUserSession } from "amazon-cognito-identity-js";
 
 const USER_POOL_ID = import.meta.env.VITE_COGNITO_USER_POOL_ID;
 const CLIENT_ID = import.meta.env.VITE_COGNITO_USER_POOL_CLIENT_ID;
 
-// Tokens live only in memory for the lifetime of the page.
-// On reload or tab close, the user must sign in again.
-class MemoryStorage implements ICognitoStorage {
-  private store: Record<string, string> = {};
-
-  setItem(key: string, value: string): void {
-    this.store[key] = value;
-  }
-
-  getItem(key: string): string | null {
-    return this.store[key] ?? null;
-  }
-
-  removeItem(key: string): void {
-    delete this.store[key];
-  }
-
-  clear(): void {
-    this.store = {};
-  }
-}
-
-const memoryStorage = new MemoryStorage();
-
 const userPool = new CognitoUserPool({
   UserPoolId: USER_POOL_ID,
-  ClientId: CLIENT_ID,
-  Storage: memoryStorage
+  ClientId: CLIENT_ID
 });
+
+export interface StoredSession {
+  username: string;
+  idToken: string;
+}
+
+export function getStoredSession(forceRefresh = false): Promise<StoredSession | null> {
+  const currentUser = userPool.getCurrentUser();
+
+  if (!currentUser) return Promise.resolve(null);
+
+  const toStoredSession = (session: CognitoUserSession) => ({
+    username: currentUser.getUsername(),
+    idToken: session.getIdToken().getJwtToken()
+  });
+
+  return new Promise((resolve) => {
+    currentUser.getSession((err: Error | null, session: CognitoUserSession | null) => {
+      if (err || !session) {
+        resolve(null);
+        return;
+      }
+
+      if (!forceRefresh) {
+        resolve(toStoredSession(session));
+        return;
+      }
+
+      currentUser.refreshSession(session.getRefreshToken(), (refreshErr, refreshed: CognitoUserSession | null) => {
+        resolve(refreshErr || !refreshed ? null : toStoredSession(refreshed));
+      });
+    });
+  });
+}
 
 export type SignInResult =
   | { kind: "success"; username: string; idToken: string }
@@ -46,8 +49,7 @@ export type SignInResult =
 export function signIn(username: string, password: string): Promise<SignInResult> {
   const cognitoUser = new CognitoUser({
     Username: username,
-    Pool: userPool,
-    Storage: memoryStorage
+    Pool: userPool
   });
 
   const authDetails = new AuthenticationDetails({
@@ -96,5 +98,4 @@ export function completeNewPassword(
 export function signOut(): void {
   const currentUser = userPool.getCurrentUser();
   currentUser?.signOut();
-  memoryStorage.clear();
 }

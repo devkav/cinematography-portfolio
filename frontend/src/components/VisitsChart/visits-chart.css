@@ -1,0 +1,56 @@
+.visits-chart {
+  position: relative;
+  width: 100%;
+  min-height: 240px;
+}
+
+.visits-chart svg {
+  display: block;
+  outline: none;
+  touch-action: pan-y;
+}
+
+.visits-chart svg:focus-visible {
+  outline: 1px solid #666;
+}
+
+.visits-chart-grid {
+  stroke: #222;
+  stroke-width: 1;
+}
+
+.visits-chart-axis {
+  fill: #828282;
+  font-family: "Archivo", sans-serif;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.visits-chart-area {
+  fill: var(--analytics-accent);
+  opacity: 0.12;
+}
+
+.visits-chart-line {
+  fill: none;
+  stroke: var(--analytics-accent);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.visits-chart-crosshair {
+  stroke: #555;
+  stroke-width: 1;
+}
+
+.visits-chart-dot {
+  fill: var(--analytics-accent);
+  stroke: #0a0a0a;
+  stroke-width: 2;
+}
+
+.visits-chart-tooltip {
+  top: 0;
+  transform: translateX(-50%);
+}

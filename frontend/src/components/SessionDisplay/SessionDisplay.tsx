@@ -1,7 +1,7 @@
 import "./session-display.css";
 
 import type { Session } from "../AnalyticsDashboard/AnalyticsDashboard";
-import { MdKeyboardArrowDown } from "react-icons/md";
+import { MdChevronRight, MdDesktopWindows, MdKeyboardArrowDown, MdPhoneIphone, MdTabletMac } from "react-icons/md";
 import { useState } from "react";
 import { UAParser } from "ua-parser-js";
 
@@ -28,6 +28,13 @@ const UNIT_LABELS: Record<string, string> = {
 };
 
 const relativeFormat = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
+const dateFormat = new Intl.DateTimeFormat("en", {
+  month: "short",
+  day: "numeric",
+  hour: "numeric",
+  minute: "2-digit"
+});
 
 function timeAgo(timestamp: string): string {
   const seconds = (Date.now() - new Date(timestamp).getTime()) / 1000;
@@ -42,7 +49,7 @@ function timeAgo(timestamp: string): string {
   return "Just now";
 }
 
-function formatDuration(seconds: number): string {
+export function formatDuration(seconds: number): string {
   for (const [unit, secondsPerUnit] of UNITS) {
     if (seconds >= secondsPerUnit || unit === "second") {
       return `${Math.floor(seconds / secondsPerUnit)}${UNIT_LABELS[unit]}`;
@@ -55,62 +62,76 @@ function formatDuration(seconds: number): string {
 export default function SessionDisplay({ session }: Props) {
   const [open, setOpen] = useState(false);
 
-  const toggleOpen = () => setOpen(!open);
-
-  const firstTimestamp = timeAgo(session.actions[0].timestamp);
-  const location = session.city ? `${session.city}, ${session.region}` : session.regionName;
-  const totalDuration = session.totalDuration;
+  const startedAt = session.actions[0].timestamp;
+  const location = session.city ? `${session.city}, ${session.region}` : session.regionName || "Unknown location";
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${session.latitude},${session.longitude}`;
 
-  const { browser, os, device } = UAParser(session.userAgent);
-  const userAgentLabel = [browser.name, os.name].filter(Boolean).join(" on ") || "Unknown device";
-  let deviceLabel = [device.vendor, device.type ?? "desktop"].filter(Boolean).join(" ");
-  deviceLabel = deviceLabel.charAt(0).toUpperCase() + deviceLabel.slice(1);
+  let country = session.country ?? "";
 
-  const actions = session.actions.map((action, index) => (
-    <div className="action-item" key={`${session.sessionId}-action${index}`}>
-      <div className="action-timeline">
-        <div className="action-timeline-line"></div>
-        <div className="action-timeline-tick"></div>
-        <div className="action-timeline-line"></div>
-      </div>
-      <p className="action-label">{`${action.page} (${action.durationSeconds}s)`}</p>
-    </div>
-  ));
+  try {
+    country = regionNames.of(session.country) ?? session.country;
+  } catch {
+    country = session.country ?? "";
+  }
+
+  const { browser, os, device } = UAParser(session.userAgent);
+  const userAgentLabel = [browser.name, os.name].filter(Boolean).join(" on ") || "Unknown browser";
+  const deviceType = device.type ?? "desktop";
+  const deviceLabel = [device.vendor, deviceType.charAt(0).toUpperCase() + deviceType.slice(1)]
+    .filter(Boolean)
+    .join(" ");
+  const DeviceIcon = deviceType === "mobile" ? MdPhoneIphone : deviceType === "tablet" ? MdTabletMac : MdDesktopWindows;
 
   return (
-    <div className="session-display">
-      <div className="session-display-header">
-        <div className="session-display-label-container">
-          <div className="session-display-label" id="session-display-label-primary">
-            <p className="session-location-label">{`${location} (${formatDuration(totalDuration)})`}</p>
-            <p className="session-timestamp-label">{firstTimestamp}</p>
-          </div>
-          <div className="session-display-label">
-            <p className="session-sub-label">{deviceLabel}</p>
-            <p className="session-sub-label">{session.actions.length} pages visited</p>
+    <div className={`session-row${open ? " open" : ""}`}>
+      <button className="session-row-main" onClick={() => setOpen(!open)} aria-expanded={open}>
+        <div className="session-cell session-cell-location">
+          <p className="session-primary">{location}</p>
+          <p className="session-secondary">{country}</p>
+        </div>
+        <div className="session-cell session-cell-time">
+          <p className="session-primary">{timeAgo(startedAt)}</p>
+          <p className="session-secondary">{dateFormat.format(new Date(startedAt))}</p>
+        </div>
+        <div className="session-cell session-cell-duration">
+          <p className="session-primary">{formatDuration(session.totalDuration)}</p>
+          <p className="session-secondary session-mobile-only">duration</p>
+        </div>
+        <div className="session-cell session-cell-pages">
+          <p className="session-primary">{session.actions.length}</p>
+          <p className="session-secondary session-mobile-only">{session.actions.length === 1 ? "page" : "pages"}</p>
+        </div>
+        <div className="session-cell session-cell-device">
+          <DeviceIcon className="session-device-icon" />
+          <div>
+            <p className="session-primary">{deviceLabel}</p>
+            <p className="session-secondary">{userAgentLabel}</p>
           </div>
         </div>
-        <div className="session-display-icon" onClick={toggleOpen}>
-          <MdKeyboardArrowDown />
-        </div>
-      </div>
+        <MdKeyboardArrowDown className="session-chevron" />
+      </button>
       {open && (
         <div className="session-details">
-          <p>
-            Device: {userAgentLabel} ({deviceLabel})
-          </p>
-          <p>
-            Location: {location}, {session.country}
-          </p>
-          <p>
-            Coordinates (approx.):{" "}
-            <a href={mapsUrl} rel="noreferrer" target="_blank">
-              {session.latitude}, {session.longitude}
-            </a>
-          </p>
-
-          <div className="actions-container">{actions}</div>
+          <p className="session-details-heading">Journey</p>
+          <div className="session-journey">
+            {session.actions.map((action, index) => (
+              <div className="session-journey-step" key={`${session.sessionId}-action${index}`}>
+                {index > 0 && <MdChevronRight className="session-journey-arrow" />}
+                <div className="session-journey-page">
+                  <p className="session-primary">{action.page}</p>
+                  <p className="session-secondary">{formatDuration(action.durationSeconds)}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          {session.latitude && session.longitude && (
+            <p className="session-secondary session-coordinates">
+              Approx. coordinates{" "}
+              <a href={mapsUrl} rel="noreferrer" target="_blank">
+                {session.latitude}, {session.longitude}
+              </a>
+            </p>
+          )}
         </div>
       )}
     </div>

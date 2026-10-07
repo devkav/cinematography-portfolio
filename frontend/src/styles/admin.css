@@ -108,3 +108,19 @@
 .admin-header-right button:hover {
   opacity: 0.75;
 }
+
+@media (max-width: 700px) {
+  .admin-dashboard {
+    padding: 16px;
+  }
+
+  .admin-header {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .admin-header-right {
+    gap: 12px;
+    font-size: 14px;
+  }
+}

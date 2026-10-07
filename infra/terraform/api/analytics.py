@@ -59,6 +59,7 @@ def handler(event, _):
         "latitude": headers_lower.get("cloudfront-viewer-latitude"),
         "longitude": headers_lower.get("cloudfront-viewer-longitude"),
         "userAgent": headers_lower.get("user-agent"),
+        "asn": headers_lower.get("cloudfront-viewer-asn"),
     }
 
     try:
