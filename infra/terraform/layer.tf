@@ -23,3 +23,16 @@ resource "aws_lambda_layer_version" "imaging" {
   source_code_hash    = data.archive_file.zip_imaging_layer.output_base64sha256
   compatible_runtimes = ["python3.13"]
 }
+
+data "archive_file" "zip_video_layer" {
+  type        = "zip"
+  source_dir  = "./api/layer-video"
+  output_path = "./api/video_layer.zip"
+}
+
+resource "aws_lambda_layer_version" "video" {
+  layer_name          = "api_video"
+  filename            = data.archive_file.zip_video_layer.output_path
+  source_code_hash    = data.archive_file.zip_video_layer.output_base64sha256
+  compatible_runtimes = ["python3.13"]
+}

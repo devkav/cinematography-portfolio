@@ -63,10 +63,27 @@ resource "aws_cloudfront_distribution" "static_distribution" {
     origin_access_control_id = aws_cloudfront_origin_access_control.cf_origin_access_control.id
   }
 
+  origin {
+    domain_name              = aws_s3_bucket.assets_bucket.bucket_regional_domain_name
+    origin_id                = local.assets_origin_id
+    origin_access_control_id = aws_cloudfront_origin_access_control.cf_origin_access_control.id
+  }
+
   aliases = [
     local.domain_name,
     "www.${local.domain_name}"
   ]
+
+  ordered_cache_behavior {
+    path_pattern               = "/resume.pdf"
+    allowed_methods            = ["GET", "HEAD", "OPTIONS"]
+    cached_methods             = ["GET", "HEAD"]
+    target_origin_id           = local.assets_origin_id
+    cache_policy_id            = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+    origin_request_policy_id   = "88a5eaf4-2fd4-4709-b370-b4c650ea3fcf"
+    response_headers_policy_id = "eaab4381-ed33-4a86-88ca-d9558dc6cd63"
+    viewer_protocol_policy     = "redirect-to-https"
+  }
 
   enabled             = true
   default_root_object = "index.html"

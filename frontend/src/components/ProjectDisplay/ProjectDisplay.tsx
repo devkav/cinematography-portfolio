@@ -11,6 +11,7 @@ interface ProjectDisplayData {
   subtitle: string;
   link?: string;
   laurels?: boolean;
+  laurelImages?: string[];
 }
 
 interface Props {
@@ -20,7 +21,7 @@ interface Props {
 }
 
 export default function ProjectDisplay({
-  data: { id, src, title, subtitle, link, laurels = false },
+  data: { id, src, title, subtitle, link, laurels = false, laurelImages = [] },
   onLoadCallback,
   playing
 }: Props) {
@@ -39,6 +40,8 @@ export default function ProjectDisplay({
       videoRef.current?.pause();
     }
   }, [playing]);
+
+  const laurelSources = [...(laurels ? [londonLaurel] : []), ...laurelImages];
 
   let className = "project-display";
 
@@ -59,13 +62,17 @@ export default function ProjectDisplay({
   return (
     <div className={className} onClick={onClick}>
       <div className="project-display-label-container">
-        {laurels && (
-          <img
-            className="project-display-laurel"
-            src={londonLaurel}
-            alt={`Film festival laurel — ${title}`}
-            key={`laurel-${id}`}
-          />
+        {laurelSources.length > 0 && (
+          <div className="project-display-laurels">
+            {laurelSources.map((laurelSrc, index) => (
+              <img
+                className="project-display-laurel"
+                src={laurelSrc}
+                alt={`Film festival laurel — ${title}`}
+                key={`laurel-${id}-${index}`}
+              />
+            ))}
+          </div>
         )}
         <div className="project-display-label">
           <p className="project-display-title">{title}</p>

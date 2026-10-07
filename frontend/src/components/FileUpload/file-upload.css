@@ -1,0 +1,160 @@
+.file-upload {
+  display: flex;
+  flex-flow: column;
+  gap: 16px;
+}
+
+.file-upload-batch {
+  display: flex;
+  flex-flow: column;
+  gap: 12px;
+}
+
+.file-upload-summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--admin-text-secondary);
+}
+
+.file-upload-percent {
+  color: white;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.file-upload-track {
+  height: 6px;
+  border-radius: 999px;
+  background-color: #1a1a1a;
+  overflow: hidden;
+}
+
+.file-upload-fill {
+  height: 100%;
+  border-radius: 999px;
+  background-color: var(--admin-accent);
+  transition: width 0.3s ease;
+}
+
+.file-upload-fill.has-failures {
+  background-color: var(--admin-bad);
+}
+
+.file-upload-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 8px;
+}
+
+.file-upload-tile {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: #1a1a1a;
+}
+
+.file-upload-tile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition:
+    opacity 0.2s,
+    filter 0.2s;
+}
+
+.file-upload-tile.queued img {
+  opacity: 0.45;
+}
+
+.file-upload-tile.optimizing img {
+  opacity: 0.6;
+  filter: grayscale(0.4);
+}
+
+.file-upload-tile.failed img {
+  opacity: 0.35;
+}
+
+.file-upload-tile-status {
+  position: absolute;
+  left: 6px;
+  bottom: 8px;
+  max-width: calc(100% - 12px);
+  box-sizing: border-box;
+  overflow: hidden;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background-color: rgba(0, 0, 0, 0.75);
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.file-upload-tile.optimizing .file-upload-tile-status {
+  animation: file-upload-pulse 1.2s ease-in-out infinite;
+}
+
+.file-upload-tile.done .file-upload-tile-status {
+  background-color: var(--admin-good);
+  color: black;
+}
+
+.file-upload-tile.failed .file-upload-tile-status {
+  background-color: var(--admin-bad);
+}
+
+.file-upload-tile-bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  background-color: var(--admin-accent);
+  transition: width 0.2s linear;
+}
+
+.file-upload-tile-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: flex;
+  padding: 3px;
+  background-color: rgba(0, 0, 0, 0.75);
+  border: none;
+  border-radius: 999px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.file-upload-tile-remove:hover {
+  background-color: var(--admin-bad);
+}
+
+.file-upload-actions {
+  display: flex;
+  gap: 8px;
+}
+
+@keyframes file-upload-pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (max-width: 700px) {
+  .file-upload-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .file-upload-actions button {
+    flex: 1;
+  }
+}

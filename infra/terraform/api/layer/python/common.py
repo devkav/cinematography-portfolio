@@ -4,6 +4,10 @@ from decimal import Decimal
 from urllib.parse import urlparse
 from enum import Enum
 
+from boto3.dynamodb.conditions import Key
+
+
+TRANSACTION_LIMIT = 100
 
 ALLOWED_ORIGINS = [
     "http://localhost:5173",
@@ -15,6 +19,7 @@ ALLOWED_ORIGINS = [
 class Page(str, Enum):
     PHOTO = "photo"
     FILM = "film"
+    RESUME = "resume"
 
 
 class AssetType(str, Enum):
@@ -63,5 +68,63 @@ def is_allowed_origin(origin):
         for allowed in ALLOWED_ORIGINS
     )
 
+
+def query_type(table, asset_type):
+    items = []
+    kwargs = {"KeyConditionExpression": Key("Type").eq(asset_type)}
+
+    while True:
+        response = table.query(**kwargs)
+        items.extend(response.get("Items", []))
+
+        if "LastEvaluatedKey" not in response:
+            return items
+
+        kwargs["ExclusiveStartKey"] = response["LastEvaluatedKey"]
+
+
+def by_order(items):
+    return sorted(items, key=lambda item: item.get("order", 0))
+
+
+def src_url(src, domain):
+    if not src or src.startswith("http"):
+        return src
+
+    return f"https://{domain}/{src}"
+
+
+def key_from_src(src):
+    if not src:
+        return ""
+
+    return urlparse(src).path.lstrip("/") if src.startswith("http") else src
+
+
+def order_update(table_name, asset_type, asset_id, position, parent_field=None, parent_id=None):
+    expression = "SET #order = :order"
+    names = {"#order": "order"}
+    values = {":order": {"N": str(position)}}
+
+    if parent_field:
+        expression += ", #parent = :parent"
+        names["#parent"] = parent_field
+        values[":parent"] = {"S": parent_id}
+
+    return {
+        "Update": {
+            "TableName": table_name,
+            "Key": {"Type": {"S": asset_type}, "AssetID": {"S": asset_id}},
+            "UpdateExpression": expression,
+            "ConditionExpression": "attribute_exists(AssetID)",
+            "ExpressionAttributeNames": names,
+            "ExpressionAttributeValues": values,
+        }
+    }
+
+
+def write_updates(client, updates):
+    for start in range(0, len(updates), TRANSACTION_LIMIT):
+        client.transact_write_items(TransactItems=updates[start:start + TRANSACTION_LIMIT])
 
 

@@ -12,11 +12,16 @@ URL_EXPIRATION_SECONDS = 300
 
 ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp", "image/avif"}
 ALLOWED_VIDEO_TYPES = {"video/mp4", "video/quicktime", "video/webm"}
-ALLOWED_CONTENT_TYPES = ALLOWED_IMAGE_TYPES | ALLOWED_VIDEO_TYPES
 
-VALID_KINDS = {"photo", "film"}
+ALLOWED_CONTENT_TYPES = {
+    "photo": ALLOWED_IMAGE_TYPES,
+    "film": ALLOWED_VIDEO_TYPES,
+    "laurel": {"image/png", "image/webp"},
+    "resume": {"application/pdf"},
+}
 
 EXTENSION_BY_CONTENT_TYPE = {
+    "application/pdf": "pdf",
     "image/jpeg": "jpg",
     "image/png": "png",
     "image/webp": "webp",
@@ -44,13 +49,13 @@ def handler(event, _):
     page = body.get("page")
     content_type = body.get("contentType")
 
-    if page not in VALID_KINDS:
+    if page not in ALLOWED_CONTENT_TYPES:
         return build_response(400, {"error": f"Invalid page: '{page}'"}, origin)
 
-    if content_type not in ALLOWED_CONTENT_TYPES:
+    if content_type not in ALLOWED_CONTENT_TYPES[page]:
         return build_response(400, {"error": f"Unsupported content type: '{content_type}'"}, origin)
 
-    extension = EXTENSION_BY_CONTENT_TYPE[content_type]
+    file_name = f"{uuid.uuid4()}.{EXTENSION_BY_CONTENT_TYPE[content_type]}"
 
     if page == "photo":
         folder = body.get("folder")
@@ -58,17 +63,18 @@ def handler(event, _):
         if not folder:
             return build_response(400, {"error": "Missing folder"}, origin)
 
-        file_name = f"{uuid.uuid4()}.{extension}"
         key = f"assets/images/photo/{get_asset_id(folder)}/{file_name}"
+    else:
+        key = f"uploads/{page}/{file_name}"
 
-        url = s3.generate_presigned_url(
-            "put_object",
-            Params={
-                "Bucket": BUCKET_NAME,
-                "Key": key,
-                "ContentType": content_type
-            },
-            ExpiresIn=URL_EXPIRATION_SECONDS
-        )
+    url = s3.generate_presigned_url(
+        "put_object",
+        Params={
+            "Bucket": BUCKET_NAME,
+            "Key": key,
+            "ContentType": content_type
+        },
+        ExpiresIn=URL_EXPIRATION_SECONDS
+    )
 
-        return build_response(200, {"url": url, "key": key}, origin)
+    return build_response(200, {"url": url, "key": key}, origin)

@@ -29,4 +29,5 @@ terraform.rc
 infra/terraform/api/*.zip
 # Lambda layer dependencies fetched by scripts/build_layers.sh
 infra/terraform/api/layer-imaging/
+infra/terraform/api/layer-video/
 TODO.md

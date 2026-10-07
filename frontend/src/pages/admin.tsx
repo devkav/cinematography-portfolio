@@ -65,27 +65,38 @@ function SignInForm({ onAuth }: { onAuth: (username: string, idToken: string) =>
 
   return (
     <div className="admin-auth-container">
-      <form onSubmit={handleSubmit} className="admin-auth-form">
-        <h1>Admin</h1>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          autoComplete="username"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          autoComplete="current-password"
-          required
-        />
-        {error && <p className="admin-auth-error">{error}</p>}
-        <button type="submit" disabled={submitting}>
-          {submitting ? "Signing in..." : "Sign In"}
+      <form onSubmit={handleSubmit} className="admin-card admin-auth-form">
+        <div className="admin-auth-header">
+          <p className="admin-auth-brand">Maggie Lucy</p>
+          <h1>Admin</h1>
+          <p className="admin-card-subtitle">Sign in to view analytics and manage uploads.</p>
+          <div className="admin-auth-accent" />
+        </div>
+        <label className="admin-field">
+          <span className="admin-label">Username</span>
+          <input
+            className="admin-input"
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            autoComplete="username"
+            required
+          />
+        </label>
+        <label className="admin-field">
+          <span className="admin-label">Password</span>
+          <input
+            className="admin-input"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+            required
+          />
+        </label>
+        {error && <p className="admin-status error">{error}</p>}
+        <button className="admin-button" type="submit" disabled={submitting}>
+          {submitting ? "Signing in…" : "Sign in"}
         </button>
       </form>
     </div>
@@ -125,28 +136,38 @@ function NewPasswordForm({
 
   return (
     <div className="admin-auth-container">
-      <form onSubmit={handleSubmit} className="admin-auth-form">
-        <h1>Set New Password</h1>
-        <p>You must set a new password before continuing.</p>
-        <input
-          type="password"
-          placeholder="New Password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          autoComplete="new-password"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          autoComplete="new-password"
-          required
-        />
-        {error && <p className="admin-auth-error">{error}</p>}
-        <button type="submit" disabled={submitting}>
-          {submitting ? "Setting..." : "Set Password"}
+      <form onSubmit={handleSubmit} className="admin-card admin-auth-form">
+        <div className="admin-auth-header">
+          <p className="admin-auth-brand">Maggie Lucy</p>
+          <h1>New password</h1>
+          <p className="admin-card-subtitle">You must set a new password before continuing.</p>
+          <div className="admin-auth-accent" />
+        </div>
+        <label className="admin-field">
+          <span className="admin-label">New password</span>
+          <input
+            className="admin-input"
+            type="password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            autoComplete="new-password"
+            required
+          />
+        </label>
+        <label className="admin-field">
+          <span className="admin-label">Confirm password</span>
+          <input
+            className="admin-input"
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            autoComplete="new-password"
+            required
+          />
+        </label>
+        {error && <p className="admin-status error">{error}</p>}
+        <button className="admin-button" type="submit" disabled={submitting}>
+          {submitting ? "Setting…" : "Set password"}
         </button>
       </form>
     </div>

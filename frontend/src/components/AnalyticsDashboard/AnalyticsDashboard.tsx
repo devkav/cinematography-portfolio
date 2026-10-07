@@ -142,7 +142,6 @@ export default function AnalyticsDashboard() {
   return (
     <div className="analytics-dashboard">
       <div className="analytics-heading">
-        <h3>Analytics</h3>
         <div className="analytics-range">
           {RANGE_OPTIONS.map((option) => (
             <button

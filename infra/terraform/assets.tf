@@ -21,6 +21,23 @@ resource "aws_s3_bucket_public_access_block" "assets_public_access" {
   restrict_public_buckets = true
 }
 
+resource "aws_s3_bucket_lifecycle_configuration" "assets_lifecycle" {
+  bucket = aws_s3_bucket.assets_bucket.id
+
+  rule {
+    id     = "expire-pending-uploads"
+    status = "Enabled"
+
+    filter {
+      prefix = "uploads/"
+    }
+
+    expiration {
+      days = 1
+    }
+  }
+}
+
 resource "aws_s3_bucket_cors_configuration" "assets_cors" {
   bucket = aws_s3_bucket.assets_bucket.id
 
@@ -51,6 +68,22 @@ data "aws_iam_policy_document" "assets_cloudfront_private_content" {
       test     = "StringEquals"
       variable = "AWS:SourceArn"
       values   = [aws_cloudfront_distribution.assets_distribution.arn]
+    }
+
+    principals {
+      type        = "Service"
+      identifiers = ["cloudfront.amazonaws.com"]
+    }
+  }
+
+  statement {
+    resources = ["${aws_s3_bucket.assets_bucket.arn}/resume.pdf"]
+    actions   = ["s3:GetObject*"]
+
+    condition {
+      test     = "StringEquals"
+      variable = "AWS:SourceArn"
+      values   = [aws_cloudfront_distribution.static_distribution.arn]
     }
 
     principals {
