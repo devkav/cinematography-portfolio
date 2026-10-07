@@ -70,7 +70,7 @@ export default function Contact() {
               Artist. Photographer. Filmmaker.
             </h2>
             <p id="about-content">{content}</p>
-            <a href="https://d3amd0zp63qrni.cloudfront.net/resume.pdf" target="_blank">
+            <a href={`${import.meta.env.VITE_SITE_URL}/resume.pdf`} target="_blank">
               Résumé
             </a>
           </div>

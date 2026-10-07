@@ -28,7 +28,9 @@ resource "aws_iam_role_policy" "lambda_dynamodb" {
         "dynamodb:GetItem",
         "dynamodb:Query",
         "dynamodb:Scan",
-        "dynamodb:PutItem"
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem"
       ]
       Resource = aws_dynamodb_table.assets_db.arn
     }]
@@ -45,6 +47,37 @@ resource "aws_iam_role_policy" "lambda_s3_upload" {
       Effect   = "Allow"
       Action   = ["s3:PutObject", "s3:GetObject", "s3:DeleteObject"]
       Resource = "${aws_s3_bucket.assets_bucket.arn}/*"
+    }]
+  })
+}
+
+resource "aws_iam_role_policy" "lambda_cloudfront_invalidation" {
+  name = "lambda_cloudfront_invalidation_policy"
+  role = aws_iam_role.lambda_exec.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect   = "Allow"
+      Action   = ["cloudfront:CreateInvalidation"]
+      Resource = [
+        aws_cloudfront_distribution.assets_distribution.arn,
+        aws_cloudfront_distribution.static_distribution.arn
+      ]
+    }]
+  })
+}
+
+resource "aws_iam_role_policy" "lambda_invoke_transcoder" {
+  name = "lambda_invoke_transcoder_policy"
+  role = aws_iam_role.lambda_exec.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect   = "Allow"
+      Action   = ["lambda:InvokeFunction"]
+      Resource = aws_lambda_function.transcode_film_lambda_function.arn
     }]
   })
 }
@@ -196,6 +229,10 @@ resource "aws_api_gateway_deployment" "assets_api_deployment" {
     aws_api_gateway_integration.options_analytics_integration,
     aws_api_gateway_integration.api_gateway_get_analytics_integration,
     aws_api_gateway_integration.options_get_analytics_integration,
+    aws_api_gateway_integration.photo_library,
+    aws_api_gateway_integration.options_photo_library_integration,
+    aws_api_gateway_integration.film_library,
+    aws_api_gateway_integration.options_film_library_integration,
   ]
   rest_api_id = aws_api_gateway_rest_api.api.id
 
@@ -228,6 +265,16 @@ resource "aws_api_gateway_deployment" "assets_api_deployment" {
       aws_api_gateway_method.options_get_analytics.id,
       aws_api_gateway_integration.api_gateway_get_analytics_integration.id,
       aws_api_gateway_integration.options_get_analytics_integration.id,
+      aws_api_gateway_resource.api_photo_library_resource.id,
+      [for method in aws_api_gateway_method.photo_library : method.id],
+      [for integration in aws_api_gateway_integration.photo_library : integration.id],
+      aws_api_gateway_method.options_photo_library.id,
+      aws_api_gateway_integration.options_photo_library_integration.id,
+      aws_api_gateway_resource.api_film_library_resource.id,
+      [for method in aws_api_gateway_method.film_library : method.id],
+      [for integration in aws_api_gateway_integration.film_library : integration.id],
+      aws_api_gateway_method.options_film_library.id,
+      aws_api_gateway_integration.options_film_library_integration.id,
     ]))
   }
 
@@ -441,7 +488,7 @@ resource "aws_lambda_function" "upload_asset_lambda_function" {
   role             = aws_iam_role.lambda_exec.arn
   source_code_hash = data.archive_file.zip_api_upload_asset.output_base64sha256
   filename         = data.archive_file.zip_api_upload_asset.output_path
-  memory_size      = 1024
+  memory_size      = 2048
   timeout          = 30
 
   layers = [
@@ -451,8 +498,10 @@ resource "aws_lambda_function" "upload_asset_lambda_function" {
 
   environment {
     variables = {
-      ASSETS_TABLE_NAME  = aws_dynamodb_table.assets_db.name
-      ASSETS_BUCKET_NAME = aws_s3_bucket.assets_bucket.id
+      ASSETS_TABLE_NAME      = aws_dynamodb_table.assets_db.name
+      ASSETS_BUCKET_NAME     = aws_s3_bucket.assets_bucket.id
+      ASSETS_DISTRIBUTION_ID = aws_cloudfront_distribution.assets_distribution.id
+      STATIC_DISTRIBUTION_ID = aws_cloudfront_distribution.static_distribution.id
     }
   }
 }
@@ -558,5 +607,316 @@ resource "aws_api_gateway_integration_response" "options_upload_asset_integratio
 
   depends_on = [
     aws_api_gateway_integration.options_upload_asset_integration
+  ]
+}
+
+########################
+# Photo library Lambda #
+########################
+data "archive_file" "zip_api_manage_photos" {
+  type        = "zip"
+  source_file = "./api/manage_photos.py"
+  output_path = "./api/manage_photos.zip"
+}
+
+resource "aws_lambda_function" "manage_photos_lambda_function" {
+  function_name    = "manage_photos_lambda_function"
+  handler          = "manage_photos.handler"
+  runtime          = "python3.13"
+  role             = aws_iam_role.lambda_exec.arn
+  source_code_hash = data.archive_file.zip_api_manage_photos.output_base64sha256
+  filename         = data.archive_file.zip_api_manage_photos.output_path
+  timeout          = 15
+
+  layers = [aws_lambda_layer_version.common.arn]
+
+  environment {
+    variables = {
+      ASSETS_TABLE_NAME        = aws_dynamodb_table.assets_db.name
+      ASSETS_BUCKET_NAME       = aws_s3_bucket.assets_bucket.id
+      ASSETS_CLOUDFRONT_DOMAIN = aws_cloudfront_distribution.assets_distribution.domain_name
+    }
+  }
+}
+
+resource "aws_api_gateway_resource" "api_photo_library_resource" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  parent_id   = aws_api_gateway_rest_api.api.root_resource_id
+  path_part   = "photo_library"
+}
+
+resource "aws_api_gateway_method" "photo_library" {
+  for_each = toset(["GET", "PUT", "DELETE"])
+
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  resource_id   = aws_api_gateway_resource.api_photo_library_resource.id
+  http_method   = each.value
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
+}
+
+resource "aws_api_gateway_integration" "photo_library" {
+  for_each = aws_api_gateway_method.photo_library
+
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.api_photo_library_resource.id
+  http_method = each.value.http_method
+
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.manage_photos_lambda_function.invoke_arn
+}
+
+resource "aws_lambda_permission" "allow_api_gateway_manage_photos" {
+  statement_id  = "AllowExecutionFromAPIGatewayManagePhotos"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.manage_photos_lambda_function.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_api_gateway_rest_api.api.execution_arn}/*"
+}
+
+resource "aws_api_gateway_method" "options_photo_library" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  resource_id   = aws_api_gateway_resource.api_photo_library_resource.id
+  http_method   = "OPTIONS"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_integration" "options_photo_library_integration" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.api_photo_library_resource.id
+  http_method = aws_api_gateway_method.options_photo_library.http_method
+
+  type = "MOCK"
+  request_templates = {
+    "application/json" = "{\"statusCode\": 200}"
+  }
+}
+
+resource "aws_api_gateway_method_response" "options_photo_library_200" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.api_photo_library_resource.id
+  http_method = aws_api_gateway_method.options_photo_library.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin"  = true
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+  }
+}
+
+resource "aws_api_gateway_integration_response" "options_photo_library_integration_response" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.api_photo_library_resource.id
+  http_method = aws_api_gateway_method.options_photo_library.http_method
+  status_code = aws_api_gateway_method_response.options_photo_library_200.status_code
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,Authorization'"
+    "method.response.header.Access-Control-Allow-Methods" = "'GET,PUT,DELETE,OPTIONS'"
+  }
+
+  depends_on = [
+    aws_api_gateway_integration.options_photo_library_integration
+  ]
+}
+
+####################
+# Film transcoding #
+####################
+resource "aws_iam_role" "transcode_film_lambda_exec" {
+  name = "transcode_film_lambda_exec_role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action    = "sts:AssumeRole"
+      Principal = { Service = "lambda.amazonaws.com" }
+      Effect    = "Allow"
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "transcode_film_lambda_logs" {
+  role       = aws_iam_role.transcode_film_lambda_exec.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_iam_role_policy" "transcode_film_lambda_access" {
+  name = "transcode_film_lambda_access_policy"
+  role = aws_iam_role.transcode_film_lambda_exec.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
+        Resource = "${aws_s3_bucket.assets_bucket.arn}/*"
+      },
+      {
+        Effect   = "Allow"
+        Action   = ["dynamodb:UpdateItem"]
+        Resource = aws_dynamodb_table.assets_db.arn
+      }
+    ]
+  })
+}
+
+data "archive_file" "zip_api_transcode_film" {
+  type        = "zip"
+  source_file = "./api/transcode_film.py"
+  output_path = "./api/transcode_film.zip"
+}
+
+resource "aws_lambda_function" "transcode_film_lambda_function" {
+  function_name    = "transcode_film_lambda_function"
+  handler          = "transcode_film.handler"
+  runtime          = "python3.13"
+  role             = aws_iam_role.transcode_film_lambda_exec.arn
+  source_code_hash = data.archive_file.zip_api_transcode_film.output_base64sha256
+  filename         = data.archive_file.zip_api_transcode_film.output_path
+  memory_size      = 3008
+  timeout          = 900
+
+  ephemeral_storage {
+    size = 10240
+  }
+
+  layers = [
+    aws_lambda_layer_version.common.arn,
+    aws_lambda_layer_version.video.arn
+  ]
+
+  environment {
+    variables = {
+      ASSETS_TABLE_NAME  = aws_dynamodb_table.assets_db.name
+      ASSETS_BUCKET_NAME = aws_s3_bucket.assets_bucket.id
+    }
+  }
+}
+
+resource "aws_lambda_function_event_invoke_config" "transcode_film" {
+  function_name          = aws_lambda_function.transcode_film_lambda_function.function_name
+  maximum_retry_attempts = 0
+}
+
+#######################
+# Film library Lambda #
+#######################
+data "archive_file" "zip_api_manage_films" {
+  type        = "zip"
+  source_file = "./api/manage_films.py"
+  output_path = "./api/manage_films.zip"
+}
+
+resource "aws_lambda_function" "manage_films_lambda_function" {
+  function_name    = "manage_films_lambda_function"
+  handler          = "manage_films.handler"
+  runtime          = "python3.13"
+  role             = aws_iam_role.lambda_exec.arn
+  source_code_hash = data.archive_file.zip_api_manage_films.output_base64sha256
+  filename         = data.archive_file.zip_api_manage_films.output_path
+  memory_size      = 1024
+  timeout          = 30
+
+  layers = [
+    aws_lambda_layer_version.common.arn,
+    aws_lambda_layer_version.imaging.arn
+  ]
+
+  environment {
+    variables = {
+      ASSETS_TABLE_NAME        = aws_dynamodb_table.assets_db.name
+      ASSETS_BUCKET_NAME       = aws_s3_bucket.assets_bucket.id
+      ASSETS_CLOUDFRONT_DOMAIN = aws_cloudfront_distribution.assets_distribution.domain_name
+      TRANSCODE_FUNCTION_NAME  = aws_lambda_function.transcode_film_lambda_function.function_name
+    }
+  }
+}
+
+resource "aws_api_gateway_resource" "api_film_library_resource" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  parent_id   = aws_api_gateway_rest_api.api.root_resource_id
+  path_part   = "film_library"
+}
+
+resource "aws_api_gateway_method" "film_library" {
+  for_each = toset(["GET", "POST", "PATCH", "PUT", "DELETE"])
+
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  resource_id   = aws_api_gateway_resource.api_film_library_resource.id
+  http_method   = each.value
+  authorization = "COGNITO_USER_POOLS"
+  authorizer_id = aws_api_gateway_authorizer.cognito.id
+}
+
+resource "aws_api_gateway_integration" "film_library" {
+  for_each = aws_api_gateway_method.film_library
+
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.api_film_library_resource.id
+  http_method = each.value.http_method
+
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.manage_films_lambda_function.invoke_arn
+}
+
+resource "aws_lambda_permission" "allow_api_gateway_manage_films" {
+  statement_id  = "AllowExecutionFromAPIGatewayManageFilms"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.manage_films_lambda_function.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_api_gateway_rest_api.api.execution_arn}/*"
+}
+
+resource "aws_api_gateway_method" "options_film_library" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  resource_id   = aws_api_gateway_resource.api_film_library_resource.id
+  http_method   = "OPTIONS"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_integration" "options_film_library_integration" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.api_film_library_resource.id
+  http_method = aws_api_gateway_method.options_film_library.http_method
+
+  type = "MOCK"
+  request_templates = {
+    "application/json" = "{\"statusCode\": 200}"
+  }
+}
+
+resource "aws_api_gateway_method_response" "options_film_library_200" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.api_film_library_resource.id
+  http_method = aws_api_gateway_method.options_film_library.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin"  = true
+    "method.response.header.Access-Control-Allow-Headers" = true
+    "method.response.header.Access-Control-Allow-Methods" = true
+  }
+}
+
+resource "aws_api_gateway_integration_response" "options_film_library_integration_response" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  resource_id = aws_api_gateway_resource.api_film_library_resource.id
+  http_method = aws_api_gateway_method.options_film_library.http_method
+  status_code = aws_api_gateway_method_response.options_film_library_200.status_code
+
+  response_parameters = {
+    "method.response.header.Access-Control-Allow-Origin"  = "'*'"
+    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,Authorization'"
+    "method.response.header.Access-Control-Allow-Methods" = "'GET,POST,PATCH,PUT,DELETE,OPTIONS'"
+  }
+
+  depends_on = [
+    aws_api_gateway_integration.options_film_library_integration
   ]
 }

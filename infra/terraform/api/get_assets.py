@@ -4,7 +4,7 @@ from collections import defaultdict
 import boto3
 from boto3.dynamodb.conditions import Key
 
-from common import build_response, is_allowed_origin, get_asset_id
+from common import build_response, is_allowed_origin, get_asset_id, src_url
 
 
 TABLE_NAME = os.getenv("ASSETS_TABLE_NAME", "assets_db")
@@ -17,10 +17,7 @@ table = dynamodb.Table(TABLE_NAME)
 
 
 def build_src(key):
-    if not key:
-        return None
-
-    return f"https://{CLOUDFRONT_DOMAIN}/{key}"
+    return src_url(key, CLOUDFRONT_DOMAIN) or None
 
 
 def handler(event, _):
@@ -45,6 +42,9 @@ def handler(event, _):
 
         assets = []
         for item in items:
+            if not item.get("src"):
+                continue
+
             asset = {
                 "id": item.get("order"),
                 "title": item.get("title"),
@@ -58,6 +58,9 @@ def handler(event, _):
             if item.get("laurels"):
                 asset["laurels"] = True
 
+            if item.get("laurelImages"):
+                asset["laurelImages"] = [build_src(key) for key in item["laurelImages"]]
+
             assets.append(asset)
 
         return build_response(200, assets, origin)
@@ -67,7 +70,7 @@ def handler(event, _):
     photos_response = table.query(KeyConditionExpression=Key("Type").eq("photo"))
 
     collections_by_id = {
-        item["AssetID"]: item
+        get_asset_id(item["AssetID"]): item
         for item in collections_response["Items"]
     }
 
@@ -86,6 +89,9 @@ def handler(event, _):
     assets = []
     for folder_id, folder_info in folders_by_id.items():
         sorted_photos = sorted(photos_by_folder.get(folder_id, []), key=lambda x: x.get("order", 0))
+
+        if not sorted_photos:
+            continue
 
         collection_item = collections_by_id.get(get_asset_id(folder_info["collection"] or ""), {})
 

@@ -5,6 +5,7 @@ export interface Project {
   src: string;
   link?: string;
   laurels?: boolean;
+  laurelImages?: string[];
 }
 
 export interface Photo {

@@ -12,10 +12,18 @@ from common import build_response, is_allowed_origin, get_asset_id, AssetType, P
 TABLE_NAME = os.getenv("ASSETS_TABLE_NAME", "assets_db")
 BUCKET_NAME = os.getenv("ASSETS_BUCKET_NAME")
 
-VALID_PAGES = {Page.PHOTO, Page.FILM}
+RESUME_DISTRIBUTION_IDS = [os.getenv("ASSETS_DISTRIBUTION_ID"), os.getenv("STATIC_DISTRIBUTION_ID")]
 
-UPLOAD_FILE_PATTERN = r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.(jpg|png|webp|avif)"
+VALID_PAGES = {Page.PHOTO, Page.FILM, Page.RESUME}
+
+UUID_PATTERN = r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+UPLOAD_FILE_PATTERN = rf"{UUID_PATTERN}\.(jpg|png|webp|avif)"
+RESUME_UPLOAD_PATTERN = rf"uploads/resume/{UUID_PATTERN}\.pdf"
+RESUME_KEY = "resume.pdf"
+RESUME_CACHE_CONTROL = "max-age=300"
+MAX_RESUME_BYTES = 10 * 1024 * 1024
 MAX_DIMENSION = 2048
+RESIZE_REDUCING_GAP = 3.0
 DEFAULT_QUALITY = 85
 
 CONVERT_TO_JPEG = {".webp"}
@@ -38,6 +46,7 @@ CONTENT_TYPE_BY_FORMAT = {
 dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table(TABLE_NAME)
 s3 = boto3.client("s3")
+cloudfront = boto3.client("cloudfront")
 
 
 def handler(event, _):
@@ -61,6 +70,41 @@ def handler(event, _):
     if not key:
         return build_response(400, {"error": "Missing key"}, origin)
 
+    if page == Page.RESUME:
+        if not re.fullmatch(RESUME_UPLOAD_PATTERN, key):
+            return build_response(400, {"error": "Invalid key"}, origin)
+
+        try:
+            size = s3.head_object(Bucket=BUCKET_NAME, Key=key)["ContentLength"]
+            signature = s3.get_object(Bucket=BUCKET_NAME, Key=key, Range="bytes=0-4")["Body"].read()
+        except s3.exceptions.ClientError:
+            return build_response(404, {"error": "Uploaded file not found"}, origin)
+
+        if size > MAX_RESUME_BYTES or signature != b"%PDF-":
+            s3.delete_object(Bucket=BUCKET_NAME, Key=key)
+            return build_response(400, {"error": "Résumé must be a PDF under 10 MB"}, origin)
+
+        s3.copy_object(
+            Bucket=BUCKET_NAME,
+            Key=RESUME_KEY,
+            CopySource={"Bucket": BUCKET_NAME, "Key": key},
+            ContentType="application/pdf",
+            CacheControl=RESUME_CACHE_CONTROL,
+            MetadataDirective="REPLACE",
+        )
+        s3.delete_object(Bucket=BUCKET_NAME, Key=key)
+
+        for distribution_id in RESUME_DISTRIBUTION_IDS:
+            cloudfront.create_invalidation(
+                DistributionId=distribution_id,
+                InvalidationBatch={
+                    "Paths": {"Quantity": 1, "Items": [f"/{RESUME_KEY}"]},
+                    "CallerReference": key,
+                },
+            )
+
+        return build_response(200, {"ok": True}, origin)
+
     if page == Page.PHOTO:
         collection = body.get("collection")
         folder = body.get("folder")
@@ -81,10 +125,12 @@ def handler(event, _):
         if not re.fullmatch(rf"assets/images/photo/{re.escape(folder_asset_id)}/{UPLOAD_FILE_PATTERN}", key):
             return build_response(400, {"error": "Invalid key"}, origin)
 
-        collection_response = table.get_item(
-            Key={"Type": AssetType.PHOTO_COLLECTION.value, "AssetID": collection_asset_id}
+        existing_collections = table.query(
+            KeyConditionExpression=Key("Type").eq(AssetType.PHOTO_COLLECTION.value),
+        )["Items"]
+        is_new_collection = not any(
+            get_asset_id(item["AssetID"]) == collection_asset_id for item in existing_collections
         )
-        is_new_collection = "Item" not in collection_response
 
         folder_response = table.get_item(
             Key={"Type": AssetType.PHOTO_FOLDER.value, "AssetID": folder_asset_id}
@@ -101,16 +147,11 @@ def handler(event, _):
         original = s3.get_object(Bucket=BUCKET_NAME, Key=key)["Body"].read()
 
         with Image.open(io.BytesIO(original)) as img:
+            img.draft("RGB", (MAX_DIMENSION, MAX_DIMENSION))
+            icc_profile = img.info.get("icc_profile")
             img = ImageOps.exif_transpose(img)
-            width, height = img.size
-
-            if width > MAX_DIMENSION or height > MAX_DIMENSION:
-                ratio = min(MAX_DIMENSION / width, MAX_DIMENSION / height)
-                img = img.resize((round(width * ratio), round(height * ratio)), Image.LANCZOS)
-
-            clean = Image.new(img.mode, img.size)
-            clean.putdata(img.get_flattened_data())
-            img = clean
+            img.thumbnail((MAX_DIMENSION, MAX_DIMENSION), Image.LANCZOS, reducing_gap=RESIZE_REDUCING_GAP)
+            img.info = {}
 
             if img.mode in ("RGBA", "P"):
                 img = img.convert("RGB")
@@ -130,6 +171,9 @@ def handler(event, _):
             if image_format in ("JPEG", "PNG"):
                 save_kwargs["optimize"] = True
 
+            if icc_profile:
+                save_kwargs["icc_profile"] = icc_profile
+
             optimized = io.BytesIO()
             img.save(optimized, **save_kwargs)
 
@@ -144,16 +188,11 @@ def handler(event, _):
             s3.delete_object(Bucket=BUCKET_NAME, Key=key)
 
         if is_new_collection:
-            collections = table.query(
-                KeyConditionExpression=Key("Type").eq(AssetType.PHOTO_COLLECTION.value),
-                Select="COUNT",
-            )
-
             table.put_item(Item={
                 "Type": AssetType.PHOTO_COLLECTION.value,
                 "AssetID": collection_asset_id,
                 "title": collection,
-                "order": collections["Count"] + 1,
+                "order": len(existing_collections) + 1,
             })
 
         if existing_folder is None:
@@ -184,5 +223,7 @@ def handler(event, _):
             "src": optimized_key,
             "order": photos["Count"] + 1,
         })
+
+        return build_response(200, {"ok": True, "id": optimized_key}, origin)
 
     return build_response(200, {"ok": True}, origin)
