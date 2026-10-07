@@ -1,7 +1,7 @@
 import math
 import os
 import re
-from collections import Counter
+from collections import Counter, defaultdict
 from datetime import datetime, timedelta, timezone
 
 import boto3
@@ -10,7 +10,7 @@ from common import build_response, is_allowed_origin
 
 TABLE_NAME = os.getenv("ANALYTICS_TABLE_NAME", "analytics_db")
 PAGE_SIZE = 20
-GEO_FIELDS = ("country", "region", "regionName", "city", "latitude", "longitude", "userAgent")
+GEO_FIELDS = ("country", "region", "regionName", "city", "latitude", "longitude", "userAgent", "visitorId")
 DEFAULT_DAYS = 30
 MAX_DAYS = 365
 MAX_TZ_OFFSET_MINUTES = 14 * 60
@@ -53,9 +53,11 @@ def totals(sessions):
     pageviews = sum(len(session["actions"]) for session in sessions)
     total_duration = sum(session["totalDuration"] for session in sessions)
     bounces = sum(1 for session in sessions if len(session["actions"]) == 1)
+    tracked_sessions = [session for session in sessions if session.get("visitorId")]
 
     return {
         "visits": visits,
+        "uniqueVisitors": len({session["visitorId"] for session in tracked_sessions}) if tracked_sessions else None,
         "pageviews": pageviews,
         "avgDurationSeconds": round(float(total_duration) / visits, 1) if visits else 0,
         "bounceRate": round(bounces / visits, 4) if visits else 0,
@@ -170,6 +172,7 @@ def handler(event, _):
 
     daily_visits = Counter()
     daily_pageviews = Counter()
+    daily_visitors = defaultdict(set)
     heatmap = [[0] * 24 for _ in range(7)]
 
     for started, session in dated_sessions:
@@ -177,6 +180,9 @@ def handler(event, _):
             daily_visits[started.date()] += 1
             daily_pageviews[started.date()] += len(session["actions"])
             heatmap[started.weekday()][started.hour] += 1
+
+            if session.get("visitorId"):
+                daily_visitors[started.date()].add(session["visitorId"])
 
     page_views = Counter()
     page_durations = Counter()
@@ -206,6 +212,7 @@ def handler(event, _):
                 "date": (range_start + timedelta(days=offset)).isoformat(),
                 "visits": daily_visits[range_start + timedelta(days=offset)],
                 "pageviews": daily_pageviews[range_start + timedelta(days=offset)],
+                "visitors": len(daily_visitors[range_start + timedelta(days=offset)]),
             }
             for offset in range(days)
         ],

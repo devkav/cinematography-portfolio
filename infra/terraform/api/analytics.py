@@ -1,3 +1,4 @@
+import hmac
 import json
 import os
 import uuid
@@ -9,10 +10,12 @@ from common import build_response, is_allowed_origin
 
 
 TABLE_NAME = os.getenv("ANALYTICS_TABLE_NAME", "analytics_db")
+ORIGIN_SECRET = os.getenv("ANALYTICS_ORIGIN_SECRET", "")
 
 MAX_SESSION_LENGTH = 128
 MAX_PAGE_LENGTH = 256
 MAX_VIEW_ID_LENGTH = 64
+MAX_VISITOR_ID_LENGTH = 64
 MAX_ENTERED_AT_LENGTH = 40
 MAX_DURATION_SECONDS = 24 * 60 * 60
 
@@ -25,6 +28,9 @@ def handler(event, _):
     headers_lower = {key.lower(): value for key, value in headers.items()}
 
     origin = headers_lower.get("origin")
+
+    if not ORIGIN_SECRET or not hmac.compare_digest(headers_lower.get("x-origin-verify", ""), ORIGIN_SECRET):
+        return build_response(403, {"error": "Forbidden"}, origin)
 
     if not is_allowed_origin(origin):
         return build_response(403, {"error": f"Invalid origin: '{origin}'"}, origin)
@@ -52,6 +58,7 @@ def handler(event, _):
         "SessionID": str(session_id)[:MAX_SESSION_LENGTH],
         "Timestamp": timestamp,
         "page": str(page)[:MAX_PAGE_LENGTH],
+        "visitorId": str(body["visitorId"])[:MAX_VISITOR_ID_LENGTH] if body.get("visitorId") else None,
         "country": headers_lower.get("cloudfront-viewer-country"),
         "region": headers_lower.get("cloudfront-viewer-country-region"),
         "regionName": headers_lower.get("cloudfront-viewer-country-region-name"),

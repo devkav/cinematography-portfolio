@@ -92,7 +92,7 @@
 
 .analytics-tiles {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 8px;
 }
 
@@ -436,7 +436,11 @@ h3 {
   }
 
   .analytics-tiles {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .analytics-tile:last-child:nth-child(odd) {
+    grid-column: span 2;
   }
 
   .analytics-tile-value {

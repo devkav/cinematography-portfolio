@@ -1,6 +1,7 @@
 import io
 import json
 import os
+import re
 
 import boto3
 from boto3.dynamodb.conditions import Attr, Key
@@ -13,6 +14,7 @@ BUCKET_NAME = os.getenv("ASSETS_BUCKET_NAME")
 
 VALID_PAGES = {Page.PHOTO, Page.FILM}
 
+UPLOAD_FILE_PATTERN = r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.(jpg|png|webp|avif)"
 MAX_DIMENSION = 2048
 DEFAULT_QUALITY = 85
 
@@ -75,6 +77,9 @@ def handler(event, _):
 
         if extension not in FORMAT_BY_EXTENSION:
             return build_response(400, {"error": f"Unsupported image type: '{extension}'"}, origin)
+
+        if not re.fullmatch(rf"assets/images/photo/{re.escape(folder_asset_id)}/{UPLOAD_FILE_PATTERN}", key):
+            return build_response(400, {"error": "Invalid key"}, origin)
 
         collection_response = table.get_item(
             Key={"Type": AssetType.PHOTO_COLLECTION.value, "AssetID": collection_asset_id}
