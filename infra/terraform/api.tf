@@ -58,8 +58,8 @@ resource "aws_iam_role_policy" "lambda_cloudfront_invalidation" {
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
-      Effect   = "Allow"
-      Action   = ["cloudfront:CreateInvalidation"]
+      Effect = "Allow"
+      Action = ["cloudfront:CreateInvalidation"]
       Resource = [
         aws_cloudfront_distribution.assets_distribution.arn,
         aws_cloudfront_distribution.static_distribution.arn
