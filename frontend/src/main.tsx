@@ -10,6 +10,7 @@ import Work from "./pages/work";
 import Contact from "./pages/contact";
 import Photo from "./pages/photo";
 import Admin from "./pages/admin";
+import AdrenalineRush from "./pages/adrenaline-rush";
 import { AuthProvider } from "./auth/AuthContext";
 import { AnalyticsTracker } from "./analytics/AnalyticsTracker";
 import type { PhotoProject, Project } from "./types/Projects";
@@ -39,6 +40,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/photo" element={<Photo photos={photos} />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/adrenaline-rush" element={<AdrenalineRush />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
