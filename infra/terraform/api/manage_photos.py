@@ -23,6 +23,7 @@ BUCKET_NAME = os.getenv("ASSETS_BUCKET_NAME")
 CLOUDFRONT_DOMAIN = os.getenv("ASSETS_CLOUDFRONT_DOMAIN")
 
 PHOTO_KEY_PREFIX = "assets/images/photo/"
+S3_DELETE_LIMIT = 1000
 
 LEVEL_TYPES = {
     "collections": AssetType.PHOTO_COLLECTION.value,
@@ -154,32 +155,68 @@ def handler(event, _):
         return build_response(200, {"ok": True}, origin)
 
     if method == "DELETE":
-        photo_id = body.get("id")
+        level = body.get("level", "photos")
+        asset_id = body.get("id")
 
-        if not isinstance(photo_id, str) or not photo_id:
+        if level not in LEVEL_TYPES:
+            return build_response(400, {"error": f"Invalid level: '{level}'"}, origin)
+
+        if not isinstance(asset_id, str) or not asset_id:
             return build_response(400, {"error": "Missing id"}, origin)
 
-        photo = table.get_item(Key={"Type": AssetType.PHOTO.value, "AssetID": photo_id}).get("Item")
+        asset_type = LEVEL_TYPES[level]
+        item = table.get_item(Key={"Type": asset_type, "AssetID": asset_id}).get("Item")
 
-        if not photo:
-            return build_response(404, {"error": "Photo not found"}, origin)
+        if not item:
+            return build_response(404, {"error": f"{level[:-1].capitalize()} not found"}, origin)
 
-        src = photo.get("src") or ""
-        key = key_from_src(src)
+        if level == "photos":
+            folders = []
+            photos = [item]
+        else:
+            folders = [item] if level == "folders" else [
+                folder for folder in query_type(table, AssetType.PHOTO_FOLDER.value)
+                if get_asset_id(folder.get("collection") or "") == get_asset_id(asset_id)
+            ]
+            folder_ids = {get_asset_id(folder["AssetID"]) for folder in folders}
+            photos = [
+                photo for photo in query_type(table, AssetType.PHOTO.value)
+                if get_asset_id(photo.get("folder") or "") in folder_ids
+            ]
 
-        if key.startswith(PHOTO_KEY_PREFIX) and ".." not in key:
-            s3.delete_object(Bucket=BUCKET_NAME, Key=key)
+        deleted = (
+            [(AssetType.PHOTO.value, photo["AssetID"]) for photo in photos]
+            + [(AssetType.PHOTO_FOLDER.value, folder["AssetID"]) for folder in folders]
+            + ([(asset_type, asset_id)] if level == "collections" else [])
+        )
+        write_updates(dynamodb_client, [
+            {
+                "Delete": {
+                    "TableName": TABLE_NAME,
+                    "Key": {"Type": {"S": deleted_type}, "AssetID": {"S": deleted_id}},
+                }
+            }
+            for deleted_type, deleted_id in deleted
+        ])
 
-        table.delete_item(Key={"Type": AssetType.PHOTO.value, "AssetID": photo_id})
+        keys = [key_from_src(photo.get("src") or "") for photo in photos]
+        keys = [key for key in keys if key.startswith(PHOTO_KEY_PREFIX) and ".." not in key]
 
-        folder_id = get_asset_id(photo.get("folder") or "")
-        remaining = [
-            item for item in query_type(table,AssetType.PHOTO.value)
-            if get_asset_id(item.get("folder") or "") == folder_id
+        for start in range(0, len(keys), S3_DELETE_LIMIT):
+            s3.delete_objects(
+                Bucket=BUCKET_NAME,
+                Delete={"Objects": [{"Key": key} for key in keys[start:start + S3_DELETE_LIMIT]], "Quiet": True},
+            )
+
+        parent_field = PARENT_FIELDS.get(level)
+        parent_id = get_asset_id(item.get(parent_field) or "") if parent_field else None
+        siblings = [
+            sibling for sibling in query_type(table, asset_type)
+            if not parent_field or get_asset_id(sibling.get(parent_field) or "") == parent_id
         ]
         write_updates(dynamodb_client, [
-            order_update(TABLE_NAME, AssetType.PHOTO.value, item["AssetID"], position)
-            for position, item in enumerate(by_order(remaining), 1)
+            order_update(TABLE_NAME, asset_type, sibling["AssetID"], position)
+            for position, sibling in enumerate(by_order(siblings), 1)
         ])
 
         return build_response(200, {"ok": True}, origin)
