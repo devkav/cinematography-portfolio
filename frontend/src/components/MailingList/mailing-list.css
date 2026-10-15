@@ -1,0 +1,61 @@
+.mailing-list {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.mailing-list-message {
+  margin-top: 20px !important;
+}
+
+.mailing-list-title {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.mailing-list-actions {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 8px;
+}
+
+.mailing-list-actions a {
+  color: white;
+}
+
+.mailing-list-note {
+  margin-bottom: 16px !important;
+}
+
+.mailing-list-header,
+.mailing-list-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  padding: 10px 0;
+  font-size: 14px;
+}
+
+.mailing-list-header {
+  border-bottom: 1px solid var(--admin-border);
+  color: var(--admin-text-muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mailing-list-row + .mailing-list-row {
+  border-top: 1px solid #1f1f1f;
+}
+
+.mailing-list-email {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mailing-list-date {
+  color: var(--admin-text-secondary);
+}

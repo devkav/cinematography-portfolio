@@ -233,6 +233,10 @@ resource "aws_api_gateway_deployment" "assets_api_deployment" {
     aws_api_gateway_integration.options_photo_library_integration,
     aws_api_gateway_integration.film_library,
     aws_api_gateway_integration.options_film_library_integration,
+    aws_api_gateway_integration.api_gateway_signup_integration,
+    aws_api_gateway_integration.options_signup_integration,
+    aws_api_gateway_integration.api_gateway_get_mailing_list_integration,
+    aws_api_gateway_integration.options_get_mailing_list_integration,
   ]
   rest_api_id = aws_api_gateway_rest_api.api.id
 
@@ -275,6 +279,16 @@ resource "aws_api_gateway_deployment" "assets_api_deployment" {
       [for integration in aws_api_gateway_integration.film_library : integration.id],
       aws_api_gateway_method.options_film_library.id,
       aws_api_gateway_integration.options_film_library_integration.id,
+      aws_api_gateway_resource.api_signup_resource.id,
+      aws_api_gateway_method.post_signup.id,
+      aws_api_gateway_method.options_signup.id,
+      aws_api_gateway_integration.api_gateway_signup_integration.id,
+      aws_api_gateway_integration.options_signup_integration.id,
+      aws_api_gateway_resource.api_mailing_list_resource.id,
+      aws_api_gateway_method.get_mailing_list.id,
+      aws_api_gateway_method.options_get_mailing_list.id,
+      aws_api_gateway_integration.api_gateway_get_mailing_list_integration.id,
+      aws_api_gateway_integration.options_get_mailing_list_integration.id,
     ]))
   }
 
@@ -321,6 +335,17 @@ resource "aws_api_gateway_method_settings" "default_throttling" {
   settings {
     throttling_rate_limit  = 20
     throttling_burst_limit = 40
+  }
+}
+
+resource "aws_api_gateway_method_settings" "signup_throttling" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  stage_name  = aws_api_gateway_stage.cloudcast_api_gateway_stage.stage_name
+  method_path = "${aws_api_gateway_resource.api_signup_resource.path_part}/POST"
+
+  settings {
+    throttling_rate_limit  = 2
+    throttling_burst_limit = 5
   }
 }
 

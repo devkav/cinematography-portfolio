@@ -13,6 +13,7 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   width: 100vw;
+  flex-grow: 1; /* Fill leftover space so rows stack from the top while loading */
   /* Width and padding must agree with the numbers in work.tsx */
 }
 

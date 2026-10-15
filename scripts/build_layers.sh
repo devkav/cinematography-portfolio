@@ -28,7 +28,7 @@ FFMPEG_ARCHIVE="$(mktemp)"
 trap 'rm -f "$FFMPEG_ARCHIVE"' EXIT
 
 curl --fail --silent --show-error --location --output "$FFMPEG_ARCHIVE" "$FFMPEG_URL"
-echo "${FFMPEG_SHA256}  ${FFMPEG_ARCHIVE}" | sha256sum --check --quiet
+echo "${FFMPEG_SHA256}  ${FFMPEG_ARCHIVE}" | shasum --algorithm 256 --check --status
 
 rm -rf "$VIDEO_LAYER_DIR"
 mkdir -p "$VIDEO_LAYER_DIR"
