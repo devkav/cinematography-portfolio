@@ -13,6 +13,7 @@ import Admin from "./pages/admin";
 import AdrenalineRush from "./pages/adrenaline-rush";
 import { AuthProvider } from "./auth/AuthContext";
 import { AnalyticsTracker } from "./analytics/AnalyticsTracker";
+import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import type { PhotoProject, Project } from "./types/Projects";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -31,6 +32,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <AnalyticsTracker />
       <AuthProvider>
         <Routes>
