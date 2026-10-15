@@ -310,20 +310,63 @@ export default function PhotoManager() {
     }
   };
 
-  const deletePhoto = async (id: string) => {
-    setDeleting(id);
+  const deleteItem = async (type: ItemType, id: string) => {
+    const key = dndId(type, id);
+    setDeleting(key);
     setMessage(undefined);
 
     try {
-      await request("DELETE", { id });
+      await request("DELETE", { level: `${type}s`, id });
+
+      if (type === "collection" && collectionId === id) setCollectionId(undefined);
+      if (type !== "photo" && (collectionId === id || folderId === id)) setFolderId(undefined);
+
       await load();
-      setMessage({ kind: "success", text: "Photo deleted." });
+      setMessage({ kind: "success", text: `${type[0].toUpperCase()}${type.slice(1)} deleted.` });
     } catch (err) {
-      setMessage({ kind: "error", text: `Couldn't delete the photo: ${errorText(err)}` });
+      setMessage({ kind: "error", text: `Couldn't delete the ${type}: ${errorText(err)}` });
     } finally {
       setDeleting(undefined);
       setConfirmingDelete(undefined);
     }
+  };
+
+  const deleteControl = (type: "collection" | "folder", id: string, title: string, photoCount: number) => {
+    const key = dndId(type, id);
+
+    if (confirmingDelete !== key) {
+      return (
+        <button
+          className="admin-button-secondary photo-manager-delete-group"
+          title={dirty ? "Save or discard changes first" : `Delete ${type}`}
+          disabled={dirty || saving}
+          onClick={() => setConfirmingDelete(key)}
+        >
+          <MdDeleteOutline /> Delete {type}
+        </button>
+      );
+    }
+
+    return (
+      <div className="photo-manager-inline-confirm">
+        <span>
+          Delete “{title}”{photoCount > 0 && ` and its ${photoCount} photo${photoCount === 1 ? "" : "s"}`}? This can't
+          be undone.
+        </span>
+        <div>
+          <button className="admin-confirm-yes" disabled={deleting === key} onClick={() => deleteItem(type, id)}>
+            {deleting === key ? "…" : "Delete"}
+          </button>
+          <button
+            className="admin-confirm-no"
+            disabled={deleting === key}
+            onClick={() => setConfirmingDelete(undefined)}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    );
   };
 
   const onUploadComplete = async (uploadedIds: string[]) => {
@@ -491,7 +534,16 @@ export default function PhotoManager() {
 
         {selectedCollection && (
           <section className="admin-card">
-            <p className="admin-card-title">Folders in {selectedCollection.title}</p>
+            <div className="photo-manager-card-header">
+              <p className="admin-card-title">Folders in {selectedCollection.title}</p>
+              {selectedCollection.id !== NEW_ID &&
+                deleteControl(
+                  "collection",
+                  selectedCollection.id,
+                  selectedCollection.title,
+                  selectedCollection.folders.reduce((total, f) => total + f.photos.length, 0)
+                )}
+            </div>
             <p className="admin-card-subtitle">
               Drag the handles to reorder folders, or onto a collection above to move them. Drop a photo on a folder to
               move it there.
@@ -562,7 +614,11 @@ export default function PhotoManager() {
 
         {selectedCollection && selectedFolder && (
           <section className="admin-card">
-            <p className="admin-card-title">{selectedFolder.title}</p>
+            <div className="photo-manager-card-header">
+              <p className="admin-card-title">{selectedFolder.title}</p>
+              {selectedFolder.id !== NEW_ID &&
+                deleteControl("folder", selectedFolder.id, selectedFolder.title, selectedFolder.photos.length)}
+            </div>
             <p className="admin-card-subtitle">
               Shown on the Photo page in this order. Drag photos to rearrange them, or onto a folder above to move them.
             </p>
@@ -590,20 +646,20 @@ export default function PhotoManager() {
                             <img src={photo.src} alt="" loading="lazy" draggable={false} />
                             <span className="photo-manager-position">{index + 1}</span>
                           </div>
-                          {confirmingDelete === photo.id ? (
+                          {confirmingDelete === dndId("photo", photo.id) ? (
                             <div className="admin-confirm">
                               <span>Delete?</span>
                               <div>
                                 <button
                                   className="admin-confirm-yes"
-                                  disabled={deleting === photo.id}
-                                  onClick={() => deletePhoto(photo.id)}
+                                  disabled={deleting === dndId("photo", photo.id)}
+                                  onClick={() => deleteItem("photo", photo.id)}
                                 >
-                                  {deleting === photo.id ? "…" : "Yes"}
+                                  {deleting === dndId("photo", photo.id) ? "…" : "Yes"}
                                 </button>
                                 <button
                                   className="admin-confirm-no"
-                                  disabled={deleting === photo.id}
+                                  disabled={deleting === dndId("photo", photo.id)}
                                   onClick={() => setConfirmingDelete(undefined)}
                                 >
                                   No
@@ -616,7 +672,7 @@ export default function PhotoManager() {
                               aria-label={`Delete photo ${index + 1}`}
                               title={dirty ? "Save or discard changes first" : "Delete photo"}
                               disabled={dirty || saving}
-                              onClick={() => setConfirmingDelete(photo.id)}
+                              onClick={() => setConfirmingDelete(dndId("photo", photo.id))}
                             >
                               <MdDeleteOutline />
                             </button>

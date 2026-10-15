@@ -321,6 +321,50 @@
   background-color: var(--admin-bad);
 }
 
+.photo-manager-card-header {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.photo-manager-delete-group {
+  font-size: 13px;
+}
+
+.photo-manager-delete-group:hover:not(:disabled) {
+  border-color: var(--admin-bad);
+  background-color: color-mix(in srgb, var(--admin-bad) 18%, transparent);
+}
+
+.photo-manager-delete-group:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.photo-manager-inline-confirm {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.photo-manager-inline-confirm > div {
+  display: flex;
+  gap: 6px;
+}
+
+.photo-manager-inline-confirm button {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-family: "Archivo", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 .photo-manager-delete:disabled {
   cursor: not-allowed;
 }
