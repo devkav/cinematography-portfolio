@@ -1,0 +1,78 @@
+.email-signup {
+  width: 100%;
+  max-width: 420px;
+}
+
+.email-signup-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.email-signup-input,
+.email-signup-button,
+.email-signup-message,
+.email-signup-error {
+  font-family: "Archivo";
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+}
+
+.email-signup-input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 0;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 0;
+  background-color: transparent;
+  color: white;
+  outline: none;
+  transition: border-color 0.25s;
+}
+
+.email-signup-input:focus {
+  border-bottom-color: white;
+}
+
+.email-signup-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.email-signup-button {
+  padding: 8px 0;
+  border: none;
+  border-bottom: 1px solid white;
+  background-color: transparent;
+  color: white;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.25s;
+}
+
+.email-signup-button:hover {
+  opacity: 0.75;
+}
+
+.email-signup-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.email-signup-trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.email-signup-message,
+.email-signup-error {
+  margin: 0;
+}
+
+.email-signup-error {
+  margin-top: 12px;
+  color: #ff6b6b;
+}

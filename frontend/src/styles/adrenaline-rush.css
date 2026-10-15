@@ -76,6 +76,25 @@
   text-align: justify;
 }
 
+#adrenaline-rush-content > section + section {
+  border-top: 2px solid white;
+}
+
+#ar-shoot {
+  min-height: 70svh;
+}
+
+#ar-shoot .ar-text-block {
+  max-width: 1400px;
+  width: 100%;
+}
+
+#ar-shoot-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 5%;
+}
+
 #ar-about .ar-section-header,
 #ar-about .ar-body {
   color: #2b2b2b;
@@ -93,6 +112,79 @@
 .ar-partner-logo {
   height: min(140px, 18vw);
   object-fit: contain;
+}
+
+/* Purple tint over the BTS photo so the text stays readable. ::after keeps it above the image. */
+#ar-bts::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: rgba(60, 20, 100, 0.45);
+  pointer-events: none;
+}
+
+#ar-signup {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  padding: min(80px, 12vw) 7%;
+  background-color: black;
+  text-align: center;
+}
+
+#ar-signup .ar-section-header {
+  margin-bottom: 12px;
+  font-size: 24px;
+  letter-spacing: 0.1em;
+}
+
+#ar-signup .ar-body {
+  margin-bottom: 28px;
+  font-size: 0.85rem;
+  font-weight: 400;
+  line-height: 1.6;
+  text-align: center;
+  opacity: 0.7;
+}
+
+#ar-press {
+  padding: min(110px, 14vw) 7%;
+  background-color: black;
+}
+
+#ar-press-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: min(40px, 4vw);
+}
+
+.ar-press-item {
+  color: white;
+  text-decoration: none;
+}
+
+.ar-press-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  transition: opacity 0.25s;
+}
+
+.ar-press-item:hover .ar-press-image {
+  opacity: 0.75;
+}
+
+.ar-press-title {
+  margin: 16px 0 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.ar-press-item:hover .ar-press-title {
+  text-decoration: underline;
 }
 
 @media only screen and (max-width: 600px) {
@@ -113,5 +205,19 @@
   .ar-body {
     font-size: 1.1rem;
     text-align: left;
+  }
+
+  #ar-shoot-columns,
+  #ar-press-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #ar-press-grid {
+    row-gap: 40px;
+  }
+
+  .ar-press-title {
+    margin-top: 12px;
+    font-size: 0.9rem;
   }
 }

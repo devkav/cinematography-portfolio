@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router";
 import "./project-display.css";
 
 import londonLaurel from "../../assets/images/london_laurel.png";
@@ -26,6 +27,7 @@ export default function ProjectDisplay({
   playing
 }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const navigate = useNavigate();
 
   if (videoRef.current) {
     // React is bugged and doesn't reflect the "muted" flag on in the DOM. This may lead to different
@@ -50,7 +52,16 @@ export default function ProjectDisplay({
   }
 
   const onClick = () => {
-    if (link != undefined) {
+    if (link == undefined) {
+      return;
+    }
+
+    // Pages on this site replace the current tab; external links open in a new one
+    const url = new URL(link, window.location.origin);
+
+    if (url.origin === window.location.origin) {
+      navigate(url.pathname + url.search + url.hash);
+    } else {
       window.open(link, "_blank");
     }
   };

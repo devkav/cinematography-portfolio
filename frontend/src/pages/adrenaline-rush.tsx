@@ -1,5 +1,6 @@
 import TitleBar from "../components/TitleBar/TitleBar";
 import Footer from "../components/Footer/Footer";
+import EmailSignup from "../components/EmailSignup/EmailSignup";
 
 import "../styles/adrenaline-rush.css";
 
@@ -24,6 +25,24 @@ const shoot = [
 const bts = `Behind-the-scenes photography and video from the production have been featured across RIT’s
  marketing and promotional platforms, highlighting the crew/creative visual process that went into the
  process to show off the School of Film and Animation through the possibilities of virtual production.`;
+
+const press = [
+  {
+    title: "‘The Hollywood Reporter’ names RIT as one of the top film schools in the nation",
+    link: "https://www.rit.edu/news/hollywood-reporter-names-rit-as-one-top-film-schools-nation",
+    image: "0c9409f9-1f00-48aa-9665-3f62c7ff57e8.jpg"
+  },
+  {
+    title: "Student's late start turns into Hollywood ending at RIT",
+    link: "https://www.rit.edu/news/students-late-start-turns-hollywood-ending-rit",
+    image: "20250403_TLW_MagicVirtualProductionSet_7606.jpg"
+  },
+  {
+    title: "‘Variety’ names RIT as one of the top film schools in North America",
+    link: "https://www.rit.edu/news/variety-names-rit-as-one-top-film-schools-north-america",
+    image: "WEB-Variety_RITVirtualProduction.jpg"
+  }
+];
 
 export default function AdrenalineRush() {
   return (
@@ -58,6 +77,12 @@ export default function AdrenalineRush() {
           </div>
         </section>
 
+        <section id="ar-signup">
+          <h2 className="ar-section-header">Stay Updated</h2>
+          <p className="ar-body">Sign up to hear about screenings and releases for Adrenaline Rush.</p>
+          <EmailSignup project="adrenaline-rush" />
+        </section>
+
         <section id="ar-shoot" className="ar-section ar-text-section">
           <img
             className="ar-background"
@@ -67,11 +92,13 @@ export default function AdrenalineRush() {
           />
           <div className="ar-text-block">
             <h2 className="ar-section-header">The Shoot</h2>
-            {shoot.map((paragraph, i) => (
-              <p key={`shoot-${i}`} className="ar-body">
-                {paragraph}
-              </p>
-            ))}
+            <div id="ar-shoot-columns">
+              {shoot.map((paragraph, i) => (
+                <p key={`shoot-${i}`} className="ar-body">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -96,6 +123,18 @@ export default function AdrenalineRush() {
           <div className="ar-text-block">
             <h2 className="ar-section-header">BTS</h2>
             <p className="ar-body">{bts}</p>
+          </div>
+        </section>
+
+        <section id="ar-press">
+          <h2 className="ar-section-header">Press and Media</h2>
+          <div id="ar-press-grid">
+            {press.map(({ title, link, image }) => (
+              <a className="ar-press-item" href={link} target="_blank" rel="noopener noreferrer" key={link}>
+                <img className="ar-press-image" alt={title} loading="lazy" src={`${ASSET_URL}/${image}`} />
+                <p className="ar-press-title">{title}</p>
+              </a>
+            ))}
           </div>
         </section>
 
