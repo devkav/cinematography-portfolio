@@ -8,6 +8,12 @@ from config.aws import STATIC_BUCKET_NAME
 BUILD_DIRECTORY_STR = "frontend/dist"
 
 
+def is_html_page(key):
+    # index.html and per-page preview copies (e.g. "adrenaline-rush") keep the same name between builds,
+    # so they always need to be replaced and invalidated
+    return key == "index.html" or "." not in key
+
+
 def main():
     s3 = boto3.resource('s3')
     bucket_name = STATIC_BUCKET_NAME
@@ -17,7 +23,7 @@ def main():
 
     deleted_object_names, ignored_object_names = delete_bucket_objects(
         bucket_name=bucket_name,
-        condition=lambda s3_object: s3_object.key not in keys_set or s3_object.key == "index.html"
+        condition=lambda s3_object: s3_object.key not in keys_set or is_html_page(s3_object.key)
     )
 
     ignored_names_set = set(ignored_object_names)
