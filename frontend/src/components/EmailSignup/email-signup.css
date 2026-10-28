@@ -1,12 +1,13 @@
+/* Pages set --signup-accent (and --signup-accent-text) to match their film, and can replace the
+   button's glow with --signup-button-shadow / --signup-button-shadow-hover */
 .email-signup {
   width: 100%;
-  max-width: 420px;
+  max-width: 560px;
 }
 
 .email-signup-row {
   display: flex;
-  align-items: flex-end;
-  gap: 16px;
+  gap: 12px;
 }
 
 .email-signup-input,
@@ -14,25 +15,27 @@
 .email-signup-message,
 .email-signup-error {
   font-family: "Archivo";
-  font-size: 0.8rem;
-  letter-spacing: 0.08em;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
 }
 
 .email-signup-input {
   flex: 1;
   min-width: 0;
-  padding: 8px 0;
-  border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 0;
-  background-color: transparent;
+  padding: 16px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.04);
   color: white;
   outline: none;
-  transition: border-color 0.25s;
+  transition:
+    border-color 0.25s,
+    box-shadow 0.25s;
 }
 
 .email-signup-input:focus {
-  border-bottom-color: white;
+  border-color: var(--signup-accent, white);
+  box-shadow: 0 0 0 1px var(--signup-accent, white);
 }
 
 .email-signup-input::placeholder {
@@ -40,22 +43,29 @@
 }
 
 .email-signup-button {
-  padding: 8px 0;
+  padding: 16px 32px;
   border: none;
-  border-bottom: 1px solid white;
-  background-color: transparent;
-  color: white;
+  border-radius: 4px;
+  background-color: var(--signup-accent, white);
+  color: var(--signup-accent-text, black);
+  font-weight: 700;
   text-transform: uppercase;
+  white-space: nowrap;
   cursor: pointer;
-  transition: opacity 0.25s;
+  box-shadow: var(--signup-button-shadow, 0 0 24px var(--signup-accent-glow, transparent));
+  transition:
+    box-shadow 0.25s,
+    transform 0.25s,
+    opacity 0.25s;
 }
 
-.email-signup-button:hover {
-  opacity: 0.75;
+.email-signup-button:hover:not(:disabled) {
+  box-shadow: var(--signup-button-shadow-hover, 0 0 36px var(--signup-accent-glow, transparent));
+  transform: translateY(-1px);
 }
 
 .email-signup-button:disabled {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: default;
 }
 
@@ -72,7 +82,19 @@
   margin: 0;
 }
 
+.email-signup-message {
+  color: var(--signup-accent, white);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
 .email-signup-error {
   margin-top: 12px;
   color: #ff6b6b;
+}
+
+@media only screen and (max-width: 600px) {
+  .email-signup-row {
+    flex-direction: column;
+  }
 }

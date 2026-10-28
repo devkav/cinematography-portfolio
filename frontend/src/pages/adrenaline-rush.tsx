@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import TitleBar from "../components/TitleBar/TitleBar";
 import Footer from "../components/Footer/Footer";
 import EmailSignup from "../components/EmailSignup/EmailSignup";
@@ -44,22 +45,114 @@ const press = [
   }
 ];
 
+// The .mov files are transparent HEVC copies of the WebMs for Safari
+const INTRO_LEAD_IN = { webm: `${ASSET_URL}/Logo_LeadIn.webm`, mov: `${ASSET_URL}/intro-lead-in-561f9075.mov` };
+const INTRO_LOOP = { webm: `${ASSET_URL}/Logo_Loop.webm`, mov: `${ASSET_URL}/intro-loop-561f9075.mov` };
+
+type IntroPhase = "lead-in" | "loop" | "static";
+
+// Safari only supports transparent video as HEVC (.mov). Other browsers can't play that type, so they
+// skip it and use the WebM.
+function IntroSources({ webm, mov }: { webm: string; mov: string }) {
+  return (
+    <>
+      <source src={mov} type='video/quicktime; codecs="hvc1"' />
+      <source src={webm} type="video/webm" />
+    </>
+  );
+}
+
+// Plays the lead-in once, then hands off to the loop. Falls back to the static logo when autoplay is
+// blocked (e.g. iOS Low Power Mode) or the viewer prefers reduced motion.
+function IntroLogo() {
+  const leadInRef = useRef<HTMLVideoElement>(null);
+  const loopRef = useRef<HTMLVideoElement>(null);
+  const [phase, setPhase] = useState<IntroPhase>(() =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "static" : "lead-in"
+  );
+
+  useEffect(() => {
+    if (phase !== "lead-in") return;
+
+    for (const video of [leadInRef.current, loopRef.current]) {
+      // React doesn't reflect the "muted" flag in the DOM, which mobile browsers need to allow autoplay
+      if (video) video.defaultMuted = true;
+    }
+
+    leadInRef.current?.play().catch(() => setPhase("static"));
+  }, [phase]);
+
+  if (phase === "static") {
+    return <img id="ar-logo" alt="Adrenaline Rush" src={`${ASSET_URL}/adrenaline_rush_transparent.png`} />;
+  }
+
+  return (
+    <div id="ar-logo" className="ar-intro" role="img" aria-label="Adrenaline Rush">
+      {/* Stays on its last frame until the loop is actually playing, so the handoff has no gap */}
+      <video
+        muted
+        playsInline
+        preload="auto"
+        className={`ar-intro-video${phase === "loop" ? " hidden" : ""}`}
+        onEnded={() => loopRef.current?.play().catch(() => setPhase("static"))}
+        ref={leadInRef}
+      >
+        <IntroSources {...INTRO_LEAD_IN} />
+      </video>
+      <video
+        muted
+        playsInline
+        loop
+        preload="auto"
+        className={`ar-intro-video${phase === "loop" ? "" : " hidden"}`}
+        onPlaying={() => setPhase("loop")}
+        ref={loopRef}
+      >
+        <IntroSources {...INTRO_LOOP} />
+      </video>
+    </div>
+  );
+}
+
 export default function AdrenalineRush() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoPlaying, setVideoPlaying] = useState(false);
+
+  if (videoRef.current) {
+    // React is bugged and doesn't reflect the "muted" flag on in the DOM. This may lead to different
+    // behaviour on mobile. This forces the flag to be added.
+    videoRef.current.defaultMuted = true;
+  }
+
   return (
     <>
       <meta name="robots" content="noindex, nofollow" />
       <div id="adrenaline-rush-content">
         <section id="ar-hero" className="ar-section">
+          {/* Shown until the video plays. A real image instead of the video's poster, which browsers
+              letterbox rather than crop to fill. */}
           <img
-            className="ar-background"
+            className="ar-background ar-uncropped"
             alt="Driver reflected in a car mirror"
-            src={`${ASSET_URL}/6800457a-9b53-400d-9979-260a196b2924.png`}
+            fetchPriority="high"
+            src={`${ASSET_URL}/billboard-preview.png`}
+          />
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            id="ar-hero-video"
+            className={`ar-background ar-uncropped${videoPlaying ? " playing" : ""}`}
+            src={`${ASSET_URL}/adrenaline-billboard-cf96cd23.mp4`}
+            onPlaying={() => setVideoPlaying(true)}
+            ref={videoRef}
           />
           <div id="ar-title-bar">
-            <TitleBar route="work" darkMode={false} />
+            <TitleBar route="work" darkMode />
           </div>
           <div id="ar-hero-content">
-            <img id="ar-logo" alt="Adrenaline Rush" src={`${ASSET_URL}/adrenaline_rush_transparent.png`} />
+            <IntroLogo />
             <p id="ar-subtitle">Experimental Short Film | Virtual Production</p>
           </div>
         </section>
