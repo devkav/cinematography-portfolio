@@ -90,6 +90,7 @@
   font-weight: normal;
   padding: 14px;
   text-transform: none;
+  white-space: nowrap;
   font-weight: normal !important;
 }
 
@@ -119,5 +120,30 @@
   #title-bar-container {
     padding-top: 20px;
     padding-bottom: 20px;
+  }
+}
+
+/* Small phones like the iPhone SE */
+@media only screen and (max-width: 400px) {
+  #logo {
+    font-size: 17px;
+    padding: 8px;
+  }
+
+  #title-bar-container a {
+    margin-left: 6px;
+    margin-right: 6px;
+  }
+
+  #title-button-row a {
+    font-size: 16px;
+  }
+
+  #logo-container {
+    margin-left: 8px;
+  }
+
+  #title-button-row {
+    margin-right: 8px;
   }
 }
