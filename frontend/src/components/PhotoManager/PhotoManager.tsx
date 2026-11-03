@@ -19,18 +19,18 @@ import { SortableItem, SortableList, useDragSensors } from "../Sortable/Sortable
 const API_URL = import.meta.env.VITE_API_URL;
 const NEW_ID = "__new__";
 
-interface LibraryPhoto {
+export interface LibraryPhoto {
   id: string;
   src: string;
 }
 
-interface LibraryFolder {
+export interface LibraryFolder {
   id: string;
   title: string;
   photos: LibraryPhoto[];
 }
 
-interface LibraryCollection {
+export interface LibraryCollection {
   id: string;
   title: string;
   folders: LibraryFolder[];
@@ -120,7 +120,7 @@ export default function PhotoManager() {
 
   const load = async (keepDraft = false) => {
     try {
-      const data: LibraryCollection[] = await request("GET");
+      const { collections: data }: { collections: LibraryCollection[] } = await request("GET");
       setLibrary(data);
       setLoadError(undefined);
 

@@ -1,0 +1,383 @@
+.photo-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  align-items: start;
+  gap: 16px;
+}
+
+.photo-layout-loading {
+  display: flex;
+  flex-flow: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.photo-layout .is-sorting {
+  opacity: 0.35;
+}
+
+.photo-layout-canvas {
+  container-type: inline-size;
+  display: flow-root;
+  min-height: 400px;
+  padding-bottom: 24px;
+  border-radius: 6px;
+  background-color: white;
+}
+
+.photo-layout-canvas-row {
+  position: relative;
+  width: var(--width);
+  margin: var(--space) auto 0;
+  outline: 1px dashed transparent;
+  transition: outline-color 0.2s;
+}
+
+.photo-layout-canvas-row:hover {
+  outline-color: #c4c4c4;
+}
+
+.photo-layout-canvas-row.selected {
+  outline: 2px solid var(--admin-accent);
+  outline-offset: 2px;
+}
+
+.photo-layout-canvas-cells {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap);
+  min-height: 60px;
+  cursor: pointer;
+}
+
+.photo-layout-canvas-cell {
+  flex: var(--flex);
+  min-width: 0;
+}
+
+.photo-layout-canvas-photo {
+  cursor: grab;
+  touch-action: none;
+}
+
+.photo-layout-canvas-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.photo-layout-canvas-photo:focus-visible,
+.photo-layout-row-handle:focus-visible {
+  outline: 2px solid var(--admin-accent);
+}
+
+.photo-layout-row-handle {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 8px 2px 4px;
+  border-radius: 999px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  font-family: "Archivo", sans-serif;
+  font-size: 12px;
+  cursor: grab;
+  touch-action: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.photo-layout-row-handle svg {
+  font-size: 16px;
+}
+
+.photo-layout-canvas-row:hover .photo-layout-row-handle,
+.photo-layout-canvas-row.selected .photo-layout-row-handle,
+.photo-layout-row-handle:focus-visible {
+  opacity: 1;
+}
+
+.photo-layout-canvas-add {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4cqw auto 0;
+  padding: 10px 18px;
+  border: 1px dashed #b4b4b4;
+  border-radius: 999px;
+  background: transparent;
+  color: #555;
+  font-family: "Archivo", sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
+}
+
+.photo-layout-canvas-add:hover:not(:disabled) {
+  border-color: var(--admin-accent);
+  color: var(--admin-accent);
+}
+
+.photo-layout-sidebar {
+  position: fixed;
+  top: var(--sidebar-top);
+  right: var(--sidebar-inset);
+  z-index: 10;
+  display: flex;
+  flex-flow: column;
+  gap: 16px;
+  width: 320px;
+  max-height: calc(100vh - var(--sidebar-top) - var(--sidebar-inset));
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.photo-layout-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.photo-layout-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.photo-layout-settings {
+  display: flex;
+  flex-flow: column;
+  gap: 10px;
+}
+
+.photo-layout-slider {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) 40px;
+  align-items: center;
+  gap: 10px;
+}
+
+.photo-layout-slider input {
+  width: 100%;
+  accent-color: var(--admin-accent);
+}
+
+.photo-layout-value {
+  min-width: 20px;
+  text-align: center;
+  font-family: "Archivo", sans-serif;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.photo-layout-slider .photo-layout-value {
+  text-align: right;
+}
+
+.photo-layout-sizing {
+  display: flex;
+  flex-flow: column;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.photo-layout-sizing .admin-segmented-button {
+  flex: 1;
+  justify-content: center;
+  padding: 6px 4px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.photo-layout-section-label,
+.photo-layout-hint {
+  margin: 0;
+}
+
+.photo-layout-cells.flex-off .admin-label,
+.photo-layout-cells.flex-off .photo-layout-value {
+  opacity: 0.35;
+}
+
+.photo-layout-cells {
+  display: flex;
+  flex-flow: column;
+  gap: 6px;
+}
+
+.photo-layout-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid var(--admin-border);
+  border-radius: 6px;
+}
+
+.photo-layout-thumb {
+  width: 56px;
+  height: 42px;
+  margin-right: auto;
+  border-radius: 4px;
+  background-color: #1a1a1a;
+  object-fit: contain;
+}
+
+.photo-layout-cell .admin-label {
+  font-size: 12px;
+}
+
+.photo-layout-step {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid var(--admin-border);
+  border-radius: 4px;
+  background: transparent;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.photo-layout-step:hover:not(:disabled) {
+  border-color: var(--admin-accent);
+}
+
+.photo-layout-step:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.photo-layout-cell-remove {
+  margin-left: 6px;
+}
+
+.photo-layout-cell-remove:hover:not(:disabled) {
+  border-color: var(--admin-bad);
+  color: var(--admin-bad);
+}
+
+.photo-layout-add-photos {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 6px;
+}
+
+.photo-layout-overlay-photo {
+  display: block;
+  max-width: 200px;
+  max-height: 160px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  cursor: grabbing;
+}
+
+.photo-layout-overlay-row {
+  padding: 10px 16px;
+  border: 1px solid white;
+  border-radius: 6px;
+  background-color: var(--admin-surface-raised);
+  color: white;
+  font-family: "Archivo", sans-serif;
+  font-size: 14px;
+  white-space: nowrap;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7);
+  cursor: grabbing;
+}
+
+.photo-layout-folder-select {
+  margin-top: 16px;
+}
+
+.photo-layout-picker {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.photo-layout-picker-photo {
+  position: relative;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.photo-layout-picker-photo:hover {
+  border-color: #666;
+}
+
+.photo-layout-picker-photo.used {
+  opacity: 0.4;
+}
+
+.photo-layout-picker-photo.selected {
+  border-color: var(--admin-accent);
+  opacity: 1;
+}
+
+.photo-layout-picker-photo img {
+  display: block;
+  height: 140px;
+  width: auto;
+}
+
+.photo-layout-picker-badge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background-color: var(--admin-accent);
+  color: white;
+  font-family: "Archivo", sans-serif;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.photo-layout-picker-footer {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 12px 0;
+  border-top: 1px solid var(--admin-border);
+  background-color: var(--admin-surface);
+}
+
+.photo-layout-picker-footer .admin-card-subtitle {
+  margin: 0;
+}
+
+@media only screen and (max-width: 900px) {
+  .photo-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .photo-layout-sidebar {
+    position: static;
+    width: auto;
+    max-height: none;
+  }
+}

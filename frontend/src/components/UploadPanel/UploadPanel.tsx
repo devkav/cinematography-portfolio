@@ -1,21 +1,29 @@
 import "./upload-panel.css";
 
-import { useState, type JSX } from "react";
-import { MdDescription, MdMovie, MdPhotoCamera } from "react-icons/md";
+import type { JSX } from "react";
+import { MdDescription, MdMovie, MdPhotoCamera, MdViewQuilt } from "react-icons/md";
 import FilmManager from "../FilmManager/FilmManager";
 import PhotoManager from "../PhotoManager/PhotoManager";
+import PhotoLayoutEditor from "../PhotoLayoutEditor/PhotoLayoutEditor";
 import ResumeUpload from "../ResumeUpload/ResumeUpload";
 
-type UploadView = "film" | "photo" | "resume";
+export type UploadView = "film" | "photo" | "photo-layout" | "resume";
 
 const VIEWS: { view: UploadView; label: string; icon: JSX.Element }[] = [
   { view: "film", label: "Film", icon: <MdMovie /> },
   { view: "photo", label: "Photo", icon: <MdPhotoCamera /> },
+  { view: "photo-layout", label: "Photo layout", icon: <MdViewQuilt /> },
   { view: "resume", label: "Résumé", icon: <MdDescription /> }
 ];
 
-export default function UploadPanel() {
-  const [view, setView] = useState<UploadView>("photo");
+export default function UploadPanel({
+  selected,
+  onSelect
+}: {
+  selected: string | null;
+  onSelect: (view: UploadView) => void;
+}) {
+  const view = VIEWS.find((option) => option.view === selected)?.view ?? "photo";
 
   return (
     <div className="upload-panel">
@@ -25,7 +33,7 @@ export default function UploadPanel() {
             <button
               key={option}
               className={`admin-segmented-button${option === view ? " active" : ""}`}
-              onClick={() => setView(option)}
+              onClick={() => onSelect(option)}
             >
               {icon}
               {label}
@@ -36,6 +44,7 @@ export default function UploadPanel() {
 
       {view === "film" && <FilmManager />}
       {view === "photo" && <PhotoManager />}
+      {view === "photo-layout" && <PhotoLayoutEditor />}
       {view === "resume" && <ResumeUpload />}
     </div>
   );

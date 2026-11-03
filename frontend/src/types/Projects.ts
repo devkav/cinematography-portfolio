@@ -17,3 +17,17 @@ export interface PhotoProject {
   collection: string;
   photos: Photo[];
 }
+
+export interface PhotoLayoutCell {
+  src: string;
+  folder: string;
+  index: number;
+  flex: number;
+}
+
+export interface PhotoLayoutRow {
+  width: number;
+  gap: number;
+  space: number;
+  cells: PhotoLayoutCell[];
+}

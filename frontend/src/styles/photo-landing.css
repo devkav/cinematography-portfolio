@@ -1,0 +1,30 @@
+#photo-landing-page {
+  container-type: inline-size;
+  min-height: 100vh;
+  background-color: white;
+  color: black;
+}
+
+.photo-landing-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap);
+  width: var(--width);
+  margin: var(--space) auto 0;
+}
+
+.photo-landing-cell {
+  flex: var(--flex);
+  min-width: 0;
+}
+
+#photo-landing-page #footer {
+  margin-top: max(24px, 3cqw);
+}
+
+.photo-landing-cell img {
+  display: block;
+  width: 100%;
+  height: auto;
+}

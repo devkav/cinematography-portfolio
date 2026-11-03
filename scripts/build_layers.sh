@@ -27,7 +27,7 @@ uv pip install \
 FFMPEG_ARCHIVE="$(mktemp)"
 trap 'rm -f "$FFMPEG_ARCHIVE"' EXIT
 
-curl --fail --silent --show-error --location --output "$FFMPEG_ARCHIVE" "$FFMPEG_URL"
+curl --fail --silent --show-error --location --connect-timeout 20 --retry 5 --retry-all-errors --output "$FFMPEG_ARCHIVE" "$FFMPEG_URL"
 echo "${FFMPEG_SHA256}  ${FFMPEG_ARCHIVE}" | shasum --algorithm 256 --check --status
 
 rm -rf "$VIDEO_LAYER_DIR"

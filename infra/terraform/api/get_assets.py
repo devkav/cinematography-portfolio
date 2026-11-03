@@ -4,13 +4,13 @@ from collections import defaultdict
 import boto3
 from boto3.dynamodb.conditions import Key
 
-from common import build_response, is_allowed_origin, get_asset_id, src_url
+from common import AssetType, build_response, by_order, get_layout, is_allowed_origin, get_asset_id, query_type, src_url
 
 
 TABLE_NAME = os.getenv("ASSETS_TABLE_NAME", "assets_db")
 CLOUDFRONT_DOMAIN = os.getenv("ASSETS_CLOUDFRONT_DOMAIN")
 
-VALID_PAGES = {"film", "photo"}
+VALID_PAGES = {"film", "photo", "photo_layout"}
 
 dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table(TABLE_NAME)
@@ -35,6 +35,38 @@ def handler(event, _):
 
     if page not in VALID_PAGES:
         return build_response(400, {"error": f"Page '{page}' is not a valid page"}, origin)
+
+    if page == "photo_layout":
+        folder_titles = {
+            item["AssetID"]: item.get("title")
+            for item in query_type(table, AssetType.PHOTO_FOLDER.value)
+        }
+
+        photos_by_folder = defaultdict(list)
+        for item in query_type(table, AssetType.PHOTO.value):
+            photos_by_folder[item.get("folder")].append(item)
+
+        photos = {
+            photo["AssetID"]: {"src": build_src(photo.get("src")), "folder": folder_titles.get(folder_id), "index": index}
+            for folder_id, folder_photos in photos_by_folder.items()
+            for index, photo in enumerate(by_order(folder_photos))
+        }
+
+        rows = [
+            {
+                **row,
+                "cells": [
+                    {
+                        **photos[cell["photo"]],
+                        "flex": cell["ratio"] if row["sizing"] == "height" else 1 if row["sizing"] == "width" else cell["flex"],
+                    }
+                    for cell in row["cells"]
+                ],
+            }
+            for row in get_layout(table, photos)
+        ]
+
+        return build_response(200, rows, origin)
 
     if page == "film":
         response = table.query(KeyConditionExpression=Key("Type").eq("film"))
