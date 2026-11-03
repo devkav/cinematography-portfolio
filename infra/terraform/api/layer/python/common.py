@@ -9,6 +9,10 @@ from boto3.dynamodb.conditions import Key
 
 TRANSACTION_LIMIT = 100
 
+LAYOUT_ID = "landing"
+LAYOUT_DEFAULT_SPACE = 4
+LAYOUT_DEFAULT_SIZING = "flex"
+
 ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://maggieclucy.com",
@@ -26,6 +30,7 @@ class AssetType(str, Enum):
     PHOTO_FOLDER = "photo_folder"
     PHOTO_COLLECTION = "photo_collection"
     PHOTO = "photo"
+    PHOTO_LAYOUT = "photo_layout"
     FILM = "film"
 
 
@@ -85,6 +90,26 @@ def query_type(table, asset_type):
 
 def by_order(items):
     return sorted(items, key=lambda item: item.get("order", 0))
+
+
+def get_layout(table, photo_ids):
+    item = table.get_item(Key={"Type": AssetType.PHOTO_LAYOUT.value, "AssetID": LAYOUT_ID}).get("Item") or {}
+    rows = [
+        {
+            "width": int(row["width"]),
+            "gap": int(row["gap"]),
+            "space": int(row.get("space", LAYOUT_DEFAULT_SPACE)),
+            "sizing": row.get("sizing", LAYOUT_DEFAULT_SIZING),
+            "cells": [
+                {"photo": cell["photo"], "flex": int(cell["flex"]), "ratio": float(cell.get("ratio", 1))}
+                for cell in row["cells"]
+                if cell.get("photo") in photo_ids
+            ],
+        }
+        for row in item.get("rows", [])
+    ]
+
+    return [row for row in rows if row["cells"]]
 
 
 def src_url(src, domain):

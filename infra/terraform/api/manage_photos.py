@@ -1,14 +1,17 @@
 import json
 import os
 from collections import defaultdict
+from decimal import Decimal
 
 import boto3
 
 from common import (
+    LAYOUT_ID,
     AssetType,
     build_response,
     by_order,
     get_asset_id,
+    get_layout,
     is_allowed_origin,
     key_from_src,
     order_update,
@@ -24,6 +27,13 @@ CLOUDFRONT_DOMAIN = os.getenv("ASSETS_CLOUDFRONT_DOMAIN")
 
 PHOTO_KEY_PREFIX = "assets/images/photo/"
 S3_DELETE_LIMIT = 1000
+
+LAYOUT_MIN_WIDTH = 10
+LAYOUT_MAX_GAP = 20
+LAYOUT_MAX_FLEX = 12
+LAYOUT_SIZINGS = {"flex", "width", "height"}
+LAYOUT_MIN_RATIO = 0.05
+LAYOUT_MAX_RATIO = 20
 
 LEVEL_TYPES = {
     "collections": AssetType.PHOTO_COLLECTION.value,
@@ -44,6 +54,10 @@ dynamodb_client = boto3.client("dynamodb")
 s3 = boto3.client("s3")
 
 
+def is_int_between(value, low, high):
+    return isinstance(value, int) and not isinstance(value, bool) and low <= value <= high
+
+
 def handler(event, _):
     headers = event.get("headers") or {}
     origin = headers.get("origin") or headers.get("Origin")
@@ -56,11 +70,12 @@ def handler(event, _):
     if method == "GET":
         folders_by_collection = defaultdict(list)
         photos_by_folder = defaultdict(list)
+        photos = query_type(table, AssetType.PHOTO.value)
 
         for folder in query_type(table,AssetType.PHOTO_FOLDER.value):
             folders_by_collection[get_asset_id(folder.get("collection") or "")].append(folder)
 
-        for photo in query_type(table,AssetType.PHOTO.value):
+        for photo in photos:
             photos_by_folder[get_asset_id(photo.get("folder") or "")].append(photo)
 
         library = [
@@ -82,12 +97,78 @@ def handler(event, _):
             for collection in by_order(query_type(table,AssetType.PHOTO_COLLECTION.value))
         ]
 
-        return build_response(200, library, origin)
+        layout = get_layout(table, {photo["AssetID"] for photo in photos})
+
+        return build_response(200, {"collections": library, "layout": layout}, origin)
 
     try:
         body = json.loads(event.get("body") or "{}")
     except json.JSONDecodeError:
         return build_response(400, {"error": "Invalid JSON body"}, origin)
+
+    if method == "PUT" and "layout" in body:
+        rows = body["layout"]
+
+        if not isinstance(rows, list) or not all(
+            isinstance(row, dict) and isinstance(row.get("cells"), list) and row["cells"] for row in rows
+        ):
+            return build_response(400, {"error": "layout must be a list of rows with at least one photo"}, origin)
+
+        photo_ids = {photo["AssetID"] for photo in query_type(table, AssetType.PHOTO.value)}
+
+        for row in rows:
+            if not is_int_between(row.get("width"), LAYOUT_MIN_WIDTH, 100):
+                return build_response(400, {"error": f"Row width must be between {LAYOUT_MIN_WIDTH}% and 100%"}, origin)
+
+            if not is_int_between(row.get("space"), 0, LAYOUT_MAX_GAP):
+                return build_response(400, {"error": f"Space above must be between 0% and {LAYOUT_MAX_GAP}%"}, origin)
+
+            if not is_int_between(row.get("gap"), 0, LAYOUT_MAX_GAP):
+                return build_response(400, {"error": f"Row spacing must be between 0% and {LAYOUT_MAX_GAP}%"}, origin)
+
+            if row.get("sizing") not in LAYOUT_SIZINGS:
+                return build_response(400, {"error": f"Row sizing must be one of {sorted(LAYOUT_SIZINGS)}"}, origin)
+
+            for cell in row["cells"]:
+                if not isinstance(cell, dict) or not isinstance(cell.get("photo"), str):
+                    return build_response(400, {"error": "Each cell must reference a photo"}, origin)
+
+                if cell["photo"] not in photo_ids:
+                    return build_response(400, {"error": f"Unknown photo: '{cell['photo']}'"}, origin)
+
+                if not is_int_between(cell.get("flex"), 1, LAYOUT_MAX_FLEX):
+                    return build_response(400, {"error": f"Flex must be between 1 and {LAYOUT_MAX_FLEX}"}, origin)
+
+                ratio = cell.get("ratio")
+
+                if (
+                    isinstance(ratio, bool)
+                    or not isinstance(ratio, (int, float))
+                    or not LAYOUT_MIN_RATIO <= ratio <= LAYOUT_MAX_RATIO
+                ):
+                    return build_response(
+                        400, {"error": f"Ratio must be between {LAYOUT_MIN_RATIO} and {LAYOUT_MAX_RATIO}"}, origin
+                    )
+
+        table.put_item(Item={
+            "Type": AssetType.PHOTO_LAYOUT.value,
+            "AssetID": LAYOUT_ID,
+            "rows": [
+                {
+                    "width": row["width"],
+                    "gap": row["gap"],
+                    "space": row["space"],
+                    "sizing": row["sizing"],
+                    "cells": [
+                        {"photo": cell["photo"], "flex": cell["flex"], "ratio": Decimal(str(round(cell["ratio"], 4)))}
+                        for cell in row["cells"]
+                    ],
+                }
+                for row in rows
+            ],
+        })
+
+        return build_response(200, {"ok": True}, origin)
 
     if method == "PUT":
         changes = body.get("changes")

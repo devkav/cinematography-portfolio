@@ -1,21 +1,37 @@
-import type { PhotoProject } from "src/types/Projects";
+import type { PhotoLayoutRow, PhotoProject } from "src/types/Projects";
 import Footer from "../components/Footer/Footer";
 import TitleBar from "../components/TitleBar/TitleBar";
 import Seo from "../components/Seo/Seo";
+import PhotoLanding from "./photo-landing";
 
 import "../styles/photo.css";
 import { useEffect, useState } from "react";
 import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import { useSearchParams } from "react-router";
+import {
+  FOLDER_SEARCH_PARAM_NAME,
+  PHOTO_SEARCH_PARAM_NAME,
+  getPhotoSearch,
+  getProjectSearchParam
+} from "../utils/photoSearchParams";
 
 const PRELOAD_DISTANCE = 2;
 const LOCAL_PRELOAD_DISTANCE = 1;
-const PHOTO_SEARCH_PARAM_NAME = "folder";
 
 type ImageCache = Map<number, Map<number, any>>;
 
-export default function Photo({ photos }: { photos: PhotoProject[] }) {
+export default function Photo({ photos, layout }: { photos: PhotoProject[]; layout: PhotoLayoutRow[] }) {
+  const [searchParams] = useSearchParams();
+
+  if (searchParams.size == 0) {
+    return <PhotoLanding rows={layout} />;
+  }
+
+  return <PhotoGallery photos={photos} />;
+}
+
+function PhotoGallery({ photos }: { photos: PhotoProject[] }) {
   const [projectIndex, setProjectIndex] = useState<number>(0);
   const [photoIndex, setPhotoIndex] = useState<number>(0);
   const [imageCache, setImageCache] = useState<ImageCache>(new Map());
@@ -23,15 +39,7 @@ export default function Photo({ photos }: { photos: PhotoProject[] }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const { width } = useWindowDimensions();
 
-  const loadAround = ({
-    initialPhotoIndex,
-    projectIndex,
-    loadInitial
-  }: {
-    initialPhotoIndex: number;
-    projectIndex: number;
-    loadInitial: boolean;
-  }) => {
+  const loadAround = ({ initialPhotoIndex, projectIndex }: { initialPhotoIndex: number; projectIndex: number }) => {
     const projectCache: Map<number, any> = new Map(imageCache.get(projectIndex));
     const project = photos[projectIndex];
     const numPhotos = project.photos.length;
@@ -39,7 +47,7 @@ export default function Photo({ photos }: { photos: PhotoProject[] }) {
 
     for (let i = 0; i <= PRELOAD_DISTANCE; i++) {
       for (let reverse = 0; reverse <= 1; reverse++) {
-        if (i == 0 && ((loadInitial && reverse == 1) || !loadInitial)) {
+        if (i == 0 && reverse == 1) {
           continue;
         }
 
@@ -65,30 +73,25 @@ export default function Photo({ photos }: { photos: PhotoProject[] }) {
     return { projectCache, changesMade };
   };
 
-  const getProjectSearchParam = (title: string) => title.toLowerCase().trim().split(" ").join("_");
+  const updateSearchParams = (projectIndex: number, photoIndex: number, replace: boolean) =>
+    setSearchParams(getPhotoSearch(photos[projectIndex].title, photoIndex), { replace });
 
   useEffect(() => {
-    const folder = searchParams.get(PHOTO_SEARCH_PARAM_NAME);
-
-    if (folder == null) {
-      if (photos.length > 0) {
-        const projectTitle = photos[projectIndex].title;
-        setSearchParams({ [PHOTO_SEARCH_PARAM_NAME]: getProjectSearchParam(projectTitle) });
-      }
-
+    if (photos.length == 0) {
       return;
     }
 
+    const folder = searchParams.get(FOLDER_SEARCH_PARAM_NAME);
     const folderIndex = photos.findIndex(({ title }) => getProjectSearchParam(title) == folder);
+    const newProjectIndex = folderIndex == -1 ? projectIndex : folderIndex;
+    const photoNumber = Number(searchParams.get(PHOTO_SEARCH_PARAM_NAME));
+    const numPhotos = photos[newProjectIndex].photos.length;
+    const newPhotoIndex =
+      Number.isInteger(photoNumber) && photoNumber >= 1 && photoNumber <= numPhotos ? photoNumber - 1 : 0;
 
-    if (folderIndex == -1) {
-      return;
-    }
-    if (folderIndex == projectIndex) {
-      return;
-    }
-
-    setProjectIndex(folderIndex);
+    setProjectIndex(newProjectIndex);
+    setPhotoIndex(newPhotoIndex);
+    updateSearchParams(newProjectIndex, newPhotoIndex, true);
   }, [photos]);
 
   useEffect(() => {
@@ -97,8 +100,7 @@ export default function Photo({ photos }: { photos: PhotoProject[] }) {
     photos.forEach((_, currentProjectIndex) => {
       const { projectCache } = loadAround({
         initialPhotoIndex: 0,
-        projectIndex: currentProjectIndex,
-        loadInitial: true
+        projectIndex: currentProjectIndex
       });
       newImageCache.set(currentProjectIndex, projectCache);
     });
@@ -114,8 +116,7 @@ export default function Photo({ photos }: { photos: PhotoProject[] }) {
 
     const { projectCache, changesMade } = loadAround({
       initialPhotoIndex: photoIndex,
-      projectIndex,
-      loadInitial: false
+      projectIndex
     });
 
     if (!changesMade) {
@@ -142,6 +143,7 @@ export default function Photo({ photos }: { photos: PhotoProject[] }) {
       changeCollection(projectIndex + 1, true);
     } else {
       setPhotoIndex(newIndex);
+      updateSearchParams(projectIndex, newIndex, true);
     }
   };
 
@@ -154,11 +156,11 @@ export default function Photo({ photos }: { photos: PhotoProject[] }) {
       collection = 0;
     }
 
-    setProjectIndex(collection);
-    setPhotoIndex(start ? 0 : photos[collection].photos.length - 1);
+    const newPhotoIndex = start ? 0 : photos[collection].photos.length - 1;
 
-    const projectTitle = photos[collection].title;
-    setSearchParams({ [PHOTO_SEARCH_PARAM_NAME]: getProjectSearchParam(projectTitle) });
+    setProjectIndex(collection);
+    setPhotoIndex(newPhotoIndex);
+    updateSearchParams(collection, newPhotoIndex, false);
   };
 
   const sections: Map<string, number[]> = photos.reduce((acc, { collection }, index) => {

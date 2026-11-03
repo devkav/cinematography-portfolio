@@ -1,7 +1,8 @@
-import { useState, type JSX } from "react";
+import type { JSX } from "react";
 import "./tabs.css";
 
 export interface TabbedPage {
+  id: string;
   name: string;
   content: JSX.Element;
   icon: JSX.Element;
@@ -9,12 +10,17 @@ export interface TabbedPage {
 
 interface Props {
   pages: TabbedPage[];
+  active: string | null;
+  onChange: (id: string) => void;
 }
 
-export default function Tabs({ pages }: Props) {
-  const [activePage, setActivePage] = useState(0);
+export default function Tabs({ pages, active, onChange }: Props) {
+  const activePage = Math.max(
+    0,
+    pages.findIndex(({ id }) => id === active)
+  );
 
-  const tabs = pages.map(({ name, icon }, index) => {
+  const tabs = pages.map(({ id, name, icon }, index) => {
     let className = "tab";
 
     if (index == activePage) {
@@ -22,7 +28,7 @@ export default function Tabs({ pages }: Props) {
     }
 
     return (
-      <div className={className} onClick={() => setActivePage(index)} key={`tab${index}-${name}`}>
+      <div className={className} onClick={() => onChange(id)} key={`tab${index}-${name}`}>
         {icon}
         <p>{name}</p>
       </div>

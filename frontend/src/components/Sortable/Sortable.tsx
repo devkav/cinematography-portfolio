@@ -26,19 +26,21 @@ interface ItemProps {
   type: string;
   acceptsType?: string;
   className: string;
+  style?: CSSProperties;
   disabled?: boolean;
   children: (dragHandleProps: DragHandleProps) => ReactNode;
 }
 
-export function SortableItem({ id, type, acceptsType, className, disabled, children }: ItemProps) {
+export function SortableItem({ id, type, acceptsType, className, style, disabled, children }: ItemProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging, isOver, active } = useSortable({
     id,
     data: { type },
     disabled
   });
 
-  const style: CSSProperties = {
-    transform: CSS.Transform.toString(transform),
+  const sortableStyle: CSSProperties = {
+    ...style,
+    transform: CSS.Translate.toString(transform),
     transition
   };
 
@@ -47,7 +49,7 @@ export function SortableItem({ id, type, acceptsType, className, disabled, child
   return (
     <div
       ref={setNodeRef}
-      style={style}
+      style={sortableStyle}
       className={`${className}${isDragging ? " is-sorting" : ""}${isDropTarget ? " is-drop-target" : ""}`}
     >
       {children({ ...attributes, ...listeners } as DragHandleProps)}
