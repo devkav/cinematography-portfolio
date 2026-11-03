@@ -1,4 +1,4 @@
-export interface Project {
+export interface FilmProject {
   id: number;
   title: string;
   subtitle: string;

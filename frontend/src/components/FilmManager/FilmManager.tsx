@@ -9,7 +9,7 @@ import londonLaurel from "../../assets/images/london_laurel.png";
 import { SortableItem, SortableList, useDragSensors } from "../Sortable/Sortable";
 import FilmEditor from "./FilmEditor";
 import FilmPreview from "./FilmPreview";
-import type { Project } from "../../types/Projects";
+import type { FilmProject } from "../../types/Projects";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const POLL_INTERVAL_MS = 5000;
@@ -161,7 +161,7 @@ export default function FilmManager() {
     ...film.laurelImages.map((laurel) => laurel.src)
   ];
 
-  const previewFilms: Project[] = draft
+  const previewFilms: FilmProject[] = draft
     .filter((film) => film.src)
     .map((film, index) => ({
       id: index + 1,

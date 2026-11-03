@@ -1,13 +1,13 @@
 import TitleBar from "../components/TitleBar/TitleBar";
 import Footer from "../components/Footer/Footer";
-import VideoRow from "../components/VideoRow/VideoRow";
+import FilmRow from "../components/FilmRow/FilmRow";
 import Seo from "../components/Seo/Seo";
 import { useRef, useEffect, useState } from "react";
 
-import "../styles/work.css";
-import type { Project } from "src/types/Projects";
+import "../styles/film.css";
+import type { FilmProject } from "src/types/Projects";
 
-export default function Work({ projects }: { projects: Project[] }) {
+export default function Film({ projects }: { projects: FilmProject[] }) {
   const videosPerRow = 2;
   const rowContainerRef = useRef(null);
   const [parentWidth, setParentWidth] = useState(0);
@@ -40,7 +40,7 @@ export default function Work({ projects }: { projects: Project[] }) {
       const rowIndex = rows.length;
 
       rows.push(
-        <VideoRow
+        <FilmRow
           videos={currentRow}
           parentWidth={parentWidth}
           allLoadedCallback={() => allLoadedCallback(rowIndex)}
@@ -53,7 +53,7 @@ export default function Work({ projects }: { projects: Project[] }) {
 
   if (currentRow.length > 0) {
     rows.push(
-      <VideoRow
+      <FilmRow
         videos={currentRow}
         parentWidth={parentWidth}
         allLoadedCallback={() => allLoadedCallback(rows.length)}
@@ -63,20 +63,20 @@ export default function Work({ projects }: { projects: Project[] }) {
   }
 
   const loadedRows = rows.reduce(
-    (acc: (typeof VideoRow)[], videoRow: typeof VideoRow, index: number) =>
-      index <= numRowsLoaded ? [...acc, videoRow] : acc,
+    (acc: (typeof FilmRow)[], filmRow: typeof FilmRow, index: number) =>
+      index <= numRowsLoaded ? [...acc, filmRow] : acc,
     []
   );
 
   return (
-    <div id="work-content">
+    <div id="film-content">
       <Seo
         title="Film"
         description="Selected film and cinematography work by Maggie Lucy, an Atlanta-based cinematographer."
         path="/film"
       />
-      <TitleBar route="work" />
-      <div id="work-row-container" ref={rowContainerRef}>
+      <TitleBar route="film" />
+      <div id="film-row-container" ref={rowContainerRef}>
         {loadedRows}
       </div>
       <Footer />

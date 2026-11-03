@@ -6,7 +6,7 @@ import { createRoot } from "react-dom/client";
 
 import Home from "./pages/home";
 import Reel from "./pages/reel";
-import Work from "./pages/work";
+import Film from "./pages/film";
 import Contact from "./pages/contact";
 import Photo from "./pages/photo";
 import Admin from "./pages/admin";
@@ -14,14 +14,14 @@ import AdrenalineRush from "./pages/adrenaline-rush";
 import { AuthProvider } from "./auth/AuthContext";
 import { AnalyticsTracker } from "./analytics/AnalyticsTracker";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
-import type { PhotoLayoutRow, PhotoProject, Project } from "./types/Projects";
+import type { FilmProject, PhotoLayoutRow, PhotoProject } from "./types/Projects";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 function App() {
   const [photos, setPhotos] = useState<PhotoProject[]>([]);
   const [photoLayout, setPhotoLayout] = useState<PhotoLayoutRow[]>([]);
-  const [filmProjects, setFilmProjects] = useState<Project[]>([]);
+  const [filmProjects, setFilmProjects] = useState<FilmProject[]>([]);
 
   useEffect(() => {
     fetch(`${API_URL}/assets?page=photo`).then((data) => data.json().then((data) => setPhotos(data)));
@@ -45,7 +45,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/reel" element={<Reel />} />
-          <Route path="/film" element={<Work projects={filmProjects} />} />
+          <Route path="/film" element={<Film projects={filmProjects} />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/photo" element={<Photo photos={photos} layout={photoLayout} />} />
           <Route path="/admin" element={<Admin />} />

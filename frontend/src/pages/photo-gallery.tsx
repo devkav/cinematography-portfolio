@@ -6,33 +6,33 @@ import TitleBar from "../components/TitleBar/TitleBar";
 import Seo from "../components/Seo/Seo";
 import { getPhotoSearch } from "../utils/photoSearchParams";
 
-import "../styles/photo-landing.css";
+import "../styles/photo-gallery.css";
 
-export default function PhotoLanding({ rows }: { rows: PhotoLayoutRow[] }) {
+export default function PhotoGallery({ rows }: { rows: PhotoLayoutRow[] }) {
   return (
-    <div id="photo-landing-page">
+    <div id="photo-gallery-page">
       <Seo
         title="Photography"
         description="Photography portfolio of Maggie Lucy, an Atlanta-based cinematographer and photographer."
         path="/photo"
       />
       <TitleBar route="photo" darkMode={false} />
-      <div id="photo-landing-rows">
+      <div id="photo-gallery-rows">
         {rows.map(({ width, gap, space, label, labelSide, cells }, rowIndex) => {
           const labelIndex = labelSide === "right" ? cells.length - 1 : 0;
 
           return (
             <div
-              className={`photo-landing-row${label ? " labeled" : ""}`}
+              className={`photo-gallery-row${label ? " labeled" : ""}`}
               style={{ "--width": `${width}%`, "--gap": `${gap}cqw`, "--space": `${space}cqw` } as CSSProperties}
               key={`row-${rowIndex}`}
             >
               {cells.map(({ src, folder, index, flex }, cellIndex) => (
-                <div className="photo-landing-cell" style={{ "--flex": flex } as CSSProperties} key={src}>
+                <div className="photo-gallery-cell" style={{ "--flex": flex } as CSSProperties} key={src}>
                   <Link to={{ pathname: "/photo", search: getPhotoSearch(folder, index) }}>
                     <img src={src} alt={`${folder} photography by Maggie Lucy`} loading="lazy" />
                   </Link>
-                  {label && cellIndex === labelIndex && <p className={`photo-landing-label ${labelSide}`}>{label}</p>}
+                  {label && cellIndex === labelIndex && <p className={`photo-gallery-label ${labelSide}`}>{label}</p>}
                 </div>
               ))}
             </div>
