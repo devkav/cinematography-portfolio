@@ -1,4 +1,4 @@
-.project-display {
+.film-display {
   border-radius: 10px;
   position: relative;
 
@@ -7,11 +7,11 @@
   }
 }
 
-.project-display video {
+.film-display video {
   height: 100%;
   width: auto;
   object-fit: contain;
-  padding: 0px; /* Must agree with the padding in VideoRow.tsx */
+  padding: 0px; /* Must agree with the padding in FilmRow.tsx */
   padding-left: 8px;
   padding-right: 8px;
   -webkit-box-sizing: border-box;
@@ -19,7 +19,7 @@
   box-sizing: border-box;
 }
 
-.project-display-label-container {
+.film-display-label-container {
   position: absolute;
   width: 100%;
   height: calc(100% + 1px); /* Removes gap caused by fractional pixels */
@@ -30,36 +30,36 @@
   background-image: linear-gradient(to top, black, rgba(0, 0, 0, 0));
 }
 
-.project-display-label {
+.film-display-label {
   position: absolute;
   bottom: 20px;
   left: 20px;
 }
 
-.project-display-title,
-.project-display-subtitle {
+.film-display-title,
+.film-display-subtitle {
   color: white;
   font-weight: bold;
   margin: 0px;
 }
 
-.project-display-title {
+.film-display-title {
   font-family: "Impact";
   font-size: 50px;
   text-transform: uppercase;
 }
 
-.project-display-subtitle {
+.film-display-subtitle {
   font-family: "Helvetica";
   font-size: 20px;
   text-transform: lowercase;
 }
 
-.project-display:hover .project-display-label-container {
+.film-display:hover .film-display-label-container {
   opacity: 1;
 }
 
-.project-display-laurels {
+.film-display-laurels {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -67,55 +67,55 @@
   gap: 12px;
 }
 
-.project-display-laurel {
+.film-display-laurel {
   width: 170px;
 }
 
 @media only screen and (max-width: 450px) {
-  .project-display video {
-    padding-left: 4px; /* Must agree with the padding in VideoRow.tsx */
-    padding-right: 4px; /* Must agree with the padding in VideoRow.tsx */
+  .film-display video {
+    padding-left: 4px; /* Must agree with the padding in FilmRow.tsx */
+    padding-right: 4px; /* Must agree with the padding in FilmRow.tsx */
   }
 }
 
 @media only screen and (max-width: 650px) {
-  .project-display-label {
+  .film-display-label {
     bottom: 6px;
   }
 
-  .project-display-title {
+  .film-display-title {
     font-size: 12px;
   }
 
-  .project-display-subtitle {
+  .film-display-subtitle {
     font-size: 8px;
   }
 
-  .project-display-laurels {
+  .film-display-laurels {
     top: 8px;
     right: 8px;
     gap: 4px;
   }
 
-  .project-display-laurel {
+  .film-display-laurel {
     width: 50px;
   }
 }
 
 @media only screen and (max-width: 1000px) and (min-width: 650px) {
-  .project-display-label {
+  .film-display-label {
     bottom: 12px;
   }
 
-  .project-display-title {
+  .film-display-title {
     font-size: 30px;
   }
 
-  .project-display-subtitle {
+  .film-display-subtitle {
     font-size: 12px;
   }
 
-  .project-display-laurel {
+  .film-display-laurel {
     width: 100px;
   }
 }

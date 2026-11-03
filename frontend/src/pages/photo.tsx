@@ -2,7 +2,7 @@ import type { PhotoLayoutRow, PhotoProject } from "src/types/Projects";
 import Footer from "../components/Footer/Footer";
 import TitleBar from "../components/TitleBar/TitleBar";
 import Seo from "../components/Seo/Seo";
-import PhotoLanding from "./photo-landing";
+import PhotoGallery from "./photo-gallery";
 
 import "../styles/photo.css";
 import { useEffect, useState } from "react";
@@ -24,13 +24,13 @@ export default function Photo({ photos, layout }: { photos: PhotoProject[]; layo
   const [searchParams] = useSearchParams();
 
   if (searchParams.size == 0) {
-    return <PhotoLanding rows={layout} />;
+    return <PhotoGallery rows={layout} />;
   }
 
-  return <PhotoGallery photos={photos} />;
+  return <PhotoViewer photos={photos} />;
 }
 
-function PhotoGallery({ photos }: { photos: PhotoProject[] }) {
+function PhotoViewer({ photos }: { photos: PhotoProject[] }) {
   const [projectIndex, setProjectIndex] = useState<number>(0);
   const [photoIndex, setPhotoIndex] = useState<number>(0);
   const [imageCache, setImageCache] = useState<ImageCache>(new Map());

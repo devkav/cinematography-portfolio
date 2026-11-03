@@ -1,12 +1,12 @@
 import { useRef, useEffect, useState } from "react";
-import ProjectDisplay from "../ProjectDisplay/ProjectDisplay";
+import FilmDisplay from "../FilmDisplay/FilmDisplay";
 
-import "./video-row.css";
+import "./film-row.css";
 import useOnScreen from "../../hooks/useOnScreen";
-import type { Project } from "src/types/Projects";
+import type { FilmProject } from "src/types/Projects";
 
 interface Props {
-  videos: Project[];
+  videos: FilmProject[];
   parentWidth: number;
   allLoadedCallback: () => void;
 }
@@ -20,7 +20,7 @@ interface VideoDimensionsState {
   [id: number]: VideoDimensions;
 }
 
-export default function VideoRow({ videos, parentWidth, allLoadedCallback }: Props) {
+export default function FilmRow({ videos, parentWidth, allLoadedCallback }: Props) {
   const [height, setHeight] = useState(100);
   const [loadedVideoIds, setLoadedVideoIds] = useState<Set<number>>(new Set());
   const [videoDimensions, setVideoDimensions] = useState<VideoDimensionsState>({});
@@ -40,7 +40,7 @@ export default function VideoRow({ videos, parentWidth, allLoadedCallback }: Pro
         return acc + commonWidth;
       }, 0);
 
-      const videoPadding = parentWidth <= 450 ? 4 : 8; // Must agree with the padding in project-display.css
+      const videoPadding = parentWidth <= 450 ? 4 : 8; // Must agree with the padding in film-display.css
       const totalPadding = videos.length * 2 * videoPadding;
       const targetWidth = parentWidth - totalPadding;
       const scale = targetWidth / totalWidth;
@@ -57,7 +57,7 @@ export default function VideoRow({ videos, parentWidth, allLoadedCallback }: Pro
   };
 
   const getClassNames = () => {
-    const classNames = ["video-row"];
+    const classNames = ["film-row"];
     const allLoaded = videos.every(({ id }) => loadedVideoIds.has(id));
 
     if (!allLoaded) {
@@ -70,7 +70,7 @@ export default function VideoRow({ videos, parentWidth, allLoadedCallback }: Pro
   return (
     <div className={getClassNames()} ref={rowRef} style={{ height: `${height}px` }}>
       {videos.map((data) => (
-        <ProjectDisplay
+        <FilmDisplay
           data={data}
           onLoadCallback={(dimensions: VideoDimensions) => {
             onLoadCallback(data.id, dimensions);

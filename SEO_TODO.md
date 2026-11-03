@@ -59,7 +59,7 @@ Category scores after re-audit: Technical 61, Schema 82, Performance 68, GEO 36,
 - [x] `noindex, nofollow` on the `/admin` route (`admin.tsx`)
 - [x] Sitemap: `lastmod` added (placeholder dates), `priority` removed (`public/sitemap.xml`)
 - [x] Bio grammar fix — sentence fragment + run-on (`contact.tsx`)
-- [x] `alt` on the festival laurel image (`ProjectDisplay.tsx`)
+- [x] `alt` on the festival laurel image (`FilmDisplay.tsx`)
 - [x] `public/llms.txt` for AI crawlers
 - [x] `WebSite` JSON-LD block added (`index.html`)
 - [x] Removed wrong static canonical from `index.html` (interim canonical fix)

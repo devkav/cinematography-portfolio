@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
-import "./project-display.css";
+import "./film-display.css";
 
 import londonLaurel from "../../assets/images/london_laurel.png";
-import type { VideoDimensions } from "../VideoRow/VideoRow";
+import type { VideoDimensions } from "../FilmRow/FilmRow";
 
-interface ProjectDisplayData {
+interface FilmDisplayData {
   id: number;
   src: string;
   title: string;
@@ -16,12 +16,12 @@ interface ProjectDisplayData {
 }
 
 interface Props {
-  data: ProjectDisplayData;
+  data: FilmDisplayData;
   onLoadCallback: ({ width, height }: VideoDimensions) => void;
   playing: boolean;
 }
 
-export default function ProjectDisplay({
+export default function FilmDisplay({
   data: { id, src, title, subtitle, link, laurels = false, laurelImages = [] },
   onLoadCallback,
   playing
@@ -45,7 +45,7 @@ export default function ProjectDisplay({
 
   const laurelSources = [...(laurels ? [londonLaurel] : []), ...laurelImages];
 
-  let className = "project-display";
+  let className = "film-display";
 
   if (link != undefined) {
     className += " clickable";
@@ -73,12 +73,12 @@ export default function ProjectDisplay({
 
   return (
     <div className={className} onClick={onClick}>
-      <div className="project-display-label-container">
+      <div className="film-display-label-container">
         {laurelSources.length > 0 && (
-          <div className="project-display-laurels">
+          <div className="film-display-laurels">
             {laurelSources.map((laurelSrc, index) => (
               <img
-                className="project-display-laurel"
+                className="film-display-laurel"
                 src={laurelSrc}
                 alt={`Film festival laurel — ${title}`}
                 key={`laurel-${id}-${index}`}
@@ -86,9 +86,9 @@ export default function ProjectDisplay({
             ))}
           </div>
         )}
-        <div className="project-display-label">
-          <p className="project-display-title">{title}</p>
-          <p className="project-display-subtitle">{subtitle}</p>
+        <div className="film-display-label">
+          <p className="film-display-title">{title}</p>
+          <p className="film-display-subtitle">{subtitle}</p>
         </div>
       </div>
       <video autoPlay muted loop playsInline onLoadedMetadata={onLoad} src={src} ref={videoRef} />

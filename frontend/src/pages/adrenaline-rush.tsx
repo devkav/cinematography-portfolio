@@ -149,7 +149,7 @@ export default function AdrenalineRush() {
             ref={videoRef}
           />
           <div id="ar-title-bar">
-            <TitleBar route="work" darkMode />
+            <TitleBar route="film" darkMode />
           </div>
           <div id="ar-hero-content">
             <IntroLogo />

@@ -1,4 +1,4 @@
-.video-row {
+.film-row {
   display: flex;
   flex-flow: row;
   justify-content: space-between;
@@ -6,21 +6,21 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  margin-bottom: 16px; /* Must be 2x the padding defined in project-display.css */
+  margin-bottom: 16px; /* Must be 2x the padding defined in film-display.css */
 }
 
-.video-row.unloaded {
+.film-row.unloaded {
   display: none;
 }
 
 @media only screen and (hover: none) and (pointer: coarse) {
-  .video-row.unloaded {
+  .film-row.unloaded {
     display: flex !important;
   }
 }
 
 @media only screen and (max-width: 450px) {
-  .video-row {
-    margin-bottom: 8px; /* Must be 2x the padding defined in project-display.css */
+  .film-row {
+    margin-bottom: 8px; /* Must be 2x the padding defined in film-display.css */
   }
 }

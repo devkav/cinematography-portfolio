@@ -1,4 +1,4 @@
-#work-content {
+#film-content {
   display: flex;
   flex-flow: column;
   justify-content: space-between;
@@ -6,7 +6,7 @@
   min-height: 100svh;
 }
 
-#work-row-container {
+#film-row-container {
   padding-left: 16px;
   padding-right: 16px;
   -webkit-box-sizing: border-box;
@@ -14,12 +14,11 @@
   box-sizing: border-box;
   width: 100vw;
   flex-grow: 1; /* Fill leftover space so rows stack from the top while loading */
-  /* Width and padding must agree with the numbers in work.tsx */
+  /* Width and padding must agree with the numbers in film.tsx */
 }
 
 body,
-#root,
-.work-row-container {
+#root {
   max-width: 100vw;
   overflow-x: hidden;
 }
