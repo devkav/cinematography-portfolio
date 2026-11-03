@@ -58,8 +58,9 @@ export default function ProjectDisplay({
 
     // Pages on this site replace the current tab; external links open in a new one
     const url = new URL(link, window.location.origin);
+    const stripWww = (host: string) => host.replace(/^www\./, "");
 
-    if (url.origin === window.location.origin) {
+    if (stripWww(url.hostname) === stripWww(window.location.hostname)) {
       navigate(url.pathname + url.search + url.hash);
     } else {
       window.open(link, "_blank");

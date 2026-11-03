@@ -7,8 +7,7 @@ import PhotoLanding from "./photo-landing";
 import "../styles/photo.css";
 import { useEffect, useState } from "react";
 import { MdNavigateNext, MdNavigateBefore } from "react-icons/md";
-import useWindowDimensions from "../hooks/useWindowDimensions";
-import { useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import {
   FOLDER_SEARCH_PARAM_NAME,
   PHOTO_SEARCH_PARAM_NAME,
@@ -37,7 +36,6 @@ function PhotoGallery({ photos }: { photos: PhotoProject[] }) {
   const [imageCache, setImageCache] = useState<ImageCache>(new Map());
   const [initialLoad, setInitialLoad] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const { width } = useWindowDimensions();
 
   const loadAround = ({ initialPhotoIndex, projectIndex }: { initialPhotoIndex: number; projectIndex: number }) => {
     const projectCache: Map<number, any> = new Map(imageCache.get(projectIndex));
@@ -174,8 +172,6 @@ function PhotoGallery({ photos }: { photos: PhotoProject[] }) {
 
   const collections: any[] = [];
   const images = [];
-  const compactBar = width > 800;
-  const titleBar = <TitleBar route="photo" compact={compactBar} />;
 
   // Preload images
   photos.forEach((_, currentProjectIndex) => {
@@ -267,11 +263,14 @@ function PhotoGallery({ photos }: { photos: PhotoProject[] }) {
         description="Photography portfolio of Maggie Lucy, an Atlanta-based cinematographer and photographer."
         path="/photo"
       />
-      {!compactBar && titleBar}
+      <TitleBar route="photo" darkMode={false} />
       <div id="photo-content-container">
         <div id="photo-content">
           <div id="sidebar-container">
-            {compactBar && titleBar}
+            <Link id="photo-back" to="/photo">
+              <MdNavigateBefore />
+             Gallery 
+            </Link>
             <div id="photo-sidebar">{collections}</div>
           </div>
           <div id="display-container">
@@ -289,7 +288,7 @@ function PhotoGallery({ photos }: { photos: PhotoProject[] }) {
           </div>
         </div>
       </div>
-      <Footer />
+      <Footer darkMode={false} />
     </div>
   );
 }
