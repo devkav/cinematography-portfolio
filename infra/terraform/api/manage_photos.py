@@ -34,6 +34,8 @@ LAYOUT_MAX_FLEX = 12
 LAYOUT_SIZINGS = {"flex", "width", "height"}
 LAYOUT_MIN_RATIO = 0.05
 LAYOUT_MAX_RATIO = 20
+LAYOUT_MAX_LABEL_LENGTH = 60
+LAYOUT_LABEL_SIDES = {"left", "right"}
 
 LEVEL_TYPES = {
     "collections": AssetType.PHOTO_COLLECTION.value,
@@ -129,6 +131,14 @@ def handler(event, _):
             if row.get("sizing") not in LAYOUT_SIZINGS:
                 return build_response(400, {"error": f"Row sizing must be one of {sorted(LAYOUT_SIZINGS)}"}, origin)
 
+            if not isinstance(row.get("label"), str) or len(row["label"].strip()) > LAYOUT_MAX_LABEL_LENGTH:
+                return build_response(
+                    400, {"error": f"Row label must be at most {LAYOUT_MAX_LABEL_LENGTH} characters"}, origin
+                )
+
+            if row.get("labelSide") not in LAYOUT_LABEL_SIDES:
+                return build_response(400, {"error": f"Label side must be one of {sorted(LAYOUT_LABEL_SIDES)}"}, origin)
+
             for cell in row["cells"]:
                 if not isinstance(cell, dict) or not isinstance(cell.get("photo"), str):
                     return build_response(400, {"error": "Each cell must reference a photo"}, origin)
@@ -159,6 +169,8 @@ def handler(event, _):
                     "gap": row["gap"],
                     "space": row["space"],
                     "sizing": row["sizing"],
+                    "label": row["label"].strip(),
+                    "labelSide": row["labelSide"],
                     "cells": [
                         {"photo": cell["photo"], "flex": cell["flex"], "ratio": Decimal(str(round(cell["ratio"], 4)))}
                         for cell in row["cells"]
