@@ -7,7 +7,8 @@
 }
 
 .session-row-main,
-.session-list-header {
+.session-list-header,
+.session-skeleton-row {
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr) minmax(0, 0.8fr) minmax(0, 0.6fr) minmax(0, 2fr) 24px;
   align-items: center;
@@ -186,5 +187,14 @@
 
   .session-details {
     padding: 4px 14px 16px;
+  }
+
+  .session-skeleton-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    padding: 12px 14px;
+  }
+
+  .session-skeleton-cell:nth-child(n + 3) {
+    display: none;
   }
 }

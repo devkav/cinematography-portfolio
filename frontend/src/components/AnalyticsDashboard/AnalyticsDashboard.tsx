@@ -10,6 +10,8 @@ const API_URL = import.meta.env.VITE_API_URL;
 const NUM_PAGE_NUMBERS = 5;
 const RANGE_OPTIONS = [7, 30, 90];
 const DEFAULT_RANGE = 30;
+const SKELETON_SESSIONS = 8;
+const SKELETON_LIST_WIDTHS = ["90%", "75%", "82%", "60%", "70%", "50%"];
 
 export interface Action {
   durationSeconds: number;
@@ -87,13 +89,16 @@ export default function AnalyticsDashboard() {
     fetch(url, {
       headers: { Authorization: idToken }
     })
-      .then((res) => res.json())
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error(`request failed (${res.status})`))))
       .then((data: AnalyticsData) => {
         if (cancelled) return;
 
         setData(data);
         setSummary(data.summary);
         setLoading(false);
+      })
+      .catch(() => {
+        if (!cancelled) setLoading(false);
       });
 
     return () => {
@@ -153,8 +158,48 @@ export default function AnalyticsDashboard() {
             </button>
           ))}
         </div>
+        {loading && summary && (
+          <span className="analytics-updating" role="status">
+            <span className="analytics-spinner" />
+            Updating…
+          </span>
+        )}
       </div>
       {summary && <AnalyticsOverview summary={summary} loading={loading} />}
+      {!summary && loading && (
+        <div className="analytics-summary" aria-busy="true" aria-label="Loading analytics">
+          <div className="analytics-card">
+            <div className="analytics-tiles">
+              {Array.from({ length: 5 }, (_, index) => (
+                <div className="analytics-tile" key={`tile-skeleton-${index}`}>
+                  <span className="analytics-skeleton analytics-skeleton-label" />
+                  <span className="analytics-skeleton analytics-skeleton-value" />
+                  <span className="analytics-skeleton analytics-skeleton-change" />
+                </div>
+              ))}
+            </div>
+            <span className="analytics-skeleton analytics-skeleton-chart" />
+          </div>
+          <div className="analytics-card analytics-map-card">
+            <span className="analytics-skeleton analytics-skeleton-map" />
+            <div className="analytics-skeleton-list">
+              {SKELETON_LIST_WIDTHS.map((width, index) => (
+                <span className="analytics-skeleton" style={{ width }} key={`list-skeleton-${index}`} />
+              ))}
+            </div>
+          </div>
+          <div className="analytics-grid">
+            <div className="analytics-card analytics-wide analytics-skeleton-card">
+              <span className="analytics-skeleton analytics-skeleton-label" />
+              <span className="analytics-skeleton analytics-skeleton-panel" />
+            </div>
+            <div className="analytics-card analytics-skeleton-card">
+              <span className="analytics-skeleton analytics-skeleton-label" />
+              <span className="analytics-skeleton analytics-skeleton-panel" />
+            </div>
+          </div>
+        </div>
+      )}
       {!summary && !loading && (
         <p className="analytics-empty">Summary data is unavailable. The analytics API may need to be redeployed.</p>
       )}
@@ -180,6 +225,20 @@ export default function AnalyticsDashboard() {
           <span>Device</span>
           <span />
         </div>
+        {!data &&
+          loading &&
+          Array.from({ length: SKELETON_SESSIONS }, (_, index) => (
+            <div className="session-row" aria-hidden="true" key={`session-skeleton-${index}`}>
+              <div className="session-skeleton-row">
+                {Array.from({ length: 5 }, (_, cell) => (
+                  <div className="session-skeleton-cell" key={cell}>
+                    <span className="analytics-skeleton" />
+                    {cell < 2 && <span className="analytics-skeleton analytics-skeleton-secondary" />}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         {data?.sessions.map((session) => (
           <SessionDisplay session={session} key={`sessionDisplay-${session.sessionId}`} />
         ))}

@@ -124,6 +124,7 @@ export default function PhotoLayoutEditor() {
   const [message, setMessage] = useState<Message>();
   const [sidebarTop, setSidebarTop] = useState(SIDEBAR_INSET);
   const sidebarSlot = useRef<HTMLDivElement>(null);
+  const changedRow = useRef(false);
 
   const sensors = useDragSensors();
 
@@ -174,6 +175,11 @@ export default function PhotoLayoutEditor() {
       window.removeEventListener("resize", updateSidebarTop);
     };
   }, [library]);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => (changedRow.current = false));
+    return () => cancelAnimationFrame(frame);
+  }, [draft]);
 
   const folders = (library ?? []).flatMap((collection) => collection.folders);
   const photosById = new Map(
@@ -233,27 +239,27 @@ export default function PhotoLayoutEditor() {
     setDragging({ type: active.data.current?.type as DragType, id: String(active.id) });
 
   const onDragOver = ({ active, over }: DragOverEvent) => {
-    if (!over || active.data.current?.type !== "cell") return;
+    if (!over || active.data.current?.type !== "cell" || changedRow.current) return;
 
     const activeId = String(active.id);
     const overId = String(over.id);
     const overRow = over.data.current?.type === "row";
+    const from = rowOfCell(draft, activeId);
+    const to = overRow ? draft.find((row) => row.id === overId) : rowOfCell(draft, overId);
 
-    setDraft((rows) => {
-      const from = rowOfCell(rows, activeId);
-      const to = overRow ? rows.find((row) => row.id === overId) : rowOfCell(rows, overId);
+    if (!from || !to || from.id === to.id) return;
 
-      if (!from || !to || from.id === to.id) return rows;
+    const cell = from.cells.find(({ id }) => id === activeId)!;
+    const index = overRow ? to.cells.length : to.cells.findIndex(({ id }) => id === overId);
 
-      const cell = from.cells.find(({ id }) => id === activeId)!;
-      const index = overRow ? to.cells.length : to.cells.findIndex(({ id }) => id === overId);
-
-      return rows.map((row) => {
+    changedRow.current = true;
+    setDraft(
+      draft.map((row) => {
         if (row.id === from.id) return { ...row, cells: row.cells.filter(({ id }) => id !== activeId) };
         if (row.id === to.id) return { ...row, cells: [...row.cells.slice(0, index), cell, ...row.cells.slice(index)] };
         return row;
-      });
-    });
+      })
+    );
   };
 
   const onDragEnd = ({ active, over }: DragEndEvent) => {

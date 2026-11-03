@@ -313,6 +313,8 @@ resource "aws_lambda_function" "get_analytics_lambda_function" {
   role             = aws_iam_role.get_analytics_lambda_exec.arn
   source_code_hash = data.archive_file.zip_api_get_analytics.output_base64sha256
   filename         = data.archive_file.zip_api_get_analytics.output_path
+  memory_size      = 1024
+  timeout          = 10
 
   layers = [aws_lambda_layer_version.common.arn]
 
