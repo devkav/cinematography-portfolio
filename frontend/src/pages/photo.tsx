@@ -269,7 +269,7 @@ function PhotoGallery({ photos }: { photos: PhotoProject[] }) {
           <div id="sidebar-container">
             <Link id="photo-back" to="/photo">
               <MdNavigateBefore />
-             Gallery 
+              Gallery
             </Link>
             <div id="photo-sidebar">{collections}</div>
           </div>
