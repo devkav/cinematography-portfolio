@@ -6,9 +6,12 @@
 
 #photo-page {
   height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  background-color: white;
+  color: black;
 }
 
 #photo-content-container {
@@ -29,10 +32,26 @@
 #sidebar-container {
   flex-shrink: 0;
   margin-right: 20px;
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--padding-top);
+}
+
+#photo-back {
+  align-self: center;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-right: 14px;
+  color: black;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 20px;
+  text-transform: uppercase;
 }
 
 #photo-sidebar {
-  height: calc(100% - 190px);
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   display: flex;
   flex-flow: column;
@@ -158,11 +177,6 @@
     max-width: calc(100% - calc(calc(var(--button-size) + calc(var(--button-margin) * 2)) * 2));
   }
 
-  #photo-sidebar {
-    height: auto;
-    margin-top: 40px;
-  }
-
   #footer {
     margin-top: 40px;
     margin-bottom: 40px;
@@ -170,6 +184,7 @@
 
   #sidebar-container {
     margin-right: 0px;
+    margin-top: 40px;
   }
 
   #next-col,

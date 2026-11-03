@@ -6,10 +6,9 @@ import "./title-bar.css";
 interface Props {
   route: MenuRoute;
   darkMode?: boolean;
-  compact?: boolean;
 }
 
-export default function TitleBar({ darkMode = true, compact = false }: Props) {
+export default function TitleBar({ darkMode = true }: Props) {
   const buttons = Object.keys(MenuRoute)
     .filter((key) => key !== "home")
     .map((key) => MenuRoute[key])
@@ -20,17 +19,8 @@ export default function TitleBar({ darkMode = true, compact = false }: Props) {
       </Link>
     ));
 
-  const classNames = [];
-
-  if (darkMode) {
-    classNames.push("dark-mode");
-  }
-  if (compact) {
-    classNames.push("compact");
-  }
-
   return (
-    <div id="title-bar-container" className={classNames.join(" ")}>
+    <div id="title-bar-container" className={darkMode ? "dark-mode" : ""}>
       <div id="logo-container">
         <Link id="logo" to="/">
           Maggie Lucy
