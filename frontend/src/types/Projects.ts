@@ -25,9 +25,13 @@ export interface PhotoLayoutCell {
   flex: number;
 }
 
+export type PhotoLabelSide = "left" | "right";
+
 export interface PhotoLayoutRow {
   width: number;
   gap: number;
   space: number;
+  label: string;
+  labelSide: PhotoLabelSide;
   cells: PhotoLayoutCell[];
 }

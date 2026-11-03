@@ -31,6 +31,11 @@
   margin: var(--space) auto 0;
   outline: 1px dashed transparent;
   transition: outline-color 0.2s;
+  --label-size: max(14px, 1.6cqw);
+}
+
+.photo-layout-canvas-row.labeled {
+  padding-bottom: calc(var(--label-size) * 1.6);
 }
 
 .photo-layout-canvas-row:hover {
@@ -57,8 +62,31 @@
 }
 
 .photo-layout-canvas-photo {
+  position: relative;
   cursor: grab;
   touch-action: none;
+}
+
+.photo-layout-canvas-label {
+  position: absolute;
+  top: 100%;
+  margin: 0;
+  padding-top: calc(var(--label-size) * 0.4);
+  color: black;
+  font-family: "Tusker-Grotesk-3500";
+  font-size: var(--label-size);
+  font-style: italic;
+  line-height: 1.2;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.photo-layout-canvas-label.left {
+  left: 0;
+}
+
+.photo-layout-canvas-label.right {
+  right: 0;
 }
 
 .photo-layout-canvas-photo img {
@@ -181,14 +209,14 @@
   text-align: right;
 }
 
-.photo-layout-sizing {
+.photo-layout-option {
   display: flex;
   flex-flow: column;
   gap: 6px;
   margin-bottom: 4px;
 }
 
-.photo-layout-sizing .admin-segmented-button {
+.photo-layout-option .admin-segmented-button {
   flex: 1;
   justify-content: center;
   padding: 6px 4px;

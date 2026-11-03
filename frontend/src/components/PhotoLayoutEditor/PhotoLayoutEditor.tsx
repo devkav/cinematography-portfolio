@@ -19,6 +19,7 @@ import {
 } from "@dnd-kit/sortable";
 import { MdAdd, MdClose, MdDeleteOutline, MdDragIndicator, MdRemove } from "react-icons/md";
 import { useAuth } from "../../auth/AuthContext";
+import type { PhotoLabelSide } from "src/types/Projects";
 import type { LibraryCollection } from "../PhotoManager/PhotoManager";
 import { SortableItem, useDragSensors } from "../Sortable/Sortable";
 
@@ -26,6 +27,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const MIN_WIDTH = 10;
 const MAX_GAP = 20;
 const MAX_FLEX = 12;
+const MAX_LABEL_LENGTH = 60;
 const NEW_ROW_ID = "__new__";
 const SIDEBAR_INSET = 24;
 
@@ -37,11 +39,18 @@ const SIZINGS: { sizing: Sizing; label: string }[] = [
   { sizing: "height", label: "Same height" }
 ];
 
+const LABEL_SIDES: { side: PhotoLabelSide; label: string }[] = [
+  { side: "left", label: "Left" },
+  { side: "right", label: "Right" }
+];
+
 interface SavedRow {
   width: number;
   gap: number;
   space: number;
   sizing: Sizing;
+  label: string;
+  labelSide: PhotoLabelSide;
   cells: { photo: string; flex: number; ratio: number }[];
 }
 
@@ -58,6 +67,8 @@ interface LayoutRow {
   gap: number;
   space: number;
   sizing: Sizing;
+  label: string;
+  labelSide: PhotoLabelSide;
   cells: LayoutCell[];
 }
 
@@ -73,11 +84,13 @@ const withIds = (rows: SavedRow[]): LayoutRow[] =>
   rows.map((row) => ({ ...row, id: newId(), cells: row.cells.map((cell) => ({ ...cell, id: newId() })) }));
 
 const withoutIds = (rows: SavedRow[]): SavedRow[] =>
-  rows.map(({ width, gap, space, sizing, cells }) => ({
+  rows.map(({ width, gap, space, sizing, label, labelSide, cells }) => ({
     width,
     gap,
     space,
     sizing,
+    label,
+    labelSide,
     cells: cells.map(({ photo, flex, ratio }) => ({ photo, flex, ratio }))
   }));
 
@@ -226,7 +239,10 @@ export default function PhotoLayoutEditor() {
 
     if (picking === NEW_ROW_ID) {
       const id = newId();
-      setDraft((rows) => [...rows, { id, width: 100, gap: 2, space: 4, sizing: "flex", cells }]);
+      setDraft((rows) => [
+        ...rows,
+        { id, width: 100, gap: 2, space: 4, sizing: "flex", label: "", labelSide: "left", cells }
+      ]);
       setSelectedRowId(id);
     } else if (picking) {
       updateCells(picking, (current) => [...current, ...cells]);
@@ -377,7 +393,7 @@ export default function PhotoLayoutEditor() {
                 id={row.id}
                 type="row"
                 disabled={saving}
-                className={`photo-layout-canvas-row${row.id === selectedRowId ? " selected" : ""}`}
+                className={`photo-layout-canvas-row${row.id === selectedRowId ? " selected" : ""}${row.label.trim() ? " labeled" : ""}`}
                 style={
                   {
                     "--width": `${row.width}%`,
@@ -418,6 +434,10 @@ export default function PhotoLayoutEditor() {
                                 draggable={false}
                                 onLoad={measure(cell.photo)}
                               />
+                              {row.label.trim() &&
+                                cellIndex === (row.labelSide === "right" ? row.cells.length - 1 : 0) && (
+                                  <p className={`photo-layout-canvas-label ${row.labelSide}`}>{row.label}</p>
+                                )}
                             </div>
                           )}
                         </SortableItem>
@@ -466,7 +486,7 @@ export default function PhotoLayoutEditor() {
                 </div>
 
                 <div className="photo-layout-settings">
-                  <div className="photo-layout-sizing">
+                  <div className="photo-layout-option">
                     <span className="admin-label">Sizing</span>
                     <div className="admin-segmented">
                       {SIZINGS.map(({ sizing, label }) => (
@@ -503,6 +523,33 @@ export default function PhotoLayoutEditor() {
                       <span className="photo-layout-value">{selectedRow[key]}%</span>
                     </label>
                   ))}
+                  <div className="photo-layout-option">
+                    <label className="admin-label" htmlFor="photo-layout-label-input">
+                      Label
+                    </label>
+                    <input
+                      id="photo-layout-label-input"
+                      className="admin-input"
+                      value={selectedRow.label}
+                      maxLength={MAX_LABEL_LENGTH}
+                      placeholder="No label"
+                      disabled={saving}
+                      onChange={(event) => updateRow(selectedRow.id, { label: event.target.value })}
+                    />
+                    <div className="admin-segmented" role="group" aria-label="Label side">
+                      {LABEL_SIDES.map(({ side, label }) => (
+                        <button
+                          key={side}
+                          className={`admin-segmented-button${selectedRow.labelSide === side ? " active" : ""}`}
+                          aria-pressed={selectedRow.labelSide === side}
+                          disabled={saving}
+                          onClick={() => updateRow(selectedRow.id, { labelSide: side })}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
 
                 <p className="admin-label photo-layout-section-label">Photos</p>

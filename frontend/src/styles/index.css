@@ -25,6 +25,13 @@ p {
 }
 
 @font-face {
+  font-family: "Tusker-Grotesk-3500";
+  src: url("https://d3amd0zp63qrni.cloudfront.net/assets/fonts/tusker-grotesk/TuskerGrotesk-3500Medium.otf")
+    format("opentype");
+  font-display: swap;
+}
+
+@font-face {
   font-family: "Starblues";
   src: url("https://d3amd0zp63qrni.cloudfront.net/assets/fonts/starblues.otf") format("opentype");
   font-display: swap;

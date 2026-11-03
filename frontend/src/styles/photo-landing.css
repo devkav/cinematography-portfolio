@@ -12,11 +12,42 @@
   gap: var(--gap);
   width: var(--width);
   margin: var(--space) auto 0;
+  --label-size: max(14px, 1.6cqw);
+}
+
+.photo-landing-row.labeled {
+  padding-bottom: calc(var(--label-size) * 1.6);
 }
 
 .photo-landing-cell {
+  position: relative;
   flex: var(--flex);
   min-width: 0;
+}
+
+.photo-landing-cell a {
+  display: block;
+}
+
+.photo-landing-label {
+  position: absolute;
+  top: 100%;
+  margin: 0;
+  padding-top: calc(var(--label-size) * 0.4);
+  font-family: "Tusker-Grotesk-3500";
+  font-size: var(--label-size);
+  font-style: italic;
+  line-height: 1.2;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.photo-landing-label.left {
+  left: 0;
+}
+
+.photo-landing-label.right {
+  right: 0;
 }
 
 #photo-landing-page #footer {

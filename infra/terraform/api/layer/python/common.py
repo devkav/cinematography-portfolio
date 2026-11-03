@@ -12,6 +12,7 @@ TRANSACTION_LIMIT = 100
 LAYOUT_ID = "landing"
 LAYOUT_DEFAULT_SPACE = 4
 LAYOUT_DEFAULT_SIZING = "flex"
+LAYOUT_DEFAULT_LABEL_SIDE = "left"
 
 ALLOWED_ORIGINS = [
     "http://localhost:5173",
@@ -100,6 +101,8 @@ def get_layout(table, photo_ids):
             "gap": int(row["gap"]),
             "space": int(row.get("space", LAYOUT_DEFAULT_SPACE)),
             "sizing": row.get("sizing", LAYOUT_DEFAULT_SIZING),
+            "label": row.get("label", ""),
+            "labelSide": row.get("labelSide", LAYOUT_DEFAULT_LABEL_SIDE),
             "cells": [
                 {"photo": cell["photo"], "flex": int(cell["flex"]), "ratio": float(cell.get("ratio", 1))}
                 for cell in row["cells"]
