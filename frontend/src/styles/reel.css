@@ -12,10 +12,12 @@
   align-items: center;
   margin-left: 16px;
   margin-right: 16px;
+  gap: 32px;
 }
 
-#reel-iframe {
-  width: 100%;
+.reel-iframe {
+  /* Capped by viewport height so the first reel leaves room to peek at the second */
+  width: min(100%, 105svh);
   height: auto;
   aspect-ratio: 16/9;
 }

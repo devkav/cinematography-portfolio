@@ -15,9 +15,14 @@ export default function Reel() {
       <TitleBar route="reel" />
       <div id="reel-container">
         <iframe
-          id="reel-iframe"
+          className="reel-iframe"
           title="Maggie Lucy cinematography reel"
           src="https://www.youtube.com/embed/IF0gXTvGxnk"
+        />
+        <iframe
+          className="reel-iframe"
+          title="Maggie Lucy cinematography reel 2"
+          src="https://www.youtube.com/embed/KX8p1n1Krlg"
         />
       </div>
 
