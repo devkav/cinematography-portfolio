@@ -14,7 +14,7 @@ import AdrenalineRush from "./pages/adrenaline-rush";
 import { AuthProvider } from "./auth/AuthContext";
 import { AnalyticsTracker } from "./analytics/AnalyticsTracker";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
-import type { FilmProject, PhotoLayoutRow, PhotoProject } from "./types/Projects";
+import type { FilmProject, PhotoLayoutRow, PhotoProject, Reel as ReelVideo } from "./types/Projects";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -22,6 +22,7 @@ function App() {
   const [photos, setPhotos] = useState<PhotoProject[]>([]);
   const [photoLayout, setPhotoLayout] = useState<PhotoLayoutRow[]>([]);
   const [filmProjects, setFilmProjects] = useState<FilmProject[]>([]);
+  const [reels, setReels] = useState<ReelVideo[]>([]);
 
   useEffect(() => {
     fetch(`${API_URL}/assets?page=photo`).then((data) => data.json().then((data) => setPhotos(data)));
@@ -37,6 +38,12 @@ function App() {
     fetch(`${API_URL}/assets?page=film`).then((data) => data.json().then((data) => setFilmProjects(data)));
   }, []);
 
+  useEffect(() => {
+    fetch(`${API_URL}/assets?page=reel`).then((response) => {
+      if (response.ok) response.json().then(setReels);
+    });
+  }, []);
+
   return (
     <BrowserRouter>
       <ScrollToTop />
@@ -44,7 +51,7 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/reel" element={<Reel />} />
+          <Route path="/reel" element={<Reel reels={reels} />} />
           <Route path="/film" element={<Film projects={filmProjects} />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/photo" element={<Photo photos={photos} layout={photoLayout} />} />

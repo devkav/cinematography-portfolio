@@ -4,13 +4,13 @@ from collections import defaultdict
 import boto3
 from boto3.dynamodb.conditions import Key
 
-from common import AssetType, build_response, by_order, get_layout, is_allowed_origin, get_asset_id, query_type, src_url
+from common import AssetType, build_response, by_order, get_layout, get_reels, is_allowed_origin, get_asset_id, query_type, src_url
 
 
 TABLE_NAME = os.getenv("ASSETS_TABLE_NAME", "assets_db")
 CLOUDFRONT_DOMAIN = os.getenv("ASSETS_CLOUDFRONT_DOMAIN")
 
-VALID_PAGES = {"film", "photo", "photo_layout"}
+VALID_PAGES = {"film", "photo", "photo_layout", "reel"}
 
 dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table(TABLE_NAME)
@@ -35,6 +35,9 @@ def handler(event, _):
 
     if page not in VALID_PAGES:
         return build_response(400, {"error": f"Page '{page}' is not a valid page"}, origin)
+
+    if page == "reel":
+        return build_response(200, get_reels(table), origin)
 
     if page == "photo_layout":
         folder_titles = {

@@ -1,0 +1,105 @@
+.reel-manager {
+  display: flex;
+  flex-flow: column;
+  gap: 16px;
+}
+
+.reel-manager-loading {
+  display: flex;
+  flex-flow: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.reel-manager-empty {
+  margin-top: 16px !important;
+}
+
+.reel-manager-list {
+  display: flex;
+  flex-flow: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.reel-manager-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px 8px 4px;
+  border: 1px solid var(--admin-border);
+  border-radius: 6px;
+  background-color: var(--admin-surface);
+}
+
+.reel-manager-row.is-sorting {
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.reel-manager-handle {
+  display: flex;
+  align-items: center;
+  padding: 8px 2px 8px 8px;
+  color: var(--admin-text-muted);
+  font-size: 20px;
+  cursor: grab;
+  touch-action: none;
+  border-radius: 4px;
+}
+
+.reel-manager-handle:focus-visible {
+  outline: 1px solid var(--admin-accent);
+}
+
+.reel-manager-position {
+  min-width: 1.2em;
+  color: var(--admin-text-muted);
+  font-size: 14px;
+  text-align: right;
+}
+
+.reel-manager-thumbnail {
+  width: 96px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 4px;
+  background-color: #050505;
+}
+
+.reel-manager-link {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--admin-text-secondary);
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reel-manager-add {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.reel-manager-add .admin-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.reel-manager-add-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+@media only screen and (max-width: 600px) {
+  .reel-manager-thumbnail {
+    width: 64px;
+  }
+}

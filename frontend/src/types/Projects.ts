@@ -8,6 +8,11 @@ export interface FilmProject {
   laurelImages?: string[];
 }
 
+export interface Reel {
+  videoId: string;
+  url: string;
+}
+
 export interface Photo {
   src: string;
 }
