@@ -22,7 +22,7 @@ function App() {
   const [photos, setPhotos] = useState<PhotoProject[]>([]);
   const [photoLayout, setPhotoLayout] = useState<PhotoLayoutRow[]>([]);
   const [filmProjects, setFilmProjects] = useState<FilmProject[]>([]);
-  const [reels, setReels] = useState<ReelVideo[]>([]);
+  const [reels, setReels] = useState<ReelVideo[]>();
 
   useEffect(() => {
     fetch(`${API_URL}/assets?page=photo`).then((data) => data.json().then((data) => setPhotos(data)));
@@ -39,9 +39,10 @@ function App() {
   }, []);
 
   useEffect(() => {
-    fetch(`${API_URL}/assets?page=reel`).then((response) => {
-      if (response.ok) response.json().then(setReels);
-    });
+    fetch(`${API_URL}/assets?page=reel`)
+      .then((response) => (response.ok ? response.json() : []))
+      .then(setReels)
+      .catch(() => setReels([]));
   }, []);
 
   return (

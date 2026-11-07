@@ -15,9 +15,37 @@
   gap: 32px;
 }
 
-.reel-iframe {
+.reel-frame {
   /* Capped by viewport height so the first reel leaves room to peek at the second */
   width: min(100%, 105svh);
-  height: auto;
   aspect-ratio: 16/9;
+}
+
+.reel-skeleton {
+  background: linear-gradient(90deg, #161616 25%, #242424 50%, #161616 75%);
+  background-size: 200% 100%;
+  animation: reel-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes reel-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+
+  to {
+    background-position: -100% 0;
+  }
+}
+
+.reel-iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.reel-iframe.loaded {
+  opacity: 1;
 }
