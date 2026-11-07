@@ -1,15 +1,17 @@
 import "./upload-panel.css";
 
 import type { JSX } from "react";
-import { MdDescription, MdMovie, MdPhotoCamera, MdViewQuilt } from "react-icons/md";
+import { MdDescription, MdMovie, MdPhotoCamera, MdVideoLibrary, MdViewQuilt } from "react-icons/md";
 import FilmManager from "../FilmManager/FilmManager";
 import PhotoManager from "../PhotoManager/PhotoManager";
 import PhotoLayoutEditor from "../PhotoLayoutEditor/PhotoLayoutEditor";
+import ReelManager from "../ReelManager/ReelManager";
 import ResumeUpload from "../ResumeUpload/ResumeUpload";
 
-export type UploadView = "film" | "photo" | "photo-layout" | "resume";
+export type UploadView = "reel" | "film" | "photo" | "photo-layout" | "resume";
 
 const VIEWS: { view: UploadView; label: string; icon: JSX.Element }[] = [
+  { view: "reel", label: "Reel", icon: <MdVideoLibrary /> },
   { view: "film", label: "Film", icon: <MdMovie /> },
   { view: "photo", label: "Photo", icon: <MdPhotoCamera /> },
   { view: "photo-layout", label: "Photo layout", icon: <MdViewQuilt /> },
@@ -42,6 +44,7 @@ export default function UploadPanel({
         </div>
       </div>
 
+      {view === "reel" && <ReelManager />}
       {view === "film" && <FilmManager />}
       {view === "photo" && <PhotoManager />}
       {view === "photo-layout" && <PhotoLayoutEditor />}

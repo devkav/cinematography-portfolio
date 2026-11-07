@@ -14,6 +14,8 @@ LAYOUT_DEFAULT_SPACE = 4
 LAYOUT_DEFAULT_SIZING = "flex"
 LAYOUT_DEFAULT_LABEL_SIDE = "left"
 
+REEL_LIST_ID = "reels"
+
 ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://maggieclucy.com",
@@ -33,6 +35,7 @@ class AssetType(str, Enum):
     PHOTO = "photo"
     PHOTO_LAYOUT = "photo_layout"
     FILM = "film"
+    REEL_LIST = "reel_list"
 
 
 def get_asset_id(title):
@@ -113,6 +116,11 @@ def get_layout(table, photo_ids):
     ]
 
     return [row for row in rows if row["cells"]]
+
+
+def get_reels(table):
+    item = table.get_item(Key={"Type": AssetType.REEL_LIST.value, "AssetID": REEL_LIST_ID}).get("Item") or {}
+    return [{"videoId": video_id, "url": f"https://www.youtube.com/watch?v={video_id}"} for video_id in item.get("videos", [])]
 
 
 def src_url(src, domain):

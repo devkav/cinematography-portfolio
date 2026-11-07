@@ -237,6 +237,8 @@ resource "aws_api_gateway_deployment" "assets_api_deployment" {
     aws_api_gateway_integration.options_signup_integration,
     aws_api_gateway_integration.api_gateway_get_mailing_list_integration,
     aws_api_gateway_integration.options_get_mailing_list_integration,
+    aws_api_gateway_integration.reels,
+    aws_api_gateway_integration.options_reels_integration,
   ]
   rest_api_id = aws_api_gateway_rest_api.api.id
 
@@ -289,6 +291,11 @@ resource "aws_api_gateway_deployment" "assets_api_deployment" {
       aws_api_gateway_method.options_get_mailing_list.id,
       aws_api_gateway_integration.api_gateway_get_mailing_list_integration.id,
       aws_api_gateway_integration.options_get_mailing_list_integration.id,
+      aws_api_gateway_resource.api_reels_resource.id,
+      [for method in aws_api_gateway_method.reels : method.id],
+      [for integration in aws_api_gateway_integration.reels : integration.id],
+      aws_api_gateway_method.options_reels.id,
+      aws_api_gateway_integration.options_reels_integration.id,
     ]))
   }
 
